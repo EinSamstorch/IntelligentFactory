@@ -37,7 +37,7 @@ public class GetOrderBehaviour extends TickerBehaviour {
         if (result.equals("[]")) return;
         LoggerUtil.agent.info(result);
 
-        CloudMysql mysqlTool = new CloudMysql(cagent.getSetting());
+        CloudMysql mysqlTool = new CloudMysql(cagent.getMysqlSetting());
         /*
           解析订单 JSONArray
           [{订单1},{订单2},{订单3}]

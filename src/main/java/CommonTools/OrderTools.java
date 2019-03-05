@@ -2,6 +2,12 @@ package CommonTools;
 
 import com.alibaba.fastjson.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 /**
  * 用于解析json格式的订单信息.
  *
@@ -28,21 +34,33 @@ public class OrderTools {
          * 		"jobDes": "{\"D1\":\"80\",\"D2\":\"35.5\",\"D3\":\"58.0\",\"D4\":\"8.0\",\"D5\":\"70.0\",\"N\":\"4\",\"L1\":\"15.0\",\"L2\":\"30.0\",\"Motto\":\"南航智造\"}",
          * 		"jobNum": 1
          *        }],
-         * 	"orderDtime": "2020-05-20 00:00:00",
          * 	"orderId": "004061",
          * 	"orderPrior": "0"
          * }
          */
         String orderDate = jo.getString("orderDate");
         String orderDetails = jo.getString("orderDetails");
-        String orderDtime = jo.getString("orderDtime");
+        //String orderDtime = jo.getString("orderDtime");
         String orderId = jo.getString("orderId");
         String orderPrior = jo.getString("orderPrior");
+
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        calendar.add(Calendar.HOUR, 10);
+        date = calendar.getTime();
+        String orderDtime = format.format(date);
 
         return new OrderInfo(orderDate, orderDtime, orderId, orderPrior, orderDetails);
     }
 
-    public static Workpiece parseWorkpiece(JSONObject jo) {
-        return new Workpiece("9999", new JSONObject());
-    }
+//    /**
+//     * 还没写
+//     * @param jo
+//     * @return
+//     */
+//    public static Workpiece parseWorkpiece(JSONObject jo) {
+//        return new Workpiece("9999", new JSONObject());
+//    }
 }

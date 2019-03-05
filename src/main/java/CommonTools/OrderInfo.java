@@ -74,6 +74,10 @@ public class OrderInfo {
      * 根据订单具体内容拆分出来的工件列表
      */
     private Vector<Workpiece> workpieceList = new Vector<>();
+    /**
+     * 本地生成工件Id，工件数量计数器
+     */
+    private int wpCnt = 0;
 
     public String getOrderDate() {
         return orderDate;
@@ -143,8 +147,10 @@ public class OrderInfo {
             JSONArray details = JSONArray.parseArray(orderDetails);
             Iterator<Object> iterator = details.iterator();
             while (iterator.hasNext()) {
-                JSONObject jsonObject = (JSONObject) iterator.next();
-                Workpiece wp = new Workpiece(orderId, jsonObject);
+                JSONObject jo = (JSONObject) iterator.next();
+                // 因为云端去掉了工件编号属性，故本地生成该属性
+                jo.put("id", String.format("%03d", ++wpCnt));
+                Workpiece wp = new Workpiece(orderId, jo);
                 workpieceList.add(wp);
             }
         }

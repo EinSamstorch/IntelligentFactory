@@ -5,6 +5,8 @@ import Cloud.Behaviours.GetOrderBehaviour;
 import CommonTools.*;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
+import jade.domain.DFService;
+import jade.domain.FIPAException;
 
 import java.util.Map;
 import java.util.Vector;
@@ -32,6 +34,11 @@ public class CloudAgent extends AgentTemplate {
      * ini配置信息.
      */
     private Map<String, String> setting;
+
+    /**
+     * mysql配置信息
+     */
+    private Map<String, String> mysqlSetting;
     /**
      * 新订单列表.
      */
@@ -51,6 +58,10 @@ public class CloudAgent extends AgentTemplate {
 
     public Map<String, String> getSetting() {
         return setting;
+    }
+
+    public Map<String, String> getMysqlSetting() {
+        return mysqlSetting;
     }
 
     public Vector<OrderInfo> getOrderList() {
@@ -91,6 +102,7 @@ public class CloudAgent extends AgentTemplate {
      */
     protected void loadINI() {
         setting = IniLoader.load(IniLoader.SECTION_CLOUD);
+        mysqlSetting = IniLoader.load(IniLoader.SECTION_MYSQL);
         website = setting.get("website");
 
         if (website == null) {
@@ -104,8 +116,16 @@ public class CloudAgent extends AgentTemplate {
      */
     private void loadOrders() {
         Vector<OrderInfo> list = new CloudMysql(IniLoader.load(IniLoader.SECTION_MYSQL)).loadOrders();
-        for (OrderInfo oi : list) {
-            orderList.add(oi);
+        orderList.addAll(list);
+    }
+
+    @Override
+    protected void takeDown() {
+        try {
+            DFService.deregister(this);
+        } catch (FIPAException fe) {
+            fe.printStackTrace();
+            LoggerUtil.agent.error("Deregister DF service error!" + fe.getMessage());
         }
     }
 }
