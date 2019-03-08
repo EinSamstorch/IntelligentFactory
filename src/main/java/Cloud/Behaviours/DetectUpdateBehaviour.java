@@ -26,13 +26,15 @@ public class DetectUpdateBehaviour extends TickerBehaviour {
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
         Behaviour b;
         String param;
-        while (cagent.getStateList().size() > 0) {
-            param = cagent.getStateList().remove(0);
+        while (true) {
+            param = cagent.getStateQueue().poll();
+            if (param == null) break;
             b = new Push2CloudBehaviour(cagent, param, Push2CloudBehaviour.UPDATE_STATE);
             cagent.addBehaviour(tbf.wrap(b));
         }
-        while (cagent.getPosList().size() > 0) {
-            param = cagent.getPosList().remove(0);
+        while (true) {
+            param = cagent.getPosQueue().poll();
+            if (param == null) break;
             b = new Push2CloudBehaviour(cagent, param, Push2CloudBehaviour.UPDATE_POSITION);
             cagent.addBehaviour(tbf.wrap(b));
         }

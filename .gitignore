@@ -13,3 +13,4 @@ logs
 IntelligentFactory.iml
 *test*
 *Test*
+*.db

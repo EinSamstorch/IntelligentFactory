@@ -21,7 +21,7 @@ public class SQLiteJDBC {
         try {
             Class.forName("org.sqlite.JDBC");
             this.con = DriverManager.getConnection(String.format("jdbc:sqlite:%s", dbName));
-            this.con.setAutoCommit(false);
+            this.con.setAutoCommit(true);
         } catch (Exception e) {
             LoggerUtil.db.error(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);

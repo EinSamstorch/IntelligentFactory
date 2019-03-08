@@ -45,7 +45,7 @@ import java.util.Vector;
  * }
  * </pre>
  *
- * @author      <a href="mailto:junfeng_pan96@qq.com">junfeng</a>
+ * @author <a href="mailto:junfeng_pan96@qq.com">junfeng</a>
  * @version 1.0.0.0
  * @since 1.8
  */
@@ -105,10 +105,11 @@ public class OrderInfo {
 
     /**
      * 构造器.
-     * @param orderDate 订单生成时间
-     * @param orderDtime 订单截止时间
-     * @param orderId 订单id
-     * @param orderPrior 订单优先级
+     *
+     * @param orderDate    订单生成时间
+     * @param orderDtime   订单截止时间
+     * @param orderId      订单id
+     * @param orderPrior   订单优先级
      * @param orderDetails 订单详细内容
      */
     public OrderInfo(String orderDate, String orderDtime, String orderId, String orderPrior, String orderDetails) {

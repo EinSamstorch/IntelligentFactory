@@ -48,7 +48,7 @@ public class GetOrderBehaviour extends TickerBehaviour {
             JSONObject jo = (JSONObject) iterator.next();
             // 加入到 Cloud Agent 待分配 列表中
             OrderInfo oi = OrderTools.parseOrderInfo(jo);
-            cagent.getOrderList().add(oi);
+            cagent.getOrderQueue().offer(oi);
 
             // 储存订单信息到MYSQL中
             mysqlTool.storeOrderInfo(oi);

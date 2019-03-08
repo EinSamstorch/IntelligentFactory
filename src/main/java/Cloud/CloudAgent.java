@@ -9,7 +9,9 @@ import jade.domain.DFService;
 import jade.domain.FIPAException;
 
 import java.util.Map;
+import java.util.Queue;
 import java.util.Vector;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Cloud，负责与云端交互.
@@ -30,10 +32,6 @@ public class CloudAgent extends AgentTemplate {
      * 云端地址.
      */
     private String website;
-    /**
-     * ini配置信息.
-     */
-    private Map<String, String> setting;
 
     /**
      * mysql配置信息
@@ -42,38 +40,34 @@ public class CloudAgent extends AgentTemplate {
     /**
      * 新订单列表.
      */
-    private Vector<OrderInfo> orderList = new Vector<>();
+    private Queue<OrderInfo> orderQueue = new LinkedBlockingDeque<>();
     /**
      * 新状态推送列表.
      */
-    Vector<String> stateList = new Vector<>();
+    Queue<String> stateQueue = new LinkedBlockingDeque<>();
     /**
      * 新位置推送列表.
      */
-    Vector<String> posList = new Vector<>();
+    Queue<String> posQueue = new LinkedBlockingDeque<>();
 
     public String getWebsite() {
         return website;
-    }
-
-    public Map<String, String> getSetting() {
-        return setting;
     }
 
     public Map<String, String> getMysqlSetting() {
         return mysqlSetting;
     }
 
-    public Vector<OrderInfo> getOrderList() {
-        return orderList;
+    public Queue<OrderInfo> getOrderQueue() {
+        return orderQueue;
     }
 
-    public Vector<String> getStateList() {
-        return stateList;
+    public Queue<String> getStateQueue() {
+        return stateQueue;
     }
 
-    public Vector<String> getPosList() {
-        return posList;
+    public Queue<String> getPosQueue() {
+        return posQueue;
     }
 
     @Override
@@ -101,7 +95,7 @@ public class CloudAgent extends AgentTemplate {
      * 载入INI文件 并读取对应配置
      */
     protected void loadINI() {
-        setting = IniLoader.load(IniLoader.SECTION_CLOUD);
+        Map<String, String> setting = IniLoader.load(IniLoader.SECTION_CLOUD);
         mysqlSetting = IniLoader.load(IniLoader.SECTION_MYSQL);
         website = setting.get("website");
 
@@ -115,8 +109,10 @@ public class CloudAgent extends AgentTemplate {
      * 从mysql数据库中载入未完成订单
      */
     private void loadOrders() {
-        Vector<OrderInfo> list = new CloudMysql(IniLoader.load(IniLoader.SECTION_MYSQL)).loadOrders();
-        orderList.addAll(list);
+        Vector<OrderInfo> list = new CloudMysql(mysqlSetting).loadOrders();
+        for (OrderInfo oi : list) {
+            orderQueue.offer(oi);
+        }
     }
 
     @Override

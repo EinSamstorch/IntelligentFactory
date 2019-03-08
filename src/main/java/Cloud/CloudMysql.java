@@ -68,10 +68,10 @@ public class CloudMysql extends MysqlJDBC {
     public Vector<OrderInfo> loadOrders() {
         Vector<OrderInfo> list = new Vector<>();
         try {
-            // 从 mysql载入 状态 不等于 "FINISHED" 的 订单基本信息
-            Statement statement = con.createStatement();
-            String cmd = "SELECT orderstate.orderId,orderinfo.orderDate,orderinfo.orderDtime,orderinfo.orderPrior FROM orderstate, orderinfo WHERE orderstate.orderId = orderinfo.orderId AND orderstate.state != 'FINISHED'";
-            ResultSet rs = statement.executeQuery(cmd);
+            // 从 mysql载入 状态 等于 "NONE" 的 订单基本信息
+            Statement stmt = con.createStatement();
+            String cmd = "SELECT orderstate.orderId,orderinfo.orderDate,orderinfo.orderDtime,orderinfo.orderPrior FROM orderstate, orderinfo WHERE orderstate.orderId = orderinfo.orderId AND orderstate.state = 'NONE'";
+            ResultSet rs = stmt.executeQuery(cmd);
             while (rs.next()) {
                 String orderId = rs.getString("orderId");
                 String orderDate = rs.getString("orderDate");
@@ -79,15 +79,15 @@ public class CloudMysql extends MysqlJDBC {
                 String orderPrior = rs.getString("orderPrior");
                 list.add(new OrderInfo(orderDate, orderDtime, orderId, orderPrior, ""));
             }
-            statement.close();
+            stmt.close();
             rs.close();
 
-            // 遍历所有 未完成订单 ， 从mysql载入未完成的工件信息
-            cmd = "SELECT od.id, od.num, od.goodsid, od.jobdes FROM orderdetails AS od, workpiecestate AS wps WHERE od.orderId = ? AND od.orderId = wps.orderId AND od.id = wps.id AND wps.state != 'FINISHED'";
+            // 遍历所有 未完成订单 ， 从mysql载入未分配的工件信息
+
             for (OrderInfo oi : list) {
-                PreparedStatement ps = con.prepareStatement(cmd);
-                ps.setString(1, oi.getOrderId());
-                ResultSet rs2 = ps.executeQuery();
+                cmd = String.format("SELECT od.id, od.num, od.goodsid, od.jobdes FROM orderdetails AS od, workpiecestate AS wps WHERE od.orderId = '%s' AND od.orderId = wps.orderId AND od.id = wps.id AND wps.state = 'NONE'", oi.getOrderId());
+                Statement stmt2 = con.createStatement();
+                ResultSet rs2 = stmt2.executeQuery(cmd);
                 while (rs2.next()) {
                     JSONObject jo = new JSONObject();
                     jo.put("id", rs2.getString("id"));
@@ -97,7 +97,7 @@ public class CloudMysql extends MysqlJDBC {
                     Workpiece wp = new Workpiece(oi.getOrderId(), jo);
                     oi.getWorkpieceList().add(wp);
                 }
-                ps.close();
+                stmt2.close();
                 rs2.close();
             }
         } catch (SQLException e) {
