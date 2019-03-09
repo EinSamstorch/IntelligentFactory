@@ -1,5 +1,6 @@
 package Cloud;
 
+import Cloud.Behaviours.CFPNewOrderBehaviour;
 import Cloud.Behaviours.DetectUpdateBehaviour;
 import Cloud.Behaviours.GetOrderBehaviour;
 import CommonTools.*;
@@ -86,6 +87,9 @@ public class CloudAgent extends AgentTemplate {
 
         // 独立线程 定时检查新推送消息
         b = new DetectUpdateBehaviour(this, TICKER_TIME);
+        addBehaviour(tbf.wrap(b));
+
+        b = new CFPNewOrderBehaviour(this, TICKER_TIME);
         addBehaviour(tbf.wrap(b));
 
 

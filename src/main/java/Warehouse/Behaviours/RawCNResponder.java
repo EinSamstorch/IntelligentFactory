@@ -27,18 +27,30 @@ public class RawCNResponder extends ContractNetResponder {
         this.whagent = whagent;
     }
 
+    /**
+     * 处理原料招标请求
+     * @param cfp 招标信息， content: String goodsid
+     * @return ACLMessage content: String quantity
+     * @throws RefuseException
+     * @throws FailureException
+     * @throws NotUnderstoodException
+     */
     @Override
     protected ACLMessage handleCfp(ACLMessage cfp) throws RefuseException, FailureException, NotUnderstoodException {
-        LoggerUtil.agent.info(String.format("CFP received from: %s.", cfp.getSender().getName()));
+        LoggerUtil.agent.debug(String.format("CFP received from: %s.", cfp.getSender().getName()));
+        // cfp 内容: String goodsid
         String goodsid = cfp.getContent();
         WarehouseSqlite sqlite = new WarehouseSqlite(whagent.getSqlitePath());
+        // 查询仓库余量
         int quantity = sqlite.getRawQuantityByGoodsId(goodsid);
         if (quantity > 0) {
+            // propose 内容: String quantity
             ACLMessage propose = cfp.createReply();
             propose.setPerformative(ACLMessage.PROPOSE);
             propose.setContent(String.valueOf(quantity));
             return propose;
         } else {
+            // 仓库余量不足
             LoggerUtil.agent.info(String.format("Goodsid: %s is out of stock.", goodsid));
             throw new RefuseException(String.format("Goodsid: %s is out of stock.", goodsid));
         }
@@ -46,7 +58,21 @@ public class RawCNResponder extends ContractNetResponder {
 
     @Override
     protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept) throws FailureException {
-        return super.handleAcceptProposal(cfp, propose, accept);
+        LoggerUtil.agent.info("Proposal accepted: " + accept.getSender().getName());
+        int quantity = Integer.parseInt(accept.getContent());
+        String goodsid = cfp.getContent();
+        WarehouseSqlite sqlite = new WarehouseSqlite(whagent.getSqlitePath());
+        if(quantity == sqlite.getRawQuantityByGoodsId(goodsid)){
+            ACLMessage inform = accept.createReply();
+            inform.setPerformative(ACLMessage.INFORM);
+
+            String position = sqlite.getRaw(goodsid);
+            inform.setContent(position);
+            return inform;
+        }
+        else{
+            throw new FailureException("Quantity changed.");
+        }
     }
 
     @Override
