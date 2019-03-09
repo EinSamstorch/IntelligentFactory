@@ -33,6 +33,27 @@ public class Workpiece implements Serializable {
 
     private String orderId;
 
+    /**
+     * 构造器，通过JSONObject解析出工件信息
+     *
+     * @param jo 工件信息
+     *           <pre>
+     *                                         {
+     *                                         "goodsId": "001",
+     *                                         "id": 165,
+     *                                         "jobDes": "{\"D1\":\"80\",\"D2\":\"35.5\",\"D3\":\"58.0\",\"D4\":\"8.0\",\"D5\":\"70.0\",\"N\":\"4\",\"L1\":\"15.0\",\"L2\":\"30.0\",\"Motto\":\"南航智造\"}",
+     *                                         "jobNum": 1
+     *                                         }
+     *                                         </pre>
+     */
+    public Workpiece(String orderId, JSONObject jo) {
+        this.orderId = orderId;
+        goodsId = jo.getString("goodsId");
+        id = jo.getString("id");
+        jobDes = jo.getString("jobDes");
+        jobNum = jo.getInteger("jobNum");
+    }
+
     public String getGoodsId() {
         return goodsId;
     }
@@ -49,10 +70,6 @@ public class Workpiece implements Serializable {
         return jobDes;
     }
 
-    public String getOrderId() {
-        return orderId;
-    }
-
 //    public CommonTools.Workpiece(String goodsId, String id, int jobNum, String jobDes) {
 //        this.goodsId = goodsId;
 //        this.id = id;
@@ -60,27 +77,9 @@ public class Workpiece implements Serializable {
 //        this.jobDes = jobDes;
 //    }
 
-    /**
-     * 构造器，通过JSONObject解析出工件信息
-     *
-     * @param jo 工件信息
-     *           <pre>
-     *                     {
-     *                     "goodsId": "001",
-     *                     "id": 165,
-     *                     "jobDes": "{\"D1\":\"80\",\"D2\":\"35.5\",\"D3\":\"58.0\",\"D4\":\"8.0\",\"D5\":\"70.0\",\"N\":\"4\",\"L1\":\"15.0\",\"L2\":\"30.0\",\"Motto\":\"南航智造\"}",
-     *                     "jobNum": 1
-     *                     }
-     *                     </pre>
-     */
-    public Workpiece(String orderId, JSONObject jo) {
-        this.orderId = orderId;
-        goodsId = jo.getString("goodsId");
-        id = jo.getString("id");
-        jobDes = jo.getString("jobDes");
-        jobNum = jo.getInteger("jobNum");
+    public String getOrderId() {
+        return orderId;
     }
-
 
     /**
      * @return 生成JSON String

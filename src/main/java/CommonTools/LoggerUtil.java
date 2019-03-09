@@ -13,13 +13,13 @@ import org.apache.log4j.PropertyConfigurator;
  */
 
 public class LoggerUtil {
+    public static Logger db = Logger.getLogger("db");
+    public static Logger agent = Logger.getLogger("agent");
+
     /**
      * 配置文件默认位置 ：config/log4j.properties
      */
     static {
         PropertyConfigurator.configure("./resources/config/log4j.properties");
     }
-
-    public static Logger db = Logger.getLogger("db");
-    public static Logger agent = Logger.getLogger("agent");
 }

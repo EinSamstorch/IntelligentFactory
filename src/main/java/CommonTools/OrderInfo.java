@@ -79,6 +79,24 @@ public class OrderInfo {
      */
     private int wpCnt = 0;
 
+    /**
+     * 构造器.
+     *
+     * @param orderDate    订单生成时间
+     * @param orderDtime   订单截止时间
+     * @param orderId      订单id
+     * @param orderPrior   订单优先级
+     * @param orderDetails 订单详细内容
+     */
+    public OrderInfo(String orderDate, String orderDtime, String orderId, String orderPrior, String orderDetails) {
+        this.orderDate = orderDate;
+        this.orderDtime = orderDtime;
+        this.orderId = orderId;
+        this.orderPrior = orderPrior;
+        this.orderDetails = orderDetails;
+        parseDetails();
+    }
+
     public String getOrderDate() {
         return orderDate;
     }
@@ -101,24 +119,6 @@ public class OrderInfo {
 
     public Vector<Workpiece> getWorkpieceList() {
         return workpieceList;
-    }
-
-    /**
-     * 构造器.
-     *
-     * @param orderDate    订单生成时间
-     * @param orderDtime   订单截止时间
-     * @param orderId      订单id
-     * @param orderPrior   订单优先级
-     * @param orderDetails 订单详细内容
-     */
-    public OrderInfo(String orderDate, String orderDtime, String orderId, String orderPrior, String orderDetails) {
-        this.orderDate = orderDate;
-        this.orderDtime = orderDtime;
-        this.orderId = orderId;
-        this.orderPrior = orderPrior;
-        this.orderDetails = orderDetails;
-        parseDetails();
     }
 
     @Override

@@ -16,34 +16,6 @@ import jade.core.behaviours.SimpleBehaviour;
  * @since 1.8
  */
 public class Push2CloudBehaviour extends SimpleBehaviour {
-    private CloudAgent cagent;
-
-    /* 对应api网址
-        - http://{website}/ks/FactoryAction_updateJobState.action?
-        - http://{website}/ks/FactoryAction_updateJobMachine.action?
-    */
-    private String url;
-
-    /* 网址api需要的参数
-        - update state : jobId=003002003001&jobState=001001001001in
-        - update position : jobId=003004003010&machine=C001&process=2
-    */
-    private String param;
-
-    /* 选择API */
-    private int choice;
-    /* 云端更新flag */
-    private boolean cloudFlag = false;
-    /* 本地数据库更新flag */
-    private boolean sqlFlag = false;
-
-    /* 失败重试计数器 */
-    private int retryCnt = 0;
-    /**
-     * 最大重试次数
-     */
-    private static int RETRY_MAX = 3;
-
     /**
      * 更新订单状态信息.
      * API网址：http://{website}/ks/FactoryAction_updateJobState.action? .
@@ -56,6 +28,29 @@ public class Push2CloudBehaviour extends SimpleBehaviour {
      */
     // 需求参数：jobId=003004003010&machine=C001&process=2.
     public static final int UPDATE_POSITION = 2;
+    /**
+     * 最大重试次数
+     */
+    private static int RETRY_MAX = 3;
+    private CloudAgent cagent;
+    /* 对应api网址
+        - http://{website}/ks/FactoryAction_updateJobState.action?
+        - http://{website}/ks/FactoryAction_updateJobMachine.action?
+    */
+    private String url;
+    /* 网址api需要的参数
+        - update state : jobId=003002003001&jobState=001001001001in
+        - update position : jobId=003004003010&machine=C001&process=2
+    */
+    private String param;
+    /* 选择API */
+    private int choice;
+    /* 云端更新flag */
+    private boolean cloudFlag = false;
+    /* 本地数据库更新flag */
+    private boolean sqlFlag = false;
+    /* 失败重试计数器 */
+    private int retryCnt = 0;
 
     /**
      * 构造器

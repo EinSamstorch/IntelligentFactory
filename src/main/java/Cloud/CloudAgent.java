@@ -30,10 +30,17 @@ public class CloudAgent extends AgentTemplate {
      */
     private static final int TICKER_TIME = 10000;
     /**
+     * 新状态推送列表.
+     */
+    Queue<String> stateQueue = new LinkedBlockingDeque<>();
+    /**
+     * 新位置推送列表.
+     */
+    Queue<String> posQueue = new LinkedBlockingDeque<>();
+    /**
      * 云端地址.
      */
     private String website;
-
     /**
      * mysql配置信息
      */
@@ -42,14 +49,6 @@ public class CloudAgent extends AgentTemplate {
      * 新订单列表.
      */
     private Queue<OrderInfo> orderQueue = new LinkedBlockingDeque<>();
-    /**
-     * 新状态推送列表.
-     */
-    Queue<String> stateQueue = new LinkedBlockingDeque<>();
-    /**
-     * 新位置推送列表.
-     */
-    Queue<String> posQueue = new LinkedBlockingDeque<>();
 
     public String getWebsite() {
         return website;

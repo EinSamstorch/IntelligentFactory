@@ -21,15 +21,6 @@ public class MysqlJDBC {
     public Connection con;
 
     /**
-     * 测试代码时使用，用于编写额外的 mysql语句 清空测试结果
-     *
-     * @return mysql connection
-     */
-    public Connection getCon() {
-        return con;
-    }
-
-    /**
      * 构造器 .
      *
      * @param mysqlInfo Map<String, String> 包含 mysql_ip, mysql_port, mysql_db, mysql_user 字段
@@ -55,5 +46,14 @@ public class MysqlJDBC {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 测试代码时使用，用于编写额外的 mysql语句 清空测试结果
+     *
+     * @return mysql connection
+     */
+    public Connection getCon() {
+        return con;
     }
 }

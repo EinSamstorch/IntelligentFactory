@@ -17,10 +17,6 @@ import java.util.Map;
  */
 public class IniLoader {
     /**
-     * 配置文件默认路径：{@value CONFIG_NAME}
-     */
-    private static final String CONFIG_NAME = "./resources/config/setting.ini";
-    /**
      * 通用配置区块
      */
     public static final String SECTION_COMMON = "common";
@@ -36,6 +32,10 @@ public class IniLoader {
      * mysql专用配置
      */
     public static final String SECTION_MYSQL = "mysql";
+    /**
+     * 配置文件默认路径：{@value CONFIG_NAME}
+     */
+    private static final String CONFIG_NAME = "./resources/config/setting.ini";
 
     /**
      * 读取配置文件并返回ini文件实例，如果配置文件读取失败，则终止程序.

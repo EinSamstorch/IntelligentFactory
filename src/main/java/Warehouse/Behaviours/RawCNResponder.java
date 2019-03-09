@@ -29,6 +29,7 @@ public class RawCNResponder extends ContractNetResponder {
 
     /**
      * 处理原料招标请求
+     *
      * @param cfp 招标信息， content: String goodsid
      * @return ACLMessage content: String quantity
      * @throws RefuseException
@@ -62,15 +63,14 @@ public class RawCNResponder extends ContractNetResponder {
         int quantity = Integer.parseInt(accept.getContent());
         String goodsid = cfp.getContent();
         WarehouseSqlite sqlite = new WarehouseSqlite(whagent.getSqlitePath());
-        if(quantity == sqlite.getRawQuantityByGoodsId(goodsid)){
+        if (quantity == sqlite.getRawQuantityByGoodsId(goodsid)) {
             ACLMessage inform = accept.createReply();
             inform.setPerformative(ACLMessage.INFORM);
 
             String position = sqlite.getRaw(goodsid);
             inform.setContent(position);
             return inform;
-        }
-        else{
+        } else {
             throw new FailureException("Quantity changed.");
         }
     }
