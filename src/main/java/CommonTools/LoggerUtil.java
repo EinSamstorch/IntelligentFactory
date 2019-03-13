@@ -15,6 +15,7 @@ import org.apache.log4j.PropertyConfigurator;
 public class LoggerUtil {
     public static Logger db = Logger.getLogger("db");
     public static Logger agent = Logger.getLogger("agent");
+    public static Logger commonTools = Logger.getLogger("commontools");
 
     /**
      * 配置文件默认位置 ：config/log4j.properties
