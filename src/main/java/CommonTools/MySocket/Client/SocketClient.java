@@ -74,14 +74,15 @@ public class SocketClient extends Thread {
     }
 
     /**
-     * 接受回应消息，超时10秒
+     * 接受回应消息，超时20秒
      *
      * @return 回应消息， 失败则返回Null
      */
     private synchronized String receive() {
         String line = null;
+        int timeout = 20000;
         try {
-            socket.setSoTimeout(10000);
+            socket.setSoTimeout(timeout);
             BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
             line = br.readLine();
         } catch (SocketTimeoutException e) {

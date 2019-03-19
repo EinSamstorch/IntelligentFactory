@@ -8,7 +8,7 @@ import jade.domain.FIPAException;
 
 /**
  * Agent模板，添加一些必须实现的函数.
- *
+ * <p>
  * 继承步骤：
  * 1.继承该类
  * 2.实现 protected abstract void loadINI();

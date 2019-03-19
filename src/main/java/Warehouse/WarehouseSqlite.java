@@ -25,7 +25,8 @@ public class WarehouseSqlite extends SQLiteJDBC {
 
     /**
      * 获取 raw 表里的所有数据
-     * @return Map<String position, String goodsid>
+     *
+     * @return Map<String       position   ,       String       goodsid>
      */
     public Map<String, String> getRawTable() {
         Map<String, String> raw = new HashMap<>();
