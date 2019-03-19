@@ -11,6 +11,4 @@ buildNumber.properties
 logs
 .idea
 IntelligentFactory.iml
-*test*
-*Test*
 *.db
