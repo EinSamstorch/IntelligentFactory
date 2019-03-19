@@ -1,4 +1,4 @@
-package CommonTools.SocketServer;
+package CommonTools.MySocket.Server;
 
 import CommonTools.LoggerUtil;
 import com.alibaba.fastjson.JSONException;

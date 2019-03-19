@@ -12,5 +12,6 @@ package CommonTools;
 public class DFServiceType {
     public static final String CLOUD_UPDATE = "cloud_update";
     public static final String WAREHOUSE = "warehouse";
+    public static final String LATHE = "lathe";
 
 }

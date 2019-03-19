@@ -1,4 +1,4 @@
-package CommonTools.SocketClient;
+package CommonTools.MySocket.Client;
 
 import CommonTools.LoggerUtil;
 import com.alibaba.fastjson.JSONObject;

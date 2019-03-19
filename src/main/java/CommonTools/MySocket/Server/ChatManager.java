@@ -1,4 +1,4 @@
-package CommonTools.SocketServer;
+package CommonTools.MySocket.Server;
 
 import java.util.Hashtable;
 import java.util.Map;
