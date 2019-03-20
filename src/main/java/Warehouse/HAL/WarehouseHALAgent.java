@@ -1,10 +1,15 @@
 package Warehouse.HAL;
 
+import CommonTools.HAL.ActionFailedException;
+import CommonTools.HAL.CmdParseException;
+import CommonTools.HAL.CmdSendFailedException;
+import CommonTools.HAL.TaskNoMismatchException;
 import CommonTools.IniLoader;
 import CommonTools.LoggerUtil;
 import CommonTools.MySocket.Client.SocketClient;
 import com.alibaba.fastjson.JSONObject;
 
+import java.net.SocketTimeoutException;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -25,6 +30,12 @@ public class WarehouseHALAgent {
     private static final String EXPORT_ITEM = "export_item";
     private static final String READ_RFID = "read_rfid";
     private static final String WRITE_RFID = "write_rfid";
+    private static final String QUERY_TASK = "query_task";
+
+    private static final String FIELD_TASK_NO = "task_no";
+    private static final String FIELD_CMD = "cmd";
+    private static final String FIELD_EXTRA = "extra";
+
     private int pos_in;
     private int pos_out;
     private SocketClient sClient;
@@ -43,7 +54,7 @@ public class WarehouseHALAgent {
         if ((pos_in > 0 && pos_in <= MAX_POS) && (pos_out > 0 && pos_out <= MAX_POS)) {
             // pos_in and pos_out should be between 0 and MAX_POS
         } else {
-            LoggerUtil.agent.error(String.format("Settings error, pos_in=%d, pos_out=%d", pos_in, pos_out));
+            LoggerUtil.hal.error(String.format("Settings error, pos_in=%d, pos_out=%d", pos_in, pos_out));
             System.exit(2);
         }
     }
@@ -58,20 +69,53 @@ public class WarehouseHALAgent {
      * @param dest 存入目的地
      * @return 成功 true, 失败 中断程序
      */
-    public synchronized boolean import_item(int dest) {
+    public synchronized boolean import_item(int dest) throws ActionFailedException {
         lock.lock();
-        // 1. 从入库口 传送进 工件
-        JSONObject msg = packMsg(IMPORT_ITEM, "");
-        sendCmd(SocketClient.MACHINE, msg);
-
-        // 2. 从入库口移动至 目标位置
-        JSONObject extra = new JSONObject();
-        extra.put("from", pos_in);
-        extra.put("to", dest);
-        JSONObject msg2 = packMsg(MOVE_ITEM, extra.toJSONString());
-        sendCmd(SocketClient.MACHINE, msg2);
+        try {
+            // 1. 从入库口 传送进 工件
+            JSONObject msg = packMsg(IMPORT_ITEM, "");
+            sendCmd(SocketClient.MACHINE, msg);
+            checkTask(SocketClient.MACHINE, msg);
+            // 2. 从入库口移动至 目标位置
+            JSONObject extra = new JSONObject();
+            extra.put("from", pos_in);
+            extra.put("to", dest);
+            JSONObject msg2 = packMsg(MOVE_ITEM, extra.toJSONString());
+            sendCmd(SocketClient.MACHINE, msg2);
+            checkTask(SocketClient.MACHINE, msg2);
+        } catch (CmdSendFailedException e) {
+            throw new ActionFailedException(e.getMessage());
+        }
 
         lock.unlock();
+        return true;
+    }
+
+    /**
+     * 检查 任务动作是否执行完成
+     *
+     * @param dest    检查对象
+     * @param taskMsg 原任务消息体
+     * @return 成功 true
+     * @throws ActionFailedException 如果响应failed则 任务失败， 若捕获 查询命令发送失败 则 任务失败
+     */
+    private boolean checkTask(String dest, JSONObject taskMsg) throws ActionFailedException {
+        int taskNo = taskMsg.getInteger(FIELD_TASK_NO);
+        while (true) {
+            try {
+                JSONObject query = packMsg(QUERY_TASK, String.valueOf(taskNo));
+                String ans = sendCmd(dest, query);
+                String extra = ((JSONObject) JSONObject.parse(ans)).getString(FIELD_EXTRA);
+                if ("done".equals(extra)) {
+                    break;
+                }
+                if ("failed".equals(extra)) {
+                    throw new ActionFailedException(ans);
+                }
+            } catch (CmdSendFailedException e) {
+                throw new ActionFailedException(e.getMessage());
+            }
+        }
         return true;
     }
 
@@ -82,7 +126,7 @@ public class WarehouseHALAgent {
      * @param rfid_msg 需要写入rfid的信息, 不需要写入，则传入null
      * @return 成功 true, 若有错误，则程序终止。
      */
-    public synchronized boolean export_item(int source, String rfid_msg) {
+    public synchronized boolean export_item(int source, String rfid_msg) throws ActionFailedException {
         lock.lock();
         // 1. 从 源位置取出货物
         JSONObject extra = new JSONObject();
@@ -90,16 +134,19 @@ public class WarehouseHALAgent {
         extra.put("from", source);
         JSONObject msg = packMsg(MOVE_ITEM, extra.toJSONString());
         sendCmd(SocketClient.MACHINE, msg);
+        checkTask(SocketClient.MACHINE, msg);
 
         // 2. 将信息写入rfid
         if (rfid_msg != null) {
             JSONObject msg2 = packMsg(WRITE_RFID, rfid_msg);
             sendCmd(SocketClient.RFID, msg2);
+            checkTask(SocketClient.RFID, msg2);
         }
 
         // 3. 从 出货口 输出
         JSONObject msg3 = packMsg(EXPORT_ITEM, "");
         sendCmd(SocketClient.MACHINE, msg3);
+        checkTask(SocketClient.MACHINE, msg3);
 
         lock.unlock();
         return true;
@@ -112,21 +159,25 @@ public class WarehouseHALAgent {
      * @param msg  消息本体
      * @return 响应字符串
      */
-    private String sendCmd(String dest, JSONObject msg) {
+    private String sendCmd(String dest, JSONObject msg) throws CmdSendFailedException {
         String ans = null;
         while (true) {
             int retry = 0;
             int RETRY_MAX = 3;
 
-            ans = sClient.sendCmd(dest, msg.toJSONString());
-            JSONObject ans_jo = (JSONObject) JSONObject.parse(ans);
-
-            if (parseAns(msg, ans_jo)) {
-                break;
+            try {
+                ans = sClient.sendCmd(dest, msg.toJSONString());
+                JSONObject ans_jo = (JSONObject) JSONObject.parse(ans);
+                if (parseAns(msg, ans_jo)) {
+                    // 响应回复正确
+                    break;
+                }
+            } catch (CmdParseException | TaskNoMismatchException | SocketTimeoutException e) {
+                LoggerUtil.hal.error(e.getMessage());
             }
-            if (retry++ > RETRY_MAX) {
-                LoggerUtil.agent.error("Hardware retry reach max. " + msg.toJSONString());
-                System.exit(2);
+
+            if (++retry > RETRY_MAX) {
+                throw new CmdSendFailedException(msg.toJSONString());
             }
         }
         return ans;
@@ -141,9 +192,9 @@ public class WarehouseHALAgent {
      */
     private JSONObject packMsg(String cmd, String extra) {
         JSONObject msg = new JSONObject();
-        msg.put("task_no", taskCnt++);
-        msg.put("cmd", cmd);
-        msg.put("extra", extra);
+        msg.put(FIELD_TASK_NO, taskCnt++);
+        msg.put(FIELD_CMD, cmd);
+        msg.put(FIELD_EXTRA, extra);
         return msg;
     }
 
@@ -154,12 +205,16 @@ public class WarehouseHALAgent {
      * @param ans 响应回来的消息
      * @return 是否成功执行任务
      */
-    private boolean parseAns(JSONObject msg, JSONObject ans) {
+    private boolean parseAns(JSONObject msg, JSONObject ans) throws CmdParseException, TaskNoMismatchException {
         if (!"success".equals(ans.getString("result"))) {
-            return false;
+            throw new CmdParseException(String.format("Cmd Failed. msg: %s, ans: %s",
+                    msg.toJSONString(),
+                    ans.toJSONString()));
         }
-        if (msg.getInteger("task_no") != ans.getInteger("task_no")) {
-            return false;
+        if (msg.getInteger(FIELD_TASK_NO) != ans.getInteger(FIELD_TASK_NO)) {
+            throw new TaskNoMismatchException(String.format("Require: %d, Get: %d",
+                    msg.getIntValue(FIELD_TASK_NO),
+                    ans.getIntValue(FIELD_TASK_NO)));
         }
         return true;
     }

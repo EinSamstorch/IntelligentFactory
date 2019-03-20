@@ -10,7 +10,7 @@ Agent Sends:
 {
   "task_no": task_no,  // This identifies a task
   "cmd": cmd_str,      // cmd_str should be one of followings: "move_item", "import_item", 
-                       // "export_item", "read_rfid", "write_rfid"
+                       // "export_item", "read_rfid", "write_rfid", "query_task"
   "extra": cmd_info    // cmd_info is extra parameters for cmd
 }
 ```
@@ -109,3 +109,22 @@ Machine:
 }
 ```
 
+#### 4 query task
+Agent:
+```
+{
+  "task_no": 5,  
+  "cmd": "query_task",  
+  "extra": query_task_no  // which you want to query if this task is done or failed. 
+}
+```
+
+Machine:
+```
+{
+  "task_no": 5,  
+  "result": "success",   
+  "extra":  "done"       // "done" if the task is finished, "processing" if the task is still doing,
+                         // "failed" if the task is failed.   
+}
+```

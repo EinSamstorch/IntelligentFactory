@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 /**
@@ -63,7 +64,7 @@ public class SocketClient extends Thread {
      * @param cmd  命令内容
      * @return 对方回应内容
      */
-    public String sendCmd(String dest, String cmd) {
+    public String sendCmd(String dest, String cmd) throws SocketTimeoutException {
         JSONObject jo = new JSONObject();
         jo.put("to", dest);
         jo.put("message", cmd);
@@ -78,7 +79,7 @@ public class SocketClient extends Thread {
      *
      * @return 回应消息， 失败则返回Null
      */
-    private synchronized String receive() {
+    private synchronized String receive() throws SocketTimeoutException {
         String line = null;
         int timeout = 20000;
         try {
@@ -86,9 +87,17 @@ public class SocketClient extends Thread {
             BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
             line = br.readLine();
         } catch (SocketTimeoutException e) {
-            LoggerUtil.agent.error("Socket Response Time Out");
+            throw e;
         } catch (IOException e) {
             LoggerUtil.agent.error(e.getMessage());
+        } finally {
+            try {
+                // cancel time out
+                socket.setSoTimeout(0);
+            } catch (SocketException e) {
+                LoggerUtil.commonTools.error(e.getMessage());
+                System.exit(2);
+            }
         }
         return line;
     }
