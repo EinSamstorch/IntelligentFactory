@@ -1,11 +1,10 @@
-### Socket - Java and C# Communication
-
+## <font color="#A52A2A">Socket - Java and C# Communication</font>
 Socket Server Address: 127.0.0.1:5656 (default port: 5656)
 
 Sending String to the Socket Server, there are 2 command String. 
 Other String will be ignored.
 
-#### Commands:
+#### <font color="#FF1493">Commands:</font>
 1. register type.
 ```
 {
@@ -25,8 +24,7 @@ Other String will be ignored.
              It can be "machine", "agent", "rfid".
 - msg : msg is the information you want to send.
 
-#### Examples:
-
+#### <font color="#FF1493">Examples:</font>
 1. register as Agent
 ```
 {
@@ -49,7 +47,7 @@ Other String will be ignored.
 }
 ```
 
-#### Warnning:
+#### <font color="#FF1493">Warnning:</font>
 1. Make sure your message contains a "\n" at the end. 
    Otherwise, your message wont be accepted until you send a "\n".
 1. When your connect to the socket server, the first thing is to register the type. 

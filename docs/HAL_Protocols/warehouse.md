@@ -1,18 +1,13 @@
-### Protocols between Warehouse Agent and Hardware
+## <font color="#A52A2A">Protocols between Warehouse Agent and Hardware</font>
 
-Using socket to communication.
 
-#### Commands
+- [<font color="#FF1493">move_item</font>](#move_item)
+- [<font color="#FF1493">control conveyor</font>](#control-conveyor)
 
-Warehouse Contains Following commands:
-- [move_item](#1move-item)
-- [import_item](#2control-conveyor)
-- [export_item](#2control-conveyor)
-- [read_rfid](#31-read-rfid)
-- [write_rfid](#32-write-rfid)
-- [query_task](#4query-task)
 
-##### 1.Move item 
+
+#### <font color="#FF1493">move_item</font>
+
 Agent:
 ```json5
 {
@@ -36,7 +31,7 @@ Machine:
 }
 ```
 
-##### 2.Control conveyor
+#### <font color="#FF1493">control conveyor</font>
 
 Agent:
 ```json5
@@ -46,7 +41,6 @@ Agent:
   "extra": "" 
 }
 ```
-
 
 Machine:
 ```json5
@@ -58,67 +52,3 @@ Machine:
 ```
 
 
-##### 3.Control RFID
-###### 3.1 Read RFID
-Agent:
-```json5
-{
-  "task_no": 3,  
-  "cmd": "read_rfid",  
-  "extra": "" 
-}
-```
-
-Machine:
-```
-{
-  "task_no": 3,  
-  "result": "success",   
-  "extra": rfid_info_str       
-}
-```
-- rfid_info_str : the info read from rfid chips   
-
-###### 3.2 Write RFID
-Agent:
-```
-{
-  "task_no": 4,  
-  "cmd": "write_rfid",  
-  "extra": info_str  
-}
-```
-- info_str : the info you wanna write into rfid chips 
-
-Machine:
-```json5
-{
-  "task_no": 4,  
-  "result": "success",   
-  "extra":  ""   
-}
-```
-
-#### 4.Query task
-Agent:
-```
-{
-  "task_no": 5,  
-  "cmd": "query_task",  
-  "extra": query_task_no 
-}
-```
-- query_task_no : which you want to query if this task is done or failed. 
-
-Machine:
-```
-{
-  "task_no": 5,  
-  "result": "success",   
-  "extra":  task_state       
-}
-```
-- task_state :
-  - "done" if the task is finished, 
-  - "processing" if the task is still doing,
-  - "failed" if the task is failed.   

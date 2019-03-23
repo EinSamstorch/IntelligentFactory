@@ -1,8 +1,8 @@
-### Protocols for Hardware Adapt Layer
+## <font color="#A52A2A">Protocols for Hardware Adapt Layer</font>
 
 Using socket to communication.
 
-#### Commands
+#### <font color="#FF1493">Framework of Commands</font>
 The basic framework of this protocols.
 
 Agent Sends:
@@ -15,7 +15,7 @@ Agent Sends:
 ```
 - task_no : This identifies a task
 - cmd_str : cmd_str depends on the specific type of machines.
-            You will see it in the details of each type.in section [details](#details).
+            You will see it in the details of each type.in section [commands](#commands).
 - cmd_info : cmd_info is extra parameters for cmd. 
              It depends on specific cmd_str. (Default:"")
 
@@ -36,8 +36,38 @@ Machine Responses:
   - For failure, it can be the reason why it fails.
 
 
-#### Details
+
+#### <font color="#FF1493">Commands</font>
+##### <font color="#FFD700">1.Common Commands</font>
+###### <font color="#90EE90">query task</font>
+Agent:
+```
+{
+  "task_no": 1,  
+  "cmd": "query_task",  
+  "extra": query_task_no 
+}
+```
+- query_task_no : which you want to query if this task is done or failed. 
+
+Machine:
+```
+{
+  "task_no": 1,  
+  "result": "success",   
+  "extra":  task_state       
+}
+```
+- task_state :
+  - "done" if the task is finished, 
+  - "processing" if the task is still doing,
+  - "failed" if the task is failed.   
+
+
+##### <font color="#FFD700">2.Detail Commands</font>
 This section contains each type of machines. It tells the cmd_str of each machine.
 And shows some examples to run the action.
 1. [Warehouse](./warehouse.md)
-2. [ArmRobot](./armrobot.md)
+1. [ArmRobot](./armrobot.md)
+1. [RFID](./rfid.md)
+
