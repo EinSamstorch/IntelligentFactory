@@ -64,12 +64,15 @@ Agent:
 	"extra": {
 		"machine_id": machine_id,
 		"goodsid": goodsid
+		"direction" : "front"
 	}
 }
 ```
 - machine_id : the same in arm robot configuration file, to identify which machine it is.
 - goodsid : see it [here](../Orders/Goodsid.md)
-
+- direction : it can be "front" or "back". 
+              This value is only used for lathe now.
+              
 Machine:
 ```json5
 {
@@ -112,12 +115,15 @@ Agent:
 	"extra": {
 		"machine_id": machine_id,
 		"goodsid": goodsid
+		"direction" : "front"
 	}
 }
 ```
 - machine_id : the same in arm robot configuration file, to identify which machine it is.
 - goodsid : see it [here](../Orders/Goodsid.md)
-
+- direction : it can be "front" or "back". 
+              This value is only used for lathe now.
+              
 Machine:
 ```json5
 {

@@ -2,6 +2,6 @@
 
 | goodsid | description | extra |
 |:--------|:------------|:------|
-| 001     | axis        |       |
-| 002     | undefined   |       |
-| 003     | undefined   |       |
+| 001     | flange      |       |
+| 002     | axis        |       |
+| 003     | plate       |       |

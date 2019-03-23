@@ -32,8 +32,7 @@ Machine Responses:
 - rst_str : rst_str tells the action result. 
             It should be "success" if everything is ok.
 - extra_info : extra_info is that the action returns some info to Agent. 
-  - For RFID, it can be the return value from read RFID action.
-  - For failure, it can be the reason why it fails.
+               For failure, it can be the reason why it fails.
 
 
 
@@ -55,7 +54,10 @@ Machine:
 {
   "task_no": 1,  
   "result": "success",   
-  "extra":  task_state       
+  "extra":  {
+    "state": task_state,
+    "extra": extra_info
+  }       
 }
 ```
 - task_state :
@@ -63,6 +65,10 @@ Machine:
   - "processing" if the task is still doing,
   - "failed" if the task is failed.   
 
+- extra_info :
+  - if task_state = "done", extra_info can be the return value from the task,
+  - if task_state = "failed", extra_info can ben the reason why it failed.
+  - or "" for other case.
 
 ##### <font color="#FFD700">2.Detail Commands</font>
 This section contains each type of machines. It tells the cmd_str of each machine.

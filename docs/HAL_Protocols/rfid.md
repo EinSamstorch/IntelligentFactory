@@ -2,6 +2,7 @@
 
 - [<font color="#FF1493">read rfid</font>](#read-rfid)
 - [<font color="#FF1493">write rfid</font>](#write-rfid)
+- [<font color="#FF1493">query task</font>](#query-task)
 
 #### <font color="#FF1493">read rfid</font>
 Agent:
@@ -13,15 +14,14 @@ Agent:
 }
 ```
 
-Machine:
-```
+RFID:
+```json5
 {
   "task_no": 1,  
   "result": "success",   
-  "extra": rfid_info_str       
+  "extra": ""       
 }
-```
-- rfid_info_str : the info read from rfid chips   
+``` 
 
 #### <font color="#FF1493">write rfid</font>
 Agent:
@@ -34,7 +34,7 @@ Agent:
 ```
 - info_str : the info you wanna write into rfid chips 
 
-Machine:
+RFID:
 ```json5
 {
   "task_no": 2,  
@@ -42,3 +42,19 @@ Machine:
   "extra":  ""   
 }
 ```
+
+#### <font color="#FF1493">query task</font>
+For read rfid commands.
+
+RFID:
+```
+{
+  "task_no": 3,  
+  "result": "success",   
+  "extra":  {
+    "state": task_state,
+    "extra": extra_info
+  }       
+}
+```
+- extra_info : the info read from rfid chips  
