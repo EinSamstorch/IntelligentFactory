@@ -95,7 +95,7 @@ Agent:
 }
 ```
 - machine_id : the same in arm robot configuration file, to identify which machine it is.
-- goodsid : see it [here](../Orders/Goodsid.md)
+- goodsid : see it [here](../Orders/definition.md/#goodsid)
 
 Machine:
 ```json5

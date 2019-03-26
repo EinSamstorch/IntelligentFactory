@@ -76,4 +76,7 @@ And shows some examples to run the action.
 1. [Warehouse](./warehouse.md)
 1. [ArmRobot](./armrobot.md)
 1. [RFID](./rfid.md)
-
+1. [AGV](./agv.md)
+1. [Lathe](./lathe.md)
+1. [Miller](./miller.md)
+1. [Vision Detector](./vision.md)
