@@ -6,7 +6,7 @@ import CommonTools.HAL.CmdSendFailedException;
 import CommonTools.HAL.TaskNoMismatchException;
 import CommonTools.IniLoader;
 import CommonTools.LoggerUtil;
-import CommonTools.MySocket.Client.SocketClient;
+import CommonTools.SocketClient;
 import com.alibaba.fastjson.JSONObject;
 
 import java.net.SocketTimeoutException;

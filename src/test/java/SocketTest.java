@@ -1,5 +1,4 @@
-import CommonTools.MySocket.Client.SocketClient;
-import CommonTools.MySocket.Server.GetSocket;
+import CommonTools.SocketClient;
 import org.junit.Test;
 
 import java.net.SocketTimeoutException;
@@ -19,7 +18,7 @@ public class SocketTest {
 
     @Test
     public void testSocket() {
-        new GetSocket().start();
+
         SocketClient agent = new SocketClient(SocketClient.AGENT);
         agent.start();
         String cmd = "this is msg";

@@ -5,7 +5,7 @@
 
 |   Attribute   |   Format    |    Example     |          Explain           |
 | :-----------: | :---------: | :------------: | :------------------------: |
-|  detail_size  | JSON String | Depend on type |                            |
+|  detail_size  | JSON String | Depend on type |        see it [here]()     |
 | pre_ownner_id |   String    |      che1      |      who processed it      |
 | cur_ownner_id |   String    |      xi2       |    who will process  it    |
 |   last_agv    |   String    |      agv1      |      who delivered it      |
@@ -25,3 +25,5 @@
 | 001     | flange      |       |
 | 002     | axis        |       |
 | 003     | plate       |       |
+
+#### <font color="#FF1493">Detail Size</font>
