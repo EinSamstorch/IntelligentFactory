@@ -1,13 +1,13 @@
-## <font color="#A52A2A">Protocols between Vision Agent and Hardware</font>
+# Protocols between Vision Agent and Hardware
 
 
 
-- [<font color="#FF1493">check</font>](#check)
-- [<font color="#FF1493">query task</font>](#query-task)
+- [check](#check)
 
 
 
-#### <font color="#FF1493">check</font>
+
+## check
 
 Agent:
 ```
@@ -34,26 +34,12 @@ Machine:
 }
 ```
 
-#### <font color="#FF1493">query task</font>
-
-Agent:
+After checking:
 ```
 {
-  "task_no": 4,  
-  "cmd": "query_task",      
-  "extra": 3
-}
-```
-                   
-Machine:
-```
-{
-  "task_no": 4,  
+  "task_no": 3,  
   "result": "success", 
-  "extra":  {
-      "state": task_state,
-      "extra": extra_info
-    }           
+  "extra": value           
 }
 ```
-- extra_info : if task_state = "done", then "qualified" or "unaccepted".
+- value : String : not defined yet.

@@ -1,12 +1,11 @@
-## <font color="#A52A2A">Protocols between Warehouse Agent and Hardware</font>
+# <font color="#A52A2A">Protocols between Warehouse Agent and Hardware</font>
+
+- [move item](#move-item)
+- [control conveyor](#control-conveyor)
 
 
-- [<font color="#FF1493">move_item</font>](#move_item)
-- [<font color="#FF1493">control conveyor</font>](#control-conveyor)
 
-
-
-#### <font color="#FF1493">move_item</font>
+## move item
 
 Agent:
 ```json5
@@ -19,19 +18,10 @@ Agent:
             }    
 }
 ```
-- from : where the item exists now
-- to : where the item will go
+- from : Integer : where the item exists now
+- to : Integer : where the item will go
 
-Machine:
-```json5
-{
-  "task_no": 1,  
-  "result": "success", 
-  "extra": ""           
-}
-```
-
-#### <font color="#FF1493">control conveyor</font>
+## control conveyor
 
 Agent:
 ```json5
@@ -41,14 +31,3 @@ Agent:
   "extra": "" 
 }
 ```
-
-Machine:
-```json5
-{
-  "task_no": 2,  
-  "result": "success",   
-  "extra": ""           
-}
-```
-
-

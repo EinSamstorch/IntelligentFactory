@@ -1,10 +1,9 @@
-## <font color="#A52A2A">Protocols between Agent and RFID</font>
+# Protocols between Agent and RFID
 
-- [<font color="#FF1493">read rfid</font>](#read-rfid)
-- [<font color="#FF1493">write rfid</font>](#write-rfid)
-- [<font color="#FF1493">query task</font>](#query-task)
+- [read rfid](#read-rfid)
+- [write rfid](#write-rfid)
 
-#### <font color="#FF1493">read rfid</font>
+## read rfid
 Agent:
 ```json5
 {
@@ -23,7 +22,18 @@ RFID:
 }
 ``` 
 
-#### <font color="#FF1493">write rfid</font>
+After reading action is done. 
+RFID Sends:
+```
+{
+  "task_no": 1,  
+  "result": "success",   
+  "extra": info_str       
+}
+```
+- info_str : String : read from rfid chips.
+
+## write rfid
 Agent:
 ```
 {
@@ -33,28 +43,3 @@ Agent:
 }
 ```
 - info_str : the info you wanna write into rfid chips 
-
-RFID:
-```json5
-{
-  "task_no": 2,  
-  "result": "success",   
-  "extra":  ""   
-}
-```
-
-#### <font color="#FF1493">query task</font>
-For read rfid commands.
-
-RFID:
-```
-{
-  "task_no": 3,  
-  "result": "success",   
-  "extra":  {
-    "state": task_state,
-    "extra": extra_info
-  }       
-}
-```
-- extra_info : the info read from rfid chips  

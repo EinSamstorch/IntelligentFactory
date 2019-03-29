@@ -1,13 +1,13 @@
-## <font color="#A52A2A">Protocols between AGV Agent and Hardware</font>
+# Protocols between AGV Agent and Hardware
 
 
-- [<font color="#FF1493">import item</font>](#import-item)
-- [<font color="#FF1493">export item</font>](#export-item)
-- [<font color="#FF1493">move</font>](#move)
+- [import item](#import-item)
+- [export item](#export-item)
+- [move](#move)
 
 
 
-#### <font color="#FF1493">import item</font>
+## import item
 
 Agent:
 ```json5
@@ -18,16 +18,7 @@ Agent:
 }
 ```
 
-Machine:
-```json5
-{
-  "task_no": 1,  
-  "result": "success", 
-  "extra": ""           
-}
-```
-
-#### <font color="#FF1493">export item</font>
+## export item
 
 Agent:
 ```json5
@@ -38,16 +29,8 @@ Agent:
 }
 ```
 
-Machine:
-```json5
-{
-  "task_no": 2,  
-  "result": "success", 
-  "extra": ""           
-}
-```
 
-#### <font color="#FF1493">move</font>
+## move
 
 Agent:
 ```
@@ -61,14 +44,7 @@ Agent:
 ```
 - map_location : A point defined in factory machine location map.
 
-Machine:
-```json5
-{
-  "task_no": 3,  
-  "result": "success", 
-  "extra": ""           
-}
-```
+
 
 
 
