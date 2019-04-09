@@ -23,6 +23,6 @@ Agent:
 
 > For machines, they would be the machine id, such as "c1", "x1".
 - goodsid : String : see it [here](../Orders/Goodsid.md)
-- step : Integer : **Lathe Only** : the step of cooperation with lathe.
+- step : Integer : **lathe Only** : the step of cooperation with lathe.
  
 

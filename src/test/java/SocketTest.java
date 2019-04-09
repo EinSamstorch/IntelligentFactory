@@ -1,4 +1,4 @@
-import CommonTools.SocketClient;
+import commons.tools.SocketClient;
 import org.junit.Test;
 
 import java.net.SocketTimeoutException;

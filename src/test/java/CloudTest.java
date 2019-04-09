@@ -1,5 +1,5 @@
-import Cloud.CloudMysql;
-import Commons.OrderInfo;
+import cloud.CloudMysql;
+import commons.OrderInfo;
 import org.junit.Test;
 
 import java.sql.Connection;
@@ -58,7 +58,7 @@ public class CloudTest {
 //
 //        Workpiece wp = new Workpiece(orderId, wp_json);
 
-        // 加入到 Cloud Agent 待分配 列表中
+        // 加入到 cloud Agent 待分配 列表中
         OrderInfo oi = new OrderInfo(orderDate, orderDtime, orderId, orderPrior, orderDetails);
 //        oi.getWpInfoList().add(wp);
 

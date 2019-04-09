@@ -1,8 +1,8 @@
-import CommonTools.*;
-import CommonTools.db.MysqlJDBC;
-import CommonTools.db.SQLiteJDBC;
-import Commons.OrderInfo;
-import Warehouse.WarehouseSqlite;
+import commons.tools.*;
+import commons.tools.db.MysqlJDBC;
+import commons.tools.db.SQLiteJDBC;
+import commons.OrderInfo;
+import warehouse.WarehouseSqlite;
 import com.alibaba.fastjson.JSONObject;
 import org.junit.Test;
 
