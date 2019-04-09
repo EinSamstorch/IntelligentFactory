@@ -1,5 +1,6 @@
-package CommonTools;
+package Commons;
 
+import CommonTools.LoggerUtil;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -51,6 +52,17 @@ public abstract class AgentTemplate extends Agent {
         } catch (FIPAException e) {
             e.printStackTrace();
             LoggerUtil.agent.fatal(e.getMessage());
+        }
+    }
+
+    // Put agent clean-up operations here
+    protected void takeDown() {
+        // Deregister from the yellow pages
+        try {
+            DFService.deregister(this);
+        }
+        catch (FIPAException fe) {
+            fe.printStackTrace();
         }
     }
 

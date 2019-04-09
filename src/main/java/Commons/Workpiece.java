@@ -1,4 +1,4 @@
-package CommonTools;
+package Commons;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -37,14 +37,14 @@ public class Workpiece implements Serializable {
      * 构造器，通过JSONObject解析出工件信息
      *
      * @param jo 工件信息
-     *           <pre>
-     *                                                             {
-     *                                                             "goodsId": "001",
-     *                                                             "id": 165,
-     *                                                             "jobDes": "{\"D1\":\"80\",\"D2\":\"35.5\",\"D3\":\"58.0\",\"D4\":\"8.0\",\"D5\":\"70.0\",\"N\":\"4\",\"L1\":\"15.0\",\"L2\":\"30.0\",\"Motto\":\"南航智造\"}",
-     *                                                             "jobNum": 1
-     *                                                             }
-     *                                                             </pre>
+     *  <pre>
+     *   {
+     *    "goodsId": "001",
+     *    "id": 165,
+     *    "jobDes": "{\"D1\":\"80\",\"D2\":\"35.5\",\"D3\":\"58.0\",\"D4\":\"8.0\",\"D5\":\"70.0\",\"N\":\"4\",\"L1\":\"15.0\",\"L2\":\"30.0\",\"Motto\":\"南航智造\"}",
+     *    "jobNum": 1
+     *   }
+     *  </pre>
      */
     public Workpiece(String orderId, JSONObject jo) {
         this.orderId = orderId;
@@ -70,12 +70,7 @@ public class Workpiece implements Serializable {
         return jobDes;
     }
 
-//    public CommonTools.Workpiece(String goodsId, String id, int jobNum, String jobDes) {
-//        this.goodsId = goodsId;
-//        this.id = id;
-//        this.jobNum = jobNum;
-//        this.jobDes = jobDes;
-//    }
+
 
     public String getOrderId() {
         return orderId;

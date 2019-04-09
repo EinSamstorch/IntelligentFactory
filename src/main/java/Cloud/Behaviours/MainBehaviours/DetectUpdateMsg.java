@@ -1,6 +1,7 @@
-package Cloud.Behaviours;
+package Cloud.Behaviours.MainBehaviours;
 
 import Cloud.CloudAgent;
+import Cloud.Behaviours.SimpleBehaviours.Push2CloudBehaviour;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.core.behaviours.TickerBehaviour;
@@ -13,10 +14,10 @@ import jade.core.behaviours.TickerBehaviour;
  * @version 1.0.0.0
  * @since 1.8
  */
-public class DetectUpdateBehaviour extends TickerBehaviour {
+public class DetectUpdateMsg extends TickerBehaviour {
     private CloudAgent cagent;
 
-    public DetectUpdateBehaviour(CloudAgent cagent, long period) {
+    public DetectUpdateMsg(CloudAgent cagent, long period) {
         super(cagent, period);
         this.cagent = cagent;
     }

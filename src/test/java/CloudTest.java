@@ -1,5 +1,5 @@
 import Cloud.CloudMysql;
-import CommonTools.OrderInfo;
+import Commons.OrderInfo;
 import org.junit.Test;
 
 import java.sql.Connection;
@@ -60,7 +60,7 @@ public class CloudTest {
 
         // 加入到 Cloud Agent 待分配 列表中
         OrderInfo oi = new OrderInfo(orderDate, orderDtime, orderId, orderPrior, orderDetails);
-//        oi.getWorkpieceList().add(wp);
+//        oi.getWpInfoList().add(wp);
 
         mysql.storeOrderInfo(oi);
     }

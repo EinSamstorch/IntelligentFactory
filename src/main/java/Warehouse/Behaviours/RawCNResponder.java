@@ -1,6 +1,7 @@
 package Warehouse.Behaviours;
 
 import CommonTools.LoggerUtil;
+import Commons.WorkpieceInfo;
 import Warehouse.WarehouseAgent;
 import Warehouse.WarehouseSqlite;
 import jade.domain.FIPAAgentManagement.FailureException;
@@ -8,6 +9,7 @@ import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetResponder;
 
 /**
@@ -40,7 +42,13 @@ public class RawCNResponder extends ContractNetResponder {
     protected ACLMessage handleCfp(ACLMessage cfp) throws RefuseException, FailureException, NotUnderstoodException {
         LoggerUtil.agent.debug(String.format("CFP received from: %s.", cfp.getSender().getName()));
         // cfp 内容: String goodsid
-        String goodsid = cfp.getContent();
+        String goodsid = null;
+        try {
+            WorkpieceInfo wpInfo = (WorkpieceInfo) cfp.getContentObject();
+            goodsid = wpInfo.getGoodsId();
+        } catch (UnreadableException e) {
+            e.printStackTrace();
+        }
         WarehouseSqlite sqlite = new WarehouseSqlite(whagent.getSqlitePath());
         // 查询仓库余量
         int quantity = sqlite.getRawQuantityByGoodsId(goodsid);
@@ -61,18 +69,25 @@ public class RawCNResponder extends ContractNetResponder {
     protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept) throws FailureException {
         LoggerUtil.agent.info("Proposal accepted: " + accept.getSender().getName());
         int quantity = Integer.parseInt(accept.getContent());
-        String goodsid = cfp.getContent();
-        WarehouseSqlite sqlite = new WarehouseSqlite(whagent.getSqlitePath());
-        if (quantity == sqlite.getRawQuantityByGoodsId(goodsid)) {
-            ACLMessage inform = accept.createReply();
-            inform.setPerformative(ACLMessage.INFORM);
 
-            String position = sqlite.getRaw(goodsid);
-            inform.setContent(position);
-            return inform;
-        } else {
-            throw new FailureException("Quantity changed.");
+        try {
+            String goodsid = ((WorkpieceInfo)cfp.getContentObject()).getGoodsId();
+            WarehouseSqlite sqlite = new WarehouseSqlite(whagent.getSqlitePath());
+            if (quantity == sqlite.getRawQuantityByGoodsId(goodsid)) {
+                ACLMessage inform = accept.createReply();
+                inform.setPerformative(ACLMessage.INFORM);
+
+                String position = sqlite.getRaw(goodsid);
+                inform.setContent(position);
+                return inform;
+            } else {
+                throw new FailureException("Quantity changed.");
+            }
+        } catch (UnreadableException e) {
+            e.printStackTrace();
+            throw new FailureException("Get goodsid failed");
         }
+
     }
 
     @Override

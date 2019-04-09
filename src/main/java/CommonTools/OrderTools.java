@@ -1,5 +1,6 @@
 package CommonTools;
 
+import Commons.OrderInfo;
 import com.alibaba.fastjson.JSONObject;
 
 import java.text.DateFormat;
@@ -55,12 +56,5 @@ public class OrderTools {
         return new OrderInfo(orderDate, orderDtime, orderId, orderPrior, orderDetails);
     }
 
-//    /**
-//     * 还没写
-//     * @param jo
-//     * @return
-//     */
-//    public static Workpiece parseWorkpiece(JSONObject jo) {
-//        return new Workpiece("9999", new JSONObject());
-//    }
+
 }

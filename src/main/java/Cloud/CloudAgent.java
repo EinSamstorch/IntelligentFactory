@@ -1,9 +1,12 @@
 package Cloud;
 
-import Cloud.Behaviours.CFPNewOrderBehaviour;
-import Cloud.Behaviours.DetectUpdateBehaviour;
-import Cloud.Behaviours.GetOrderBehaviour;
+
+import Cloud.Behaviours.MainBehaviours.DetectUpdateMsg;
+import Cloud.Behaviours.MainBehaviours.GetOrder;
+import Cloud.Behaviours.MainBehaviours.HandleOrders;
 import CommonTools.*;
+import Commons.AgentTemplate;
+import Commons.OrderInfo;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.domain.DFService;
@@ -74,21 +77,21 @@ public class CloudAgent extends AgentTemplate {
     protected void setup() {
         super.setup();
         // 载入未完成订单
-        loadOrders();
+        //loadOrders();
         // 注册DF服务 订单状态更新服务
         registerDF(DFServiceType.CLOUD_UPDATE);
 
 
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
         //独立线程 定时从云端 获取新订单
-        Behaviour b = new GetOrderBehaviour(this, TICKER_TIME);
+        Behaviour b = new GetOrder(this, TICKER_TIME);
         addBehaviour(tbf.wrap(b));
 
         // 独立线程 定时检查新推送消息
-        b = new DetectUpdateBehaviour(this, TICKER_TIME);
+        b = new DetectUpdateMsg(this, TICKER_TIME);
         addBehaviour(tbf.wrap(b));
 
-        b = new CFPNewOrderBehaviour(this, TICKER_TIME);
+        b = new HandleOrders(this, TICKER_TIME);
         addBehaviour(tbf.wrap(b));
 
 

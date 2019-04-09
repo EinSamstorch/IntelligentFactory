@@ -1,6 +1,6 @@
 package Lathe;
 
-import CommonTools.AgentTemplate;
+import Commons.AgentTemplate;
 import CommonTools.DFServiceType;
 
 /**

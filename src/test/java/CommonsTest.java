@@ -1,6 +1,7 @@
 import CommonTools.*;
 import CommonTools.db.MysqlJDBC;
 import CommonTools.db.SQLiteJDBC;
+import Commons.OrderInfo;
 import Warehouse.WarehouseSqlite;
 import com.alibaba.fastjson.JSONObject;
 import org.junit.Test;
@@ -94,16 +95,16 @@ public class CommonsTest {
                     return 1;
                 }
                 if (!o1.getOrderDate().equals(o2.getOrderDate())) {
-                    return 1;
+                    return 2;
                 }
-                if (!o1.getOrderDtime().equals(o2.getOrderDtime())) {
-                    return 1;
-                }
+//                if (!o1.getOrderDtime().equals(o2.getOrderDtime())) {
+//                    return 3;
+//                }
                 if (!o1.getOrderPrior().equals((o2.getOrderPrior()))) {
-                    return 1;
+                    return 4;
                 }
                 if (!o1.getOrderDetails().equals(o2.getOrderDetails())) {
-                    return 1;
+                    return 5;
                 }
                 return 0;
             }

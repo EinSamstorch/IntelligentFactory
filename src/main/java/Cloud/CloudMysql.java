@@ -1,9 +1,10 @@
 package Cloud;
 
 import CommonTools.LoggerUtil;
-import CommonTools.OrderInfo;
-import CommonTools.Workpiece;
+import Commons.OrderInfo;
+import Commons.Workpiece;
 import CommonTools.db.MysqlJDBC;
+import Commons.WorkpieceInfo;
 import com.alibaba.fastjson.JSONObject;
 
 import java.sql.PreparedStatement;
@@ -42,17 +43,17 @@ public class CloudMysql extends MysqlJDBC {
             if (rst != 1) {
                 LoggerUtil.db.error(String.format("INSERT OrderInfo FAILED, %s", oi.toString()));
             }
-            for (Workpiece wp : oi.getWorkpieceList()) {
+            for (WorkpieceInfo wpInfo : oi.getWpInfoList()) {
                 cmd = String.format("INSERT INTO OrderDetails(orderId,id,goodsid,num,jobdes) VALUES (?,?,?,?,?)");
                 ps = con.prepareStatement(cmd);
                 ps.setString(1, oi.getOrderId());
-                ps.setString(2, wp.getId());
-                ps.setString(3, wp.getGoodsId());
-                ps.setInt(4, wp.getJobNum());
-                ps.setString(5, wp.getJobDes());
+                ps.setString(2, wpInfo.getWorkpieceId());
+                ps.setString(3, wpInfo.getGoodsId());
+                ps.setInt(4, 1);
+                ps.setString(5, wpInfo.getDetailSize());
                 rst = ps.executeUpdate();
                 if (rst != 1) {
-                    LoggerUtil.db.error(String.format("INSERT OrderDetails FAILED, %s", wp.toString()));
+                    LoggerUtil.db.error(String.format("INSERT OrderDetails FAILED, %s", wpInfo.toString()));
                 }
             }
         } catch (SQLException e) {
@@ -94,8 +95,11 @@ public class CloudMysql extends MysqlJDBC {
                     jo.put("goodsId", rs2.getString("goodsid"));
                     jo.put("jobNum", rs2.getInt("num"));
                     jo.put("jobDes", rs2.getString("jobDes"));
-                    Workpiece wp = new Workpiece(oi.getOrderId(), jo);
-                    oi.getWorkpieceList().add(wp);
+                    WorkpieceInfo wpInfo = new WorkpieceInfo(oi.getOrderId(),
+                            rs2.getString("id"),
+                            rs2.getString("goodsid"),
+                            rs2.getString("jobDes"));
+                    oi.getWpInfoList().add(wpInfo);
                 }
                 stmt2.close();
                 rs2.close();

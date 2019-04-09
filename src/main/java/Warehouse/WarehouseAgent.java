@@ -1,6 +1,6 @@
 package Warehouse;
 
-import CommonTools.AgentTemplate;
+import Commons.AgentTemplate;
 import CommonTools.DFServiceType;
 import CommonTools.IniLoader;
 import Warehouse.Behaviours.RawCNResponder;
@@ -54,10 +54,6 @@ public class WarehouseAgent extends AgentTemplate {
                 MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
                 MessageTemplate.MatchPerformative(ACLMessage.CFP)
         );
-        mt = MessageTemplate.and(mt,
-                MessageTemplate.MatchLanguage("RAW"));
-
-
         Behaviour b = new RawCNResponder(this, mt);
         addBehaviour(tbf.wrap(b));
 

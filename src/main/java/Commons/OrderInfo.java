@@ -1,4 +1,4 @@
-package CommonTools;
+package Commons;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -46,7 +46,7 @@ import java.util.Vector;
  * </pre>
  *
  * @author <a href="mailto:junfeng_pan96@qq.com">junfeng</a>
- * @version 1.0.0.0
+ * @version 1.1.0.0
  * @since 1.8
  */
 public class OrderInfo {
@@ -73,11 +73,8 @@ public class OrderInfo {
     /**
      * 根据订单具体内容拆分出来的工件列表
      */
-    private Vector<Workpiece> workpieceList = new Vector<>();
-    /**
-     * 本地生成工件Id，工件数量计数器
-     */
-    private int wpCnt = 0;
+    private Vector<WorkpieceInfo> wpInfoList = new Vector<>();
+
 
     /**
      * 构造器.
@@ -117,8 +114,8 @@ public class OrderInfo {
         return orderDetails;
     }
 
-    public Vector<Workpiece> getWorkpieceList() {
-        return workpieceList;
+    public Vector<WorkpieceInfo> getWpInfoList() {
+        return wpInfoList;
     }
 
     @Override
@@ -145,14 +142,19 @@ public class OrderInfo {
     private void parseDetails() {
         // orderDetails 不能为空 或 null
         if (!orderDetails.equals("") && orderDetails != null && !orderDetails.equals("[]")) {
+            // 本地工件编号计数器。 因为云端去掉了工件编号属性，故本地生成该属性
+            int wpCnt = 0;
             JSONArray details = JSONArray.parseArray(orderDetails);
-            Iterator<Object> iterator = details.iterator();
-            while (iterator.hasNext()) {
-                JSONObject jo = (JSONObject) iterator.next();
-                // 因为云端去掉了工件编号属性，故本地生成该属性
-                jo.put("id", String.format("%03d", ++wpCnt));
-                Workpiece wp = new Workpiece(orderId, jo);
-                workpieceList.add(wp);
+            for (Object detail : details) {
+                JSONObject jo = (JSONObject) detail;
+                // 获取零件数量
+                int nums = jo.getIntValue("jobNum");
+                for (int i = 0; i < nums; i++) {
+                    WorkpieceInfo wpInfo = new WorkpieceInfo(orderId, String.format("%3d", ++wpCnt),
+                            jo.getString("goodsId"), jo.getString("jobDes"));
+                    wpInfoList.add(wpInfo);
+                }
+
             }
         }
     }

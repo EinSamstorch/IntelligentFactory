@@ -9,9 +9,13 @@ Agent:
 {
   "task_no": 1,  
   "cmd": "read_rfid",  
-  "extra": "" 
+  "extra": {
+    "rfid_no": 1
+  } 
 }
 ```
+
+- rfid_no : Integer : the number order of rfid in this machine. 
 
 RFID:
 ```json5
@@ -39,7 +43,11 @@ Agent:
 {
   "task_no": 2,  
   "cmd": "write_rfid",  
-  "extra": info_str  
+  "extra": {
+    "rfid_no": 1,
+    "info": info_str
+  }  
 }
 ```
+- rfid_no : Integer : the number order of rfid in this machine.
 - info_str : the info you wanna write into rfid chips 

@@ -1,4 +1,4 @@
-package Cloud.Behaviours;
+package Cloud.Behaviours.SimpleBehaviours;
 
 import Cloud.CloudAgent;
 import CommonTools.HttpRequest;
