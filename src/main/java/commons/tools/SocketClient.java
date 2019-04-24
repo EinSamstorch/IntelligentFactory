@@ -5,10 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 用于与socket server建立连接并发送消息.
@@ -19,7 +19,7 @@ import java.net.SocketTimeoutException;
  */
 
 
-public class SocketClient extends Thread {
+public class SocketClient {
     /**
      * 设备类型
      */
@@ -33,7 +33,7 @@ public class SocketClient extends Thread {
     /**
      * 用于构建 {"type": type_str}, 向 socket server 注册类型
      */
-    private JSONObject jo_type = new JSONObject();
+    private JSONObject selfType = new JSONObject();
     /**
      * Socket Server 默认端口 5656
      */
@@ -45,13 +45,13 @@ public class SocketClient extends Thread {
 
 
     public SocketClient(String type) {
-        jo_type.put("type", type);
+        selfType.put("type", type);
         this.port = 5656; // default port
         connect();
     }
 
     public SocketClient(String type, int port) {
-        jo_type.put("type", type);
+        selfType.put("type", type);
         this.port = port;
         connect();
     }
@@ -110,9 +110,7 @@ public class SocketClient extends Thread {
         try {
             // 消息末端增加 \n，以表示 一条消息结束
             words += "\n";
-            socket.getOutputStream().write(words.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            LoggerUtil.agent.error(e.getMessage());
+            socket.getOutputStream().write(words.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             LoggerUtil.agent.error(e.getMessage());
         }
@@ -121,32 +119,17 @@ public class SocketClient extends Thread {
     /**
      * 连接Socket Server
      */
-    private void connect() {
+    public void connect() {
         try {
             LoggerUtil.agent.debug("Connecting to Socket Server");
             socket = new Socket(host, port);
             if (socket.isConnected()) {
                 LoggerUtil.agent.debug("Connected Successfully");
-                send(jo_type.toJSONString());
+                send(selfType.toJSONString());
             }
         } catch (IOException e) {
             LoggerUtil.agent.error(e.getMessage());
         }
     }
 
-
-    /**
-     * 线程主循环，检查是否连接上Socket Server
-     * 若未连接上，则建立连接
-     */
-    @Override
-    public void run() {
-        while (true) {
-            if (socket == null) {
-                connect();
-            } else if (socket.isClosed()) {
-                connect();
-            }
-        }
-    }
 }

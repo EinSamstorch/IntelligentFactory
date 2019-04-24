@@ -23,7 +23,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 
 
-public class WarehouseHALAgent {
+public class WarehouseHal {
     private static final int MAX_POS = 70;
     private static final String MOVE_ITEM = "move_item";
     private static final String IMPORT_ITEM = "import_item";
@@ -43,13 +43,15 @@ public class WarehouseHALAgent {
     private Lock lock = new ReentrantLock();
 
 
-    private WarehouseHALAgent() {
+    private WarehouseHal() {
+        // 从配置区载入仓库配置
         Map<String, String> settings = IniLoader.load(IniLoader.SECTION_WAREHOUSE);
         pos_in = Integer.parseInt(settings.get("pos_in"));
         pos_out = Integer.parseInt(settings.get("pos_out"));
 
+        // 与 SocketServer建立连接
         sClient = new SocketClient(SocketClient.AGENT);
-        sClient.start();
+        sClient.connect();
 
         if ((pos_in > 0 && pos_in <= MAX_POS) && (pos_out > 0 && pos_out <= MAX_POS)) {
             // pos_in and pos_out should be between 0 and MAX_POS
@@ -59,7 +61,7 @@ public class WarehouseHALAgent {
         }
     }
 
-    public static WarehouseHALAgent getInstance() {
+    public static WarehouseHal getInstance() {
         return InstanceHolder.hal;
     }
 
@@ -69,7 +71,7 @@ public class WarehouseHALAgent {
      * @param dest 存入目的地
      * @return 成功 true, 失败 中断程序
      */
-    public synchronized boolean import_item(int dest) throws ActionFailedException {
+    public synchronized boolean importItem(int dest) throws ActionFailedException {
         lock.lock();
         try {
             // 1. 从入库口 传送进 工件
@@ -96,10 +98,9 @@ public class WarehouseHALAgent {
      *
      * @param dest    检查对象
      * @param taskMsg 原任务消息体
-     * @return 成功 true
      * @throws ActionFailedException 如果响应failed则 任务失败， 若捕获 查询命令发送失败 则 任务失败
      */
-    private boolean checkTask(String dest, JSONObject taskMsg) throws ActionFailedException {
+    private void checkTask(String dest, JSONObject taskMsg) throws ActionFailedException {
         int taskNo = taskMsg.getInteger(FIELD_TASK_NO);
         while (true) {
             try {
@@ -116,7 +117,6 @@ public class WarehouseHALAgent {
                 throw new ActionFailedException(e.getMessage());
             }
         }
-        return true;
     }
 
     /**
@@ -126,7 +126,7 @@ public class WarehouseHALAgent {
      * @param rfid_msg 需要写入rfid的信息, 不需要写入，则传入null
      * @return 成功 true, 若有错误，则程序终止。
      */
-    public synchronized boolean export_item(int source, String rfid_msg) throws ActionFailedException {
+    public synchronized boolean exportItem(int source, String rfid_msg) throws ActionFailedException {
         lock.lock();
         // 1. 从 源位置取出货物
         JSONObject extra = new JSONObject();
@@ -211,7 +211,7 @@ public class WarehouseHALAgent {
                     msg.toJSONString(),
                     ans.toJSONString()));
         }
-        if (msg.getInteger(FIELD_TASK_NO) != ans.getInteger(FIELD_TASK_NO)) {
+        if (msg.getIntValue(FIELD_TASK_NO) != ans.getIntValue(FIELD_TASK_NO)) {
             throw new TaskNoMismatchException(String.format("Require: %d, Get: %d",
                     msg.getIntValue(FIELD_TASK_NO),
                     ans.getIntValue(FIELD_TASK_NO)));
@@ -223,6 +223,6 @@ public class WarehouseHALAgent {
      * 单例化该类
      */
     private static class InstanceHolder {
-        private final static WarehouseHALAgent hal = new WarehouseHALAgent();
+        private final static WarehouseHal hal = new WarehouseHal();
     }
 }

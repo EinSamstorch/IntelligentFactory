@@ -91,6 +91,7 @@ public class CloudAgent extends AgentTemplate {
         b = new DetectUpdateMsg(this, TICKER_TIME);
         addBehaviour(tbf.wrap(b));
 
+        // 独立线程 处理获得的订单
         b = new HandleOrders(this, TICKER_TIME);
         addBehaviour(tbf.wrap(b));
 

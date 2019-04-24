@@ -9,9 +9,9 @@
 | workpieceId   |   String    |      001       |      id of workpiece       |
 |   goodsid     |   String    |      001       |  see [Definition](#goodsid)|
 |  detailSize  | JSON String | Depend on type |        see it [here]()     |
-| providerAID |   AID    |            |      who offered raw material      |
-| preOwnnerAID |   AID    |            |      who processed it      |
-| curOwnnerAID |   AID    |             |    who will process  it    |
+| providerId |   AID    |            |      who offered raw material      |
+| preOwnerId |   AID    |            |      who processed it      |
+| curOwnerId |   AID    |             |    who will process  it    |
 |   last_agv    |   AID    |            |      who delivered it      |
 |  buffer_pos   |   Integer   |       1        | current position in buffer |
 

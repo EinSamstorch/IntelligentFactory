@@ -21,10 +21,10 @@ import jade.proto.ContractNetResponder;
  */
 
 
-public class RawCNResponder extends ContractNetResponder {
+public class RawContractNetResponder extends ContractNetResponder {
     private WarehouseAgent whagent;
 
-    public RawCNResponder(WarehouseAgent whagent, MessageTemplate mt) {
+    public RawContractNetResponder(WarehouseAgent whagent, MessageTemplate mt) {
         super(whagent, mt);
         this.whagent = whagent;
     }

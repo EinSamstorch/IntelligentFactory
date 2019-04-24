@@ -42,7 +42,7 @@ public class DFUtils {
         template.addServices(templateSd);
 
         SearchConstraints sc = new SearchConstraints();
-        sc.setMaxResults(new Long(100));
+        sc.setMaxResults(100L);
         try {
             DFAgentDescription[] results = DFService.search(agent, template, sc);
             if (results.length > 0) {

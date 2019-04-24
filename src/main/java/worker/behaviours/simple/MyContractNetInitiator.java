@@ -1,28 +1,28 @@
 package worker.behaviours.simple;
 
 import commons.tools.LoggerUtil;
-import worker.WorkerAgent;
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import jade.proto.ContractNetInitiator;
 import jade.util.leap.Iterator;
+import worker.WorkerAgent;
 
 import java.util.Enumeration;
 import java.util.Vector;
 
 /**
- * 原材料招标发起人.
+ * 招投标发起人.
  *
  * @author <a href="mailto:junfeng_pan96@qq.com">junfeng</a>
  * @version 1.0.0.0
  * @since 1.8
  */
 
-
-public class RAWCNInitiator extends ContractNetInitiator {
+public class MyContractNetInitiator extends ContractNetInitiator {
     private WorkerAgent wagent;
     private int nResponders = 0;
-    public RAWCNInitiator(WorkerAgent wagent, ACLMessage cfp) {
+
+    public MyContractNetInitiator(WorkerAgent wagent, ACLMessage cfp) {
         super(wagent, cfp);
         this.wagent = wagent;
         Iterator it = cfp.getAllReceiver();
@@ -33,7 +33,7 @@ public class RAWCNInitiator extends ContractNetInitiator {
         if (nResponders == 0) {
             // future to do
             // 没有招标商，移除招标行为
-            LoggerUtil.agent.error("Raw Responder Not Found");
+            LoggerUtil.agent.error("Responder Not Found");
         }
     }
 
@@ -65,7 +65,8 @@ public class RAWCNInitiator extends ContractNetInitiator {
             accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
             accept.setContent(String.valueOf(bestProposal));
         } else {
-            LoggerUtil.agent.error("All warehouses is out of stock.");
+            LoggerUtil.agent.error("No service is available.");
+            // 后续处理
         }
     }
 }

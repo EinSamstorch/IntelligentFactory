@@ -1,8 +1,7 @@
 package commons;
 
-import jade.core.AID;
-
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 单个工件所携带信息.
@@ -18,11 +17,12 @@ public class WorkpieceInfo implements Serializable {
     private String workpieceId;
     private String goodsId;
     private String detailSize;
-    private AID providerAID;
-    private AID preOwnnerAID;
-    private AID curOwnnerAID;
-    private AID lastAGV;
+    private String providerId;
+    private String preOwnerId;
+    private String curOwnerId;
+    private String lastAgvId;
     private int bufferPos;
+    private List<String> processPlan;
 
     public WorkpieceInfo(String orderId, String workpieceId, String goodsId, String detailSize) {
         this.orderId = orderId;
@@ -47,36 +47,36 @@ public class WorkpieceInfo implements Serializable {
         return detailSize;
     }
 
-    public AID getProviderAID() {
-        return providerAID;
+    public String getProviderId() {
+        return providerId;
     }
 
-    public void setProviderAID(AID providerAID) {
-        this.providerAID = providerAID;
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
     }
 
-    public AID getPreOwnnerAID() {
-        return preOwnnerAID;
+    public String getPreOwnerId() {
+        return preOwnerId;
     }
 
-    public void setPreOwnnerAID(AID preOwnnerAID) {
-        this.preOwnnerAID = preOwnnerAID;
+    public void setPreOwnerId(String preOwnerId) {
+        this.preOwnerId = preOwnerId;
     }
 
-    public AID getCurOwnnerAID() {
-        return curOwnnerAID;
+    public String getCurOwnerId() {
+        return curOwnerId;
     }
 
-    public void setCurOwnnerAID(AID curOwnnerAID) {
-        this.curOwnnerAID = curOwnnerAID;
+    public void setCurOwnerId(String curOwnerId) {
+        this.curOwnerId = curOwnerId;
     }
 
-    public AID getLastAGV() {
-        return lastAGV;
+    public String getLastAgvId() {
+        return lastAgvId;
     }
 
-    public void setLastAGV(AID lastAGV) {
-        this.lastAGV = lastAGV;
+    public void setLastAgvId(String lastAgvId) {
+        this.lastAgvId = lastAgvId;
     }
 
     public int getBufferPos() {
@@ -85,5 +85,14 @@ public class WorkpieceInfo implements Serializable {
 
     public void setBufferPos(int bufferPos) {
         this.bufferPos = bufferPos;
+    }
+
+    public List<String> getProcessPlan() {
+        return processPlan;
+    }
+
+    public void setProcessPlan(List<String> processPlan) {
+        // List 内容是 String，不可变类型 无需深拷贝
+        this.processPlan = processPlan;
     }
 }

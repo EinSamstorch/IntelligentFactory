@@ -14,5 +14,9 @@ public class DFServiceType {
     public static final String WAREHOUSE = "warehouse";
     public static final String LATHE = "lathe";
     public static final String WORKER = "worker";
+    public static final String MILLER = "miller";
+    public static final String DETECTOR = "detector";
+    public static final String AGV = "agv";
+
 
 }

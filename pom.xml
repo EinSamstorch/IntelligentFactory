@@ -11,14 +11,15 @@
 
     <repositories>
         <repository>
+            <id>jade</id>
+            <name>Jade Repository</name>
+            <url>https://jade.tilab.com/maven/</url>
+        </repository>
+
+        <repository>
             <id>alimaven</id>
             <name>aliyun maven</name>
             <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>jade</id>
-            <name>Jade Repository</name>
-            <url>http://jade.tilab.com/maven/</url>
         </repository>
     </repositories>
 
