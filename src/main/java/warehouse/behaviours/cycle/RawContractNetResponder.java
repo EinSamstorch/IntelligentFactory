@@ -1,7 +1,11 @@
-package warehouse.behaviours;
+package warehouse.behaviours.cycle;
 
+import commons.exceptions.MsgCreateFailedException;
+import commons.tools.DFServiceType;
+import commons.tools.DFUtils;
 import commons.tools.LoggerUtil;
 import commons.WorkpieceInfo;
+import jade.core.behaviours.Behaviour;
 import warehouse.WarehouseAgent;
 import warehouse.WarehouseSqlite;
 import jade.domain.FIPAAgentManagement.FailureException;
@@ -23,10 +27,13 @@ import jade.proto.ContractNetResponder;
 
 public class RawContractNetResponder extends ContractNetResponder {
     private WarehouseAgent whagent;
+    private WarehouseSqlite sqlite;
 
     public RawContractNetResponder(WarehouseAgent whagent, MessageTemplate mt) {
         super(whagent, mt);
         this.whagent = whagent;
+        sqlite = new WarehouseSqlite(whagent.getSqlitePath());
+        sqlite.initTable();
     }
 
     /**
@@ -41,7 +48,7 @@ public class RawContractNetResponder extends ContractNetResponder {
     @Override
     protected ACLMessage handleCfp(ACLMessage cfp) throws RefuseException, FailureException, NotUnderstoodException {
         LoggerUtil.agent.debug(String.format("CFP received from: %s.", cfp.getSender().getName()));
-        // cfp 内容: String goodsid
+        // cfp 内容: WorkpieceInfo
         String goodsid = null;
         try {
             WorkpieceInfo wpInfo = (WorkpieceInfo) cfp.getContentObject();
@@ -49,7 +56,6 @@ public class RawContractNetResponder extends ContractNetResponder {
         } catch (UnreadableException e) {
             e.printStackTrace();
         }
-        WarehouseSqlite sqlite = new WarehouseSqlite(whagent.getSqlitePath());
         // 查询仓库余量
         int quantity = sqlite.getRawQuantityByGoodsId(goodsid);
         if (quantity > 0) {
@@ -71,23 +77,45 @@ public class RawContractNetResponder extends ContractNetResponder {
         int quantity = Integer.parseInt(accept.getContent());
 
         try {
-            String goodsid = ((WorkpieceInfo)cfp.getContentObject()).getGoodsId();
-            WarehouseSqlite sqlite = new WarehouseSqlite(whagent.getSqlitePath());
-            if (quantity == sqlite.getRawQuantityByGoodsId(goodsid)) {
-                ACLMessage inform = accept.createReply();
-                inform.setPerformative(ACLMessage.INFORM);
+            // 对 workpieceInfo 添加 warehousePosition
+            WorkpieceInfo wpInfo = ((WorkpieceInfo)cfp.getContentObject());
+            String goodsid = wpInfo.getGoodsId();
+            Integer position = sqlite.getRaw(goodsid);
+            wpInfo.setWarehousePosition(position);
+            // 更新 wpInfo
+            wpInfo.setProviderId(whagent.getLocalName());
+            wpInfo.setCurOwnerId(whagent.getLocalName());
+            // 设置bufferPos,  agv取货用
+            wpInfo.setBufferPos(whagent.getPosIn());
 
-                String position = sqlite.getRaw(goodsid);
-                inform.setContent(position);
-                return inform;
-            } else {
-                throw new FailureException("Quantity changed.");
-            }
+            // 发送至Worker 进行下一轮招标
+            ACLMessage msg = DFUtils.createRequestMsg(wpInfo);
+            msg = DFUtils.searchDF(whagent, msg, DFServiceType.WORKER);
+            whagent.send(msg);
+
+            // 完成本次招标动作
+            ACLMessage inform = accept.createReply();
+            inform.setPerformative(ACLMessage.INFORM);
+            return inform;
+//            String goodsid = ((WorkpieceInfo)cfp.getContentObject()).getGoodsId();
+//            if (quantity == sqlite.getRawQuantityByGoodsId(goodsid)) {
+//                ACLMessage inform = accept.createReply();
+//                inform.setPerformative(ACLMessage.INFORM);
+//
+//                String position = sqlite.getRaw(goodsid);
+//                // inform.setContent(position);
+//
+//                return inform;
+//            } else {
+//                throw new FailureException("Quantity changed.");
+//            }
         } catch (UnreadableException e) {
             e.printStackTrace();
             throw new FailureException("Get goodsid failed");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new FailureException(e.getMessage());
         }
-
     }
 
     @Override

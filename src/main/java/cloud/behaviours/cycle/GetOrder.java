@@ -53,7 +53,7 @@ public class GetOrder extends TickerBehaviour {
                     JSONObject jo = (JSONObject) o;
                     // 加入到 cloud Agent 待分配 列表中
                     OrderInfo oi = OrderTools.parseOrderInfo(jo);
-                    ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+                    // ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
                     cagent.getOrderQueue().offer(oi);
 
                     // 储存订单信息到MYSQL中

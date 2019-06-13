@@ -10,7 +10,7 @@ import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 
 /**
- * 处理REQUEST请求.
+ * 接受REQUEST请求，并放入处理队列中
  *
  * @author <a href="mailto:junfeng_pan96@qq.com">junfeng</a>
  * @version 1.0.0.0

@@ -33,12 +33,16 @@ public class HandleWorkpiece extends CyclicBehaviour {
         WorkpieceInfo wpInfo = wagent.getWpInfoQueue().poll();
         if(wpInfo == null) return;
         List<String> processPlan = wpInfo.getProcessPlan();
-        if(processPlan.isEmpty()){
+        int processIndex = wpInfo.nextProcessIndex();
+        if(processIndex >= processPlan.size()){
             // 所有工艺完成，回成品库
+
             // action here
             return ;
         }
-        String process = processPlan.get(0);
+
+        // 未来修改 将 MachineType 去除 改用 DFServiceType
+        String process = processPlan.get(processIndex);
         switch (process){
             case MachineType.WAREHOUSE:
                 processOn(wpInfo, DFServiceType.WAREHOUSE);

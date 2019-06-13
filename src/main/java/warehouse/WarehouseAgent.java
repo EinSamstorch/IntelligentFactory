@@ -3,13 +3,13 @@ package warehouse;
 import commons.AgentTemplate;
 import commons.tools.DFServiceType;
 import commons.tools.IniLoader;
-import warehouse.behaviours.RawContractNetResponder;
+import warehouse.behaviours.cycle.HalBehaviour;
+import warehouse.behaviours.cycle.RawContractNetResponder;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import warehouse.hal.WarehouseHal;
 
 import java.util.Map;
 
@@ -25,12 +25,24 @@ import java.util.Map;
 
 public class WarehouseAgent extends AgentTemplate {
     private String sqlitePath;
-    private int pos_in;
-    private int pos_out;
-    private WarehouseHal hal = WarehouseHal.getInstance();
+    private int posIn;
+    private int posOut;
+    private WarehouseHal hal = new WarehouseHal();
+
+    public WarehouseHal getHal() {
+        return hal;
+    }
 
     public String getSqlitePath() {
         return sqlitePath;
+    }
+
+    public int getPosIn() {
+        return posIn;
+    }
+
+    public int getPosOut() {
+        return posOut;
     }
 
     @Override
@@ -40,6 +52,10 @@ public class WarehouseAgent extends AgentTemplate {
 
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
         addContractNetResponder(tbf);
+
+
+        Behaviour b = new HalBehaviour(this);
+        addBehaviour(tbf.wrap(b));
     }
 
     @Override
@@ -51,8 +67,8 @@ public class WarehouseAgent extends AgentTemplate {
         String SETTING_POS_OUT = "pos_out";
 
         sqlitePath = setting.get(SETTING_SQLITE_PATH);
-        pos_in = new Integer(setting.get(SETTING_POS_IN));
-        pos_out = new Integer(setting.get(SETTING_POS_OUT));
+        posIn = new Integer(setting.get(SETTING_POS_IN));
+        posOut = new Integer(setting.get(SETTING_POS_OUT));
     }
 
     private void addContractNetResponder(ThreadedBehaviourFactory tbf) {
@@ -63,6 +79,5 @@ public class WarehouseAgent extends AgentTemplate {
         );
         Behaviour b = new RawContractNetResponder(this, mt);
         addBehaviour(tbf.wrap(b));
-
     }
 }

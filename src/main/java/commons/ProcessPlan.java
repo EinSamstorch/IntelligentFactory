@@ -14,19 +14,43 @@ import java.util.Map;
  */
 
 public class ProcessPlan {
-    private Map<String, List<String>> processPlan = new HashMap<String, List<String>>(){
-        {
-            List<String > l = new ArrayList<String>(){
-                {
-                    add(MachineType.WAREHOUSE);
-                    add(MachineType.LATHE);
-                }
-            };
-            processPlan.put("002", l);
-        }
-    };
 
-    public Map<String, List<String>> getProcessPlan() {
-        return processPlan;
+    private static List<String> goodsidList = new ArrayList<>();
+    private static Map<String, List<String>> processPlan = new HashMap<>();
+
+    static {
+        // 当前支持的goodsid
+        goodsidList.add("001");    // 法兰
+        goodsidList.add("002");    // 轴
+        goodsidList.add("003");    // 板
+
+        List<String> flangePP = new ArrayList<String>(){
+            {
+                add(MachineType.WAREHOUSE);
+                add(MachineType.LATHE);
+                add(MachineType.MILLER);
+            }
+        };
+        processPlan.put("001", flangePP);
+
+        List<String> axisPP = new ArrayList<String>(){
+            {
+                add(MachineType.WAREHOUSE);
+                add(MachineType.LATHE);
+            }
+        };
+        processPlan.put("002", axisPP);
+
+        List<String> plainPP = new ArrayList<String>(){
+            {
+                add(MachineType.WAREHOUSE);
+                add(MachineType.MILLER);
+            }
+        };
+        processPlan.put("003", plainPP);
+    }
+
+    public static List<String> getProcessPlan(String goodsid) {
+        return processPlan.get(goodsid);
     }
 }

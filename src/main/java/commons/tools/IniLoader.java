@@ -33,6 +33,11 @@ public class IniLoader {
      */
     public static final String SECTION_MYSQL = "mysql";
     /**
+     * 车床专用配置
+     */
+    public static final String SECTION_LATHE = "lathe";
+
+    /**
      * 配置文件默认路径：{@value CONFIG_NAME}
      */
     private static final String CONFIG_NAME = "./resources/config/setting.ini";
