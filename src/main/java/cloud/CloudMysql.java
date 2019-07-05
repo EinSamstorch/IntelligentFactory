@@ -32,7 +32,7 @@ public class CloudMysql extends MysqlJDBC {
      */
     public void storeOrderInfo(OrderInfo oi) {
         try {
-            String cmd = String.format("INSERT INTO OrderInfo(orderDate, orderDtime, orderId, orderPrior) VALUES (?,?,?,?)");
+            String cmd = "INSERT INTO OrderInfo(orderDate, orderDtime, orderId, orderPrior) VALUES (?,?,?,?)";
             PreparedStatement ps = con.prepareStatement(cmd);
             ps.setString(1, oi.getOrderDate());
             ps.setString(2, oi.getOrderDtime());
@@ -43,7 +43,7 @@ public class CloudMysql extends MysqlJDBC {
                 LoggerUtil.db.error(String.format("INSERT OrderInfo FAILED, %s", oi.toString()));
             }
             for (WorkpieceInfo wpInfo : oi.getWpInfoList()) {
-                cmd = String.format("INSERT INTO OrderDetails(orderId,id,goodsid,num,jobdes) VALUES (?,?,?,?,?)");
+                cmd = "INSERT INTO OrderDetails(orderId,id,goodsid,num,jobdes) VALUES (?,?,?,?,?)";
                 ps = con.prepareStatement(cmd);
                 ps.setString(1, oi.getOrderId());
                 ps.setString(2, wpInfo.getWorkpieceId());
@@ -89,11 +89,6 @@ public class CloudMysql extends MysqlJDBC {
                 Statement stmt2 = con.createStatement();
                 ResultSet rs2 = stmt2.executeQuery(cmd);
                 while (rs2.next()) {
-                    JSONObject jo = new JSONObject();
-                    jo.put("id", rs2.getString("id"));
-                    jo.put("goodsId", rs2.getString("goodsid"));
-                    jo.put("jobNum", rs2.getInt("num"));
-                    jo.put("jobDes", rs2.getString("jobDes"));
                     WorkpieceInfo wpInfo = new WorkpieceInfo(oi.getOrderId(),
                             rs2.getString("id"),
                             rs2.getString("goodsid"),

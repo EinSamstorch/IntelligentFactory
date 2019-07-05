@@ -37,6 +37,8 @@ public class WarehouseSqlite extends SQLiteJDBC {
      */
     private Map<Integer, String> getRawTable() {
         Map<Integer, String> raw = new ConcurrentHashMap<>();
+
+        connect();
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT position, goodsid FROM raw");
@@ -51,6 +53,8 @@ public class WarehouseSqlite extends SQLiteJDBC {
             }
         } catch (SQLException e) {
             LoggerUtil.db.error(e.getMessage());
+        } finally {
+            close();
         }
         return raw;
     }
@@ -122,7 +126,7 @@ public class WarehouseSqlite extends SQLiteJDBC {
     }
 
     private void removeRawTable(int position) {
-        String sqlCmd = String.format("UPDATE raw SET goodsid=null WHERE position = %d", position);
+        String sqlCmd = String.format("UPDATE raw SET goodsid = null WHERE position = %d", position);
         try {
             Statement stmt = con.createStatement();
             int rst = stmt.executeUpdate(sqlCmd);
