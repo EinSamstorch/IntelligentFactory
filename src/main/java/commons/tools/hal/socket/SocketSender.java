@@ -24,6 +24,7 @@ public class SocketSender {
 
     public SocketSender(int port) {
         this.port = port;
+        connect();
     }
 
     public SocketSender(){

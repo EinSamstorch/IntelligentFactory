@@ -2,12 +2,9 @@ import commons.tools.*;
 import commons.tools.db.MysqlJDBC;
 import commons.tools.db.SQLiteJDBC;
 import commons.OrderInfo;
-import warehouse.WarehouseSqlite;
 import com.alibaba.fastjson.JSONObject;
 import org.junit.Test;
 
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;

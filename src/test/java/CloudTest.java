@@ -1,4 +1,4 @@
-import cloud.CloudMysql;
+import machines.virtual.cloud.CloudMysql;
 import commons.OrderInfo;
 import org.junit.Test;
 

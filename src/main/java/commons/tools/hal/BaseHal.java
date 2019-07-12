@@ -23,6 +23,7 @@ public class BaseHal {
 
     private SocketSender sender;
     private SocketListener listener;
+    private Object extraInfo;
 
     public BaseHal() {
         sender = new SocketSender();
@@ -99,13 +100,19 @@ public class BaseHal {
                 cmdResponse.getString(SocketMessage.FIELD_CMD_RESULT))) {
             return false;
         }
+        extraInfo = cmdResponse.get(SocketMessage.FIELD_EXTRA);
 
         JSONObject actionResponse = getActionResponse(taskNo);
         if(!Objects.equals(SocketMessage.RESULT_SUCCESS,
                 actionResponse.getString(SocketMessage.FIELD_ACTION_RESULT))) {
             return false;
         }
+        extraInfo = actionResponse.get(SocketMessage.FIELD_EXTRA);
 
         return true;
+    }
+
+    public Object getExtraInfo() {
+        return extraInfo;
     }
 }

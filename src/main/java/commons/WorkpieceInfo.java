@@ -1,5 +1,7 @@
 package commons;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,6 +27,26 @@ public class WorkpieceInfo implements Serializable {
     private List<String> processPlan;
     private Integer processIndex = 0;
     private Integer warehousePosition;
+    // 工序分步
+    private Integer processStep;
+
+    public static void main(String[] args) {
+//        WorkpieceInfo wpInfo = new WorkpieceInfo("001","001","002","{\"L1\":10}");
+        WorkpieceInfo wpInfo = new WorkpieceInfo("001","001","002","");
+        JSONObject json = new JSONObject();
+        json.put("extra", wpInfo);
+        System.out.println(json.toJSONString());
+    }
+
+    private void initParamters(){
+        providerId = "";
+        preOwnerId = "";
+        curOwnerId = "";
+        lastAgvId = "";
+        bufferPos = 0;
+        warehousePosition = 0;
+        processStep = 0;
+    }
 
     public WorkpieceInfo(String orderId, String workpieceId, String goodsId, String detailSize) {
         this.orderId = orderId;
@@ -34,6 +56,7 @@ public class WorkpieceInfo implements Serializable {
 
         // 加载工艺路线
         processPlan = ProcessPlan.getProcessPlan(goodsId);
+        initParamters();
     }
 
     public String getOrderId() {
@@ -113,5 +136,13 @@ public class WorkpieceInfo implements Serializable {
 
     public void setWarehousePosition(Integer warehousePosition) {
         this.warehousePosition = warehousePosition;
+    }
+
+    public Integer getProcessStep() {
+        return processStep;
+    }
+
+    public void setProcessStep(Integer processStep) {
+        this.processStep = processStep;
     }
 }
