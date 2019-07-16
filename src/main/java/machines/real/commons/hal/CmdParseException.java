@@ -1,4 +1,4 @@
-package commons.tools.hal;
+package machines.real.commons.hal;
 
 /**
  * 硬件层解析指令失败 异常.

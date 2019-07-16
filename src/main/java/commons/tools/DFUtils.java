@@ -5,6 +5,7 @@ import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.Property;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
@@ -35,10 +36,13 @@ public class DFUtils {
      * @param type 服务类型 {@link DFServiceType}
      * @return 消息-已装填所有提供方地址
      */
-    public static ACLMessage searchDF(Agent agent, ACLMessage msg, String type) throws Exception {
+    public static ACLMessage searchDF(Agent agent, ACLMessage msg, String type, String password) throws Exception {
         DFAgentDescription template = new DFAgentDescription();
         ServiceDescription templateSd = new ServiceDescription();
         templateSd.setType(type);
+        if(password != null) {
+            templateSd.addProperties(new Property("password", password));
+        }
         template.addServices(templateSd);
 
         SearchConstraints sc = new SearchConstraints();
@@ -65,6 +69,10 @@ public class DFUtils {
             LoggerUtil.agent.error(e.getMessage());
         }
         return msg;
+    }
+
+    public static ACLMessage searchDF(Agent agent, ACLMessage msg, String type) throws Exception{
+        return searchDF(agent, msg, type, null);
     }
 
     /**

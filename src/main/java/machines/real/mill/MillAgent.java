@@ -1,4 +1,4 @@
-package machines.real.lathe;
+package machines.real.mill;
 
 import commons.AgentTemplate;
 import commons.Buffer;
@@ -10,38 +10,41 @@ import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import machines.real.lathe.behaviours.cycle.LatheContractNetResponder;
+import machines.real.mill.behaviours.cycle.LoadItemBehaviour;
+import machines.real.mill.behaviours.cycle.MaintainBufferBehaviour;
+import machines.real.mill.behaviours.cycle.MillContractNetResponder;
 
 import java.util.Map;
 
 /**
- * 车床Agent.
+ * .
  *
  * @author <a href="mailto:junfeng_pan96@qq.com">junfeng</a>
  * @version 1.0.0.0
  * @since 1.8
  */
 
-
-public class LatheAgent extends AgentTemplate {
+public class MillAgent extends AgentTemplate {
     private Buffer[] buffers;
-    private LatheHal hal;
-
-    public LatheHal getHal() {
-        return hal;
-    }
+    private MillHal hal;
+    private Boolean busy = false;
+    private String armPwd;
 
     @Override
     protected void setup() {
         super.setup();
-        registerDF(DFServiceType.LATHE);
+        registerDF(DFServiceType.MILL);
 
-        hal = new LatheHal(halPort);
+        hal = new MillHal(halPort);
 
-        // 独立线程启动车削服务应标行为
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
         addContractNetResponder(tbf);
 
+        Behaviour b = new LoadItemBehaviour(this);
+        addBehaviour(tbf.wrap(b));
+
+        b = new MaintainBufferBehaviour(this);
+        addBehaviour(tbf.wrap(b));
     }
 
     @Override
@@ -65,7 +68,13 @@ public class LatheAgent extends AgentTemplate {
                     )
             );
         }
+
+        setting = IniLoader.load(IniLoader.SECTION_COMMON);
+
+        final String SETTING_ARM_PASSWORD = "arm_password";
+        armPwd = setting.get(SETTING_ARM_PASSWORD);
     }
+
 
     /**
      * 检查buffer是否已满
@@ -109,6 +118,13 @@ public class LatheAgent extends AgentTemplate {
         return buffers[index];
     }
 
+    public MillHal getHal() {
+        return hal;
+    }
+
+    public Buffer[] getBuffers() {
+        return buffers;
+    }
 
     private void addContractNetResponder(ThreadedBehaviourFactory tbf) {
 
@@ -116,8 +132,19 @@ public class LatheAgent extends AgentTemplate {
                 MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
                 MessageTemplate.MatchPerformative(ACLMessage.CFP)
         );
-        Behaviour b = new LatheContractNetResponder(this, mt);
+        Behaviour b = new MillContractNetResponder(this, mt);
         addBehaviour(tbf.wrap(b));
     }
 
+    public Boolean isBusy() {
+        return busy;
+    }
+
+    public void setBusy(Boolean busy) {
+        this.busy = busy;
+    }
+
+    public String getArmPwd() {
+        return armPwd;
+    }
 }

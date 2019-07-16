@@ -1,9 +1,8 @@
-package commons.tools.hal.socket;
+package machines.real.commons.hal.socket;
 
 import com.alibaba.fastjson.JSONObject;
 import commons.tools.JsonTool;
 import commons.tools.LoggerUtil;
-import commons.tools.SocketConnector;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,8 +11,6 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * 监听socket返回消息并存入自身Map<taskNo, resultStr>中.

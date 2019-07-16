@@ -1,10 +1,9 @@
-package commons.tools.hal;
+package machines.real.commons.hal;
 
 import com.alibaba.fastjson.JSONObject;
-import commons.tools.JsonTool;
-import commons.tools.hal.socket.SocketListener;
-import commons.tools.hal.socket.SocketMessage;
-import commons.tools.hal.socket.SocketSender;
+import machines.real.commons.hal.socket.SocketListener;
+import machines.real.commons.hal.socket.SocketMessage;
+import machines.real.commons.hal.socket.SocketSender;
 
 import java.util.Map;
 import java.util.Objects;

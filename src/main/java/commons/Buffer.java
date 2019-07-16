@@ -11,8 +11,11 @@ package commons;
 public class Buffer {
     private Integer index;
     private WorkpieceInfo wpInfo;
+    private Boolean arrived = false;
+    private Boolean processed = false;
+    private Boolean onMachine = false;
 
-    public Integer getIndex() {
+    public int getIndex() {
         return index;
     }
 
@@ -26,5 +29,35 @@ public class Buffer {
 
     public Buffer(Integer index) {
         this.index = index;
+    }
+
+    public boolean isArrived() {
+        return arrived;
+    }
+
+    public void setArrived(boolean arrived) {
+        this.arrived = arrived;
+    }
+
+    public boolean isProcessed() {
+        return processed;
+    }
+
+    public void setProcessed(boolean processed) {
+        this.processed = processed;
+    }
+
+    public boolean isOnMachine() {
+        return onMachine;
+    }
+
+    public void setOnMachine(boolean onMachine) {
+        this.onMachine = onMachine;
+    }
+
+    public void reset(){
+        this.arrived = false;
+        this.processed = false;
+        this.onMachine = false;
     }
 }

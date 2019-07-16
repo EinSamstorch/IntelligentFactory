@@ -1,4 +1,4 @@
-package commons.tools.hal.socket;
+package machines.real.commons.hal.socket;
 
 /**
  * 定义了一些常量.

@@ -1,10 +1,7 @@
 package machines.real.lathe;
 
-import com.alibaba.fastjson.JSONObject;
 import commons.WorkpieceInfo;
-import commons.tools.hal.BaseHal;
-
-import java.util.Objects;
+import machines.real.commons.hal.BaseHal;
 
 /**
  * 车床硬件.
@@ -20,8 +17,6 @@ public class LatheHal extends BaseHal {
     private static final String CMD_PROCESS = "process";
     private static final String CMD_EVALUATE = "evaluate";
 
-    private static final String FIELD_FROM = "from";
-    private static final String FIELD_TO = "to";
     public LatheHal() {
         super();
     }

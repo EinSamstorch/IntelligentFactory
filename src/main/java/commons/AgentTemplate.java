@@ -1,11 +1,15 @@
 package commons;
 
+import commons.tools.IniLoader;
 import commons.tools.LoggerUtil;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.Property;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
+
+import java.util.Map;
 
 /**
  * Agent模板，添加一些必须实现的函数.
@@ -24,10 +28,22 @@ import jade.domain.FIPAException;
 
 
 public abstract class AgentTemplate extends Agent {
+    protected Integer halPort;
     @Override
     protected void setup() {
         super.setup();
         loadINI();
+        loadHalPort();
+    }
+
+    /**
+     * load hal_port from [common] in setting.ini
+     */
+    private void loadHalPort(){
+        Map<String, String> setting = IniLoader.load(IniLoader.SECTION_COMMON);
+
+        String SETTING_HAL_PORT = "hal_port";
+        halPort = new Integer(setting.get(SETTING_HAL_PORT));
     }
 
     /**
@@ -40,12 +56,15 @@ public abstract class AgentTemplate extends Agent {
      *
      * @param serviceType 自身提供的服务类型，{@link commons.tools.DFServiceType}
      */
-    protected void registerDF(String serviceType) {
+    protected void registerDF(String serviceType, String password) {
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();
         sd.setName(getLocalName());
         sd.setType(serviceType);
+        if(password != null) {
+            sd.addProperties(new Property("password",password));
+        }
         dfd.addServices(sd);
         try {
             DFService.register(this, dfd);
@@ -53,6 +72,10 @@ public abstract class AgentTemplate extends Agent {
             e.printStackTrace();
             LoggerUtil.agent.fatal(e.getMessage());
         }
+    }
+
+    protected void registerDF(String serviceType) {
+        registerDF(serviceType, null);
     }
 
     // Put agent clean-up operations here

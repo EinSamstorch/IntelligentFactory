@@ -41,7 +41,7 @@ public class HandleWorkpiece extends CyclicBehaviour {
             return ;
         }
 
-        // 未来修改 将 MachineType 去除 改用 DFServiceType
+        // TODO 未来修改 将 MachineType 去除 改用 DFServiceType
         String process = processPlan.get(processIndex);
         switch (process){
             case MachineType.WAREHOUSE:
@@ -50,8 +50,8 @@ public class HandleWorkpiece extends CyclicBehaviour {
             case MachineType.LATHE:
                 processOn(wpInfo, DFServiceType.LATHE);
                 break;
-            case MachineType.MILLER:
-                processOn(wpInfo, DFServiceType.MILLER);
+            case MachineType.MILL:
+                processOn(wpInfo, DFServiceType.MILL);
                 break;
             case MachineType.DETECTOR:
                 processOn(wpInfo, DFServiceType.DETECTOR);

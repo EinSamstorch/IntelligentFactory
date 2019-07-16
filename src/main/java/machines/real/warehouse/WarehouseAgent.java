@@ -3,15 +3,19 @@ package machines.real.warehouse;
 import commons.AgentTemplate;
 import commons.tools.DFServiceType;
 import commons.tools.IniLoader;
-import machines.real.warehouse.behaviours.cycle.HalBehaviour;
+import machines.real.commons.ItemExportRequest;
+import machines.real.warehouse.behaviours.cycle.ItemExportBehaviour;
 import machines.real.warehouse.behaviours.cycle.RawContractNetResponder;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import machines.real.warehouse.behaviours.cycle.RecvItemExportRequestBehaviour;
 
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 
 /**
@@ -25,9 +29,10 @@ import java.util.Map;
 
 public class WarehouseAgent extends AgentTemplate {
     private String sqlitePath;
-    private int posIn;
-    private int posOut;
-    private WarehouseHal hal = new WarehouseHal();
+    private Integer posIn;
+    private Integer posOut;
+    private WarehouseHal hal;
+    private Queue<ItemExportRequest> exportQueue = new LinkedBlockingQueue<>();
 
     public WarehouseHal getHal() {
         return hal;
@@ -50,11 +55,15 @@ public class WarehouseAgent extends AgentTemplate {
         super.setup();
         registerDF(DFServiceType.WAREHOUSE);
 
+        hal = new WarehouseHal(halPort);
 
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
         addContractNetResponder(tbf);
 
-        Behaviour b = new HalBehaviour(this);
+        Behaviour b = new RecvItemExportRequestBehaviour(this);
+        addBehaviour(tbf.wrap(b));
+
+        b = new ItemExportBehaviour(this);
         addBehaviour(tbf.wrap(b));
     }
 
@@ -78,5 +87,9 @@ public class WarehouseAgent extends AgentTemplate {
         );
         Behaviour b = new RawContractNetResponder(this, mt);
         addBehaviour(tbf.wrap(b));
+    }
+
+    public Queue<ItemExportRequest> getExportQueue() {
+        return exportQueue;
     }
 }

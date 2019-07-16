@@ -1,7 +1,7 @@
 package machines.real.agv;
 
 import com.alibaba.fastjson.JSONObject;
-import commons.tools.hal.BaseHal;
+import machines.real.commons.hal.BaseHal;
 
 /**
  * Agv对应硬件层

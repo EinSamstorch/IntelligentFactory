@@ -1,4 +1,4 @@
-package commons.tools.hal.socket;
+package machines.real.commons.hal.socket;
 
 import com.alibaba.fastjson.JSONObject;
 import commons.tools.LoggerUtil;

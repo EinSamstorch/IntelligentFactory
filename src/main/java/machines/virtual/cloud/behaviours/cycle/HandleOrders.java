@@ -31,7 +31,7 @@ public class HandleOrders extends TickerBehaviour {
             if (oi == null) break;
             for (WorkpieceInfo wpInfo : oi.getWpInfoList()) {
                 try {
-                    // 未来此处需要做处理，失败的消息需要记录并重试。
+                    // TODO 未来此处需要做处理，失败的消息需要记录并重试。
                     ACLMessage msg = DFUtils.createRequestMsg(wpInfo);
                     msg = DFUtils.searchDF(cagent, msg, DFServiceType.WORKER);
                     cagent.send(msg);

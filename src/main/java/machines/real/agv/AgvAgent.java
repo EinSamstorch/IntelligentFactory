@@ -2,7 +2,8 @@ package machines.real.agv;
 
 import commons.AgentTemplate;
 import commons.tools.DFServiceType;
-import commons.tools.TransportRequest;
+import jade.lang.acl.ACLMessage;
+import machines.real.commons.TransportRequest;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import machines.real.agv.behaviours.cycle.RecvTransportRequestBehaviour;
@@ -20,13 +21,15 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 
 public class AgvAgent extends AgentTemplate {
-    private Queue<TransportRequest> transportRequestQueue = new LinkedBlockingQueue<>();
-    private AgvHal hal = new AgvHal();
+    private Queue<ACLMessage> transportRequestQueue = new LinkedBlockingQueue<>();
+    private AgvHal hal;
 
     @Override
     protected void setup() {
         super.setup();
         registerDF(DFServiceType.AGV);
+
+        hal = new AgvHal(halPort);
 
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
 
@@ -44,7 +47,7 @@ public class AgvAgent extends AgentTemplate {
 
     }
 
-    public Queue<TransportRequest> getTransportRequestQueue() {
+    public Queue<ACLMessage> getTransportRequestQueue() {
         return transportRequestQueue;
     }
 

@@ -83,6 +83,8 @@ public class RawContractNetResponder extends ContractNetResponder {
             // 更新 wpInfo
             wpInfo.setProviderId(whagent.getLocalName());
             wpInfo.setCurOwnerId(whagent.getLocalName());
+            // map location for exporter of warehouse
+            wpInfo.setBufferPos(26);
             // 设置bufferPos,  agv取货用
             wpInfo.setBufferPos(whagent.getPosIn());
 

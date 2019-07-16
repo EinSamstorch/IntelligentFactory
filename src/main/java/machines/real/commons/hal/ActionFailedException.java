@@ -1,4 +1,4 @@
-package commons.tools.hal;
+package machines.real.commons.hal;
 
 /**
  * 动作执行失败 异常.

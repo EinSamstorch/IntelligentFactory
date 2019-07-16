@@ -28,7 +28,7 @@ public class ProcessPlan {
             {
                 add(MachineType.WAREHOUSE);
                 add(MachineType.LATHE);
-                add(MachineType.MILLER);
+                add(MachineType.MILL);
             }
         };
         processPlan.put("001", flangePP);
@@ -44,7 +44,7 @@ public class ProcessPlan {
         List<String> plainPP = new ArrayList<String>(){
             {
                 add(MachineType.WAREHOUSE);
-                add(MachineType.MILLER);
+                add(MachineType.MILL);
             }
         };
         processPlan.put("003", plainPP);

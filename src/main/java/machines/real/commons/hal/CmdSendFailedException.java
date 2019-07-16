@@ -1,4 +1,4 @@
-package commons.tools.hal;
+package machines.real.commons.hal;
 
 /**
  * 发送控制命令失败 异常.

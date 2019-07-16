@@ -1,4 +1,8 @@
-package commons.tools;
+package machines.real.commons;
+
+import commons.WorkpieceInfo;
+
+import java.io.Serializable;
 
 /**
  * 运输任务请求.
@@ -8,16 +12,18 @@ package commons.tools;
  * @since 1.8
  */
 
-public class TransportRequest {
+public class TransportRequest implements Serializable {
     /**
      * 从from地点取货 放置到 to 地点
      */
     private Integer from;
     private Integer to;
+    private WorkpieceInfo wpInfo;
 
-    public TransportRequest(Integer from, Integer to) {
+    public TransportRequest(Integer from, Integer to, WorkpieceInfo wpInfo) {
         this.from = from;
         this.to = to;
+        this.wpInfo = wpInfo;
     }
 
     public Integer getFrom() {
@@ -26,5 +32,9 @@ public class TransportRequest {
 
     public Integer getTo() {
         return to;
+    }
+
+    public WorkpieceInfo getWpInfo() {
+        return wpInfo;
     }
 }

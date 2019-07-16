@@ -37,6 +37,8 @@ public class IniLoader {
      */
     public static final String SECTION_LATHE = "lathe";
 
+    public static final String SECTION_ARMROBOT = "armrobot";
+
     /**
      * 配置文件默认路径：{@value CONFIG_NAME}
      */

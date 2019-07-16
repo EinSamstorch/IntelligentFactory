@@ -27,9 +27,6 @@ public class WorkerAgent extends AgentTemplate {
         return wpInfoQueue;
     }
 
-    public void setWpInfoQueue(Queue<WorkpieceInfo> wpInfoQueue) {
-        this.wpInfoQueue = wpInfoQueue;
-    }
 
     @Override
     protected void setup() {

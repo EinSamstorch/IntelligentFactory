@@ -1,4 +1,4 @@
-package commons.tools.hal;
+package machines.real.commons.hal;
 
 /**
  * 硬件适配层的异常类.

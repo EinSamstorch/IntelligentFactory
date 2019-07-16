@@ -1,4 +1,4 @@
-package commons.tools.hal;
+package machines.real.commons.hal;
 
 /**
  * 响应消息的 任务号 不正确.
