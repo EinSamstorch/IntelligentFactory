@@ -33,14 +33,7 @@ public class RecvItemExportRequestBehaviour extends CyclicBehaviour {
         );
         ACLMessage receive = wagent.receive(mt);
         if(receive != null) {
-            try {
-                ItemExportRequest request = (ItemExportRequest) receive.getContentObject();
-                if(request != null) {
-                    wagent.getExportQueue().offer(request);
-                }
-            } catch (UnreadableException e) {
-                e.printStackTrace();
-            }
+            wagent.getExportQueue().offer(receive);
         } else {
             block();
         }

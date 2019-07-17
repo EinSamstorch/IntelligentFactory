@@ -24,7 +24,6 @@ public class ProcessItemBehaviour extends OneShotBehaviour {
     private Buffer buffer;
     private MillHal hal;
     private MillAgent magent;
-    private Boolean isDone = false;
 
     public ProcessItemBehaviour(MillAgent magent, Buffer buffer) {
         super(magent);
@@ -35,6 +34,7 @@ public class ProcessItemBehaviour extends OneShotBehaviour {
 
     @Override
     public void action() {
+        LoggerUtil.hal.info(String.format("Start processing item from buffer %d", buffer.getIndex()));
         WorkpieceInfo wpInfo = buffer.getWpInfo();
         if(hal.process(wpInfo)) {
             LoggerUtil.hal.info(String.format("Item orderid:%s, workpieceid:%s processed.", wpInfo.getOrderId(), wpInfo.getWorkpieceId()));

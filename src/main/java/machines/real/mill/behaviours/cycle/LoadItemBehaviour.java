@@ -6,6 +6,7 @@ import machines.real.commons.ArmrobotMoveItemRequest;
 import machines.real.mill.MillAgent;
 import machines.real.mill.MillHal;
 import machines.real.mill.behaviours.simple.CallForArm;
+import machines.real.mill.behaviours.simple.ProcessItemBehaviour;
 
 /**
  * .
@@ -30,17 +31,24 @@ public class LoadItemBehaviour extends CyclicBehaviour {
     @Override
     public void action() {
         if(!magent.isBusy()) {
-            for (int i = 0; i < buffers.length; i++) {
+//            for (Buffer buffer : buffers) {
+//                boolean readyProcess = buffer.isOnMachine() && !magent.isBusy();
+//                if (readyProcess) {
+//                    magent.setBusy(true);
+//                    magent.addBehaviour(new ProcessItemBehaviour(magent, buffer));
+//                }
+//            }
+            for (Buffer buffer : buffers) {
                 // 已到达 且 未加工 且 机床空闲
-                boolean ready = buffers[i].isArrived() && !buffers[i].isProcessed() && !magent.isBusy();
-                if(ready) {
+                boolean readyLoad = buffer.isArrived() && !buffer.isProcessed() && !magent.isBusy();
+                if (readyLoad) {
                     // 向机械手发起搬运请求
                     magent.setBusy(true);
-                    String from = String.valueOf(buffers[i].getIndex());
+                    String from = String.valueOf(buffer.getIndex());
                     String to = magent.getLocalName();
-                    String goodsId = buffers[i].getWpInfo().getGoodsId();
+                    String goodsId = buffer.getWpInfo().getGoodsId();
                     ArmrobotMoveItemRequest request = new ArmrobotMoveItemRequest(from, to, goodsId);
-                    magent.addBehaviour(new CallForArm(magent, request, buffers[i], magent.getArmPwd(), CallForArm.LOAD));
+                    magent.addBehaviour(new CallForArm(magent, request, buffer, magent.getArmPwd(), CallForArm.LOAD));
                 }
             }
         } else {

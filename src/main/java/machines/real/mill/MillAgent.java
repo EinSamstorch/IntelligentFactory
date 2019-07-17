@@ -49,7 +49,7 @@ public class MillAgent extends AgentTemplate {
 
     @Override
     protected void loadINI() {
-        Map<String, String> setting = IniLoader.load(IniLoader.SECTION_LATHE);
+        Map<String, String> setting = IniLoader.load(IniLoader.SECTION_MILL);
 
         String SETTING_BUFFER_SIZE = "buffer_size";
         String SETTING_BUFFER_INDEX = "buffer_index";

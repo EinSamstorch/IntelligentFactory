@@ -3,6 +3,8 @@ package machines.real.warehouse.behaviours.cycle;
 import commons.tools.LoggerUtil;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.UnreadableException;
 import machines.real.commons.ItemExportRequest;
 import machines.real.warehouse.WarehouseAgent;
 import machines.real.warehouse.WarehouseHal;
@@ -21,7 +23,7 @@ public class ItemExportBehaviour extends CyclicBehaviour {
     private WarehouseAgent wagent;
     private WarehouseHal hal;
     private Integer posOut;
-    private Queue<ItemExportRequest> requestQueue;
+    private Queue<ACLMessage> requestQueue;
 
     public ItemExportBehaviour(WarehouseAgent wagent) {
         super(wagent);
@@ -33,13 +35,27 @@ public class ItemExportBehaviour extends CyclicBehaviour {
 
     @Override
     public void action() {
-        ItemExportRequest request = requestQueue.poll();
-        if(request != null) {
-            Integer itemPosition = request.getItemPosition();
-            if(hal.moveItem(itemPosition, posOut)) {
-                LoggerUtil.hal.info(String.format("Export item from %d", itemPosition));
-            } else{
-                LoggerUtil.hal.error(String.format("Failed! Export item from %d", itemPosition));
+        ACLMessage msg = requestQueue.poll();
+        if(msg != null) {
+            ItemExportRequest request = null;
+            try {
+                request = (ItemExportRequest) msg.getContentObject();
+            } catch (UnreadableException e) {
+                e.printStackTrace();
+            }
+            if(request != null) {
+                Integer itemPosition = request.getItemPosition();
+                if(hal.moveItem(itemPosition, posOut)) {
+                    // 通知AGV取货
+                    ACLMessage reply = msg.createReply();
+                    reply.setPerformative(ACLMessage.INFORM);
+                    myAgent.send(reply);
+                    LoggerUtil.hal.info(String.format("Succeed! Export item from %d", itemPosition));
+                } else{
+                    LoggerUtil.hal.error(String.format("Failed! Export item from %d", itemPosition));
+                }
+            } else {
+                LoggerUtil.hal.error("Request NPE Error.");
             }
         } else {
             block(1000);

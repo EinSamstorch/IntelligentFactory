@@ -32,7 +32,7 @@ public class WorkpieceInfo implements Serializable {
 
     public static void main(String[] args) {
 //        WorkpieceInfo wpInfo = new WorkpieceInfo("001","001","002","{\"L1\":10}");
-        WorkpieceInfo wpInfo = new WorkpieceInfo("001","001","002","");
+        WorkpieceInfo wpInfo = new WorkpieceInfo("001","001","003","");
         JSONObject json = new JSONObject();
         json.put("extra", wpInfo);
         System.out.println(json.toJSONString());
@@ -144,5 +144,10 @@ public class WorkpieceInfo implements Serializable {
 
     public void setProcessStep(Integer processStep) {
         this.processStep = processStep;
+    }
+
+    @Override
+    public String toString() {
+        return JSONObject.toJSONString(this);
     }
 }

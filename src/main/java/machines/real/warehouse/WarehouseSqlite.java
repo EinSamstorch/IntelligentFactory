@@ -127,6 +127,7 @@ public class WarehouseSqlite extends SQLiteJDBC {
 
     private void removeRawTable(int position) {
         String sqlCmd = String.format("UPDATE raw SET goodsid = null WHERE position = %d", position);
+        connect();
         try {
             Statement stmt = con.createStatement();
             int rst = stmt.executeUpdate(sqlCmd);
@@ -135,6 +136,8 @@ public class WarehouseSqlite extends SQLiteJDBC {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            close();
         }
 
 

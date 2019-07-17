@@ -34,30 +34,37 @@ public class MoveItemBehaviour extends CyclicBehaviour {
     @Override
     public void action() {
         ACLMessage msg = requestQueue.poll();
-        ArmrobotMoveItemRequest request = null ;
-        try {
-            request = (ArmrobotMoveItemRequest) msg.getContentObject();
-        } catch (UnreadableException e) {
-            e.printStackTrace();
-        }
-        if (request != null) {
-            String from = request.getFrom();
-            String to = request.getTo();
-            String goodsid = request.getGoodsid();
-            Integer step = request.getStep();
-            if (hal.moveItem(from, to, goodsid, step)) {
-                LoggerUtil.hal.info(String.format("Move item from %s to %s, goodsid: %s, step: %d.",
-                        from, to, goodsid, step));
-                // 搬运完成通知
-                ACLMessage reply = msg.createReply();
-                reply.setPerformative(ACLMessage.INFORM);
-                armagent.send(reply);
+        if(msg != null) {
+            ArmrobotMoveItemRequest request = null ;
+            try {
+                request = (ArmrobotMoveItemRequest) msg.getContentObject();
+            } catch (UnreadableException e) {
+                LoggerUtil.hal.error("Get Request Error.");
+                e.printStackTrace();
+            }
+            if (request != null) {
+                String from = request.getFrom();
+                String to = request.getTo();
+                String goodsid = request.getGoodsid();
+                Integer step = request.getStep();
+                if (hal.moveItem(from, to, goodsid, step)) {
+                    LoggerUtil.hal.info(String.format("Move item from %s to %s, goodsid: %s, step: %d.",
+                            from, to, goodsid, step));
+                    // 搬运完成通知
+                    ACLMessage reply = msg.createReply();
+                    reply.setPerformative(ACLMessage.INFORM);
+                    armagent.send(reply);
+                } else {
+                    LoggerUtil.hal.error(String.format("Failed! Move item from %s to %s, goodsid: %s, step: %d.",
+                            from, to, goodsid, step));
+                }
             } else {
-                LoggerUtil.hal.error(String.format("Failed! Move item from %s to %s, goodsid: %s, step: %d.",
-                        from, to, goodsid, step));
+                LoggerUtil.hal.error("Request NEP Error.");
             }
         } else {
             block(1000);
         }
+
+
     }
 }

@@ -36,7 +36,7 @@ public class HandleWorkpiece extends CyclicBehaviour {
         int processIndex = wpInfo.nextProcessIndex();
         if(processIndex >= processPlan.size()){
             // 所有工艺完成，回成品库
-
+            LoggerUtil.hal.info(String.format("OrderId: %s, wpId: %s done.", wpInfo.getOrderId(), wpInfo.getWorkpieceId()));
             // action here
             return ;
         }

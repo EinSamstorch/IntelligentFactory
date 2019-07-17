@@ -32,7 +32,7 @@ public class WarehouseAgent extends AgentTemplate {
     private Integer posIn;
     private Integer posOut;
     private WarehouseHal hal;
-    private Queue<ItemExportRequest> exportQueue = new LinkedBlockingQueue<>();
+    private Queue<ACLMessage> exportQueue = new LinkedBlockingQueue<>();
 
     public WarehouseHal getHal() {
         return hal;
@@ -89,7 +89,7 @@ public class WarehouseAgent extends AgentTemplate {
         addBehaviour(tbf.wrap(b));
     }
 
-    public Queue<ItemExportRequest> getExportQueue() {
+    public Queue<ACLMessage> getExportQueue() {
         return exportQueue;
     }
 }

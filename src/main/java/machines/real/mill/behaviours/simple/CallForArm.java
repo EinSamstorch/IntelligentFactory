@@ -5,12 +5,15 @@ import commons.Workpiece;
 import commons.WorkpieceInfo;
 import commons.tools.DFServiceType;
 import commons.tools.DFUtils;
+import commons.tools.LoggerUtil;
 import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import machines.real.commons.ArmrobotMoveItemRequest;
 import machines.real.mill.MillAgent;
+
+import java.util.Random;
 
 /**
  * .
@@ -34,10 +37,12 @@ public class CallForArm extends SimpleBehaviour {
 
     public CallForArm(MillAgent magent, ArmrobotMoveItemRequest request, Buffer buffer, String password, String operation) {
         super(magent);
+        this.magent = magent;
         this.request = request;
         this.password = password;
         this.buffer = buffer;
         this.operation = operation;
+        conversationId = String.format("CALL_FOR_ARM_%d", new Random().nextInt());
     }
 
     @Override
@@ -49,12 +54,13 @@ public class CallForArm extends SimpleBehaviour {
                 msg = DFUtils.createRequestMsg(request);
                 DFUtils.searchDF(myAgent, msg, DFServiceType.ARMROBOT, password);
 
-                conversationId = msg.getConversationId();
+                msg.setConversationId(conversationId);
                 myAgent.send(msg);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             init = false;
+            LoggerUtil.hal.debug("Call for arm.");
         } else {
             MessageTemplate mt = MessageTemplate.MatchConversationId(conversationId);
             ACLMessage receive = myAgent.receive(mt);
@@ -64,12 +70,16 @@ public class CallForArm extends SimpleBehaviour {
                     switch (operation) {
                         case LOAD:
                             buffer.setOnMachine(true);
+//                            magent.setBusy(false);
+                            magent.addBehaviour(new ProcessItemBehaviour(magent, buffer));
+                            LoggerUtil.hal.info(String.format("Buffer %d load on machine.", buffer.getIndex()));
                             break;
                         case UNLOAD:
                             magent.setBusy(false);
                             buffer.setOnMachine(false);
                             buffer.setProcessed(true);
                             sendToWorker(buffer.getWpInfo());
+                            LoggerUtil.hal.info(String.format("Buffer %d unload from machine", buffer.getIndex()));
                             break;
                     }
                 }

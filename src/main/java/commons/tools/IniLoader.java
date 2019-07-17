@@ -39,6 +39,8 @@ public class IniLoader {
 
     public static final String SECTION_ARMROBOT = "armrobot";
 
+    public static final String SECTION_MILL = "mill";
+
     /**
      * 配置文件默认路径：{@value CONFIG_NAME}
      */

@@ -13,7 +13,7 @@ import machines.real.commons.hal.BaseHal;
 
 public class MillHal extends BaseHal {
     private static final String CMD_PROCESS = "process";
-    private static final String CMD_EVALUATE = "evalute";
+    private static final String CMD_EVALUATE = "evaluate";
 
     public MillHal() {
         super();
