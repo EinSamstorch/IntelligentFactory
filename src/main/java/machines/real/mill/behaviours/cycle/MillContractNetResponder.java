@@ -35,6 +35,9 @@ public class MillContractNetResponder extends ContractNetResponder {
     @Override
     protected ACLMessage handleCfp(ACLMessage cfp) throws RefuseException, FailureException, NotUnderstoodException {
         LoggerUtil.agent.debug(String.format("CFP received from: %s.", cfp.getSender().getName()));
+        if(magent.isBufferFull()) {
+            throw new RefuseException("Buffer Full!");
+        }
         WorkpieceInfo wpInfo;
         try {
             wpInfo = (WorkpieceInfo)cfp.getContentObject();

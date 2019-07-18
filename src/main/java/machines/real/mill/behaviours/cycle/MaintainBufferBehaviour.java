@@ -1,6 +1,7 @@
 package machines.real.mill.behaviours.cycle;
 
 import commons.Buffer;
+import commons.tools.LoggerUtil;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -37,6 +38,7 @@ public class MaintainBufferBehaviour extends CyclicBehaviour {
             int bufferIndex = new Integer(receive.getContent());
             for (Buffer buffer : buffers) {
                 if(buffer.getIndex() == bufferIndex) {
+                    LoggerUtil.hal.info(String.format("Item removed from buffer %d", bufferIndex));
                     buffer.reset();
                 }
             }

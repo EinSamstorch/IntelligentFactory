@@ -1,12 +1,9 @@
 package machines.real.warehouse.behaviours.cycle;
 
-import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.lang.acl.UnreadableException;
-import machines.real.commons.ItemExportRequest;
 import machines.real.warehouse.WarehouseAgent;
 
 /**

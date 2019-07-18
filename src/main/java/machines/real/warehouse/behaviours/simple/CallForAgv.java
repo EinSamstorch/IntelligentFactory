@@ -1,6 +1,6 @@
-package machines.real.agv.behaviours.simple;
+package machines.real.warehouse.behaviours.simple;
 
-import commons.NotifyFinish;
+import commons.exceptions.MsgCreateFailedException;
 import commons.tools.DFServiceType;
 import commons.tools.DFUtils;
 import commons.tools.LoggerUtil;
@@ -9,6 +9,8 @@ import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import machines.real.commons.ItemMoveRequest;
+import machines.real.commons.TransportRequest;
+import machines.real.warehouse.WarehouseAgent;
 
 import java.util.Random;
 
@@ -20,45 +22,45 @@ import java.util.Random;
  * @since 1.8
  */
 
-public class CallForWarehouse extends SimpleBehaviour {
+public class CallForAgv extends SimpleBehaviour {
+    private TransportRequest request;
     private boolean init = true;
-    private boolean isDone = false;
+    private boolean done = false;
     private String conversationId;
-    private ItemMoveRequest request;
-    private volatile NotifyFinish notifyFinish;
-    public CallForWarehouse(Agent a, ItemMoveRequest request, NotifyFinish notifyFinish) {
+
+    public CallForAgv(Agent a, TransportRequest request) {
         super(a);
         this.request = request;
-        this.notifyFinish = notifyFinish;
-        conversationId = String.format("CALL_FOR_WH_%d", new Random().nextInt());
-
+        conversationId = String.format("CALL_FOR_AGV_%d", new Random().nextInt());
     }
 
     @Override
     public void action() {
         if(init) {
-            // 发送出货请求
+            // 发送运输请求
             ACLMessage msg = null;
-            try {
+            try{
                 msg = DFUtils.createRequestMsg(request);
-                DFUtils.searchDF(myAgent, msg, DFServiceType.WAREHOUSE);
-                // 发送运输请求
+                DFUtils.searchDF(myAgent, msg, DFServiceType.AGV);
                 msg.setConversationId(conversationId);
                 myAgent.send(msg);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             init = false;
-            LoggerUtil.hal.debug("Call for warehouse.");
+            LoggerUtil.agent.debug("Call for agv.");
         } else {
             MessageTemplate mt = MessageTemplate.MatchConversationId(conversationId);
             ACLMessage receive = myAgent.receive(mt);
-            if(receive != null) {
+            if(receive!=null) {
                 if(receive.getPerformative() == ACLMessage.INFORM) {
-                    // 已到达出货口
-                    isDone = true;
-                    notifyFinish.setDone(true);
-                    LoggerUtil.agent.info("Workpiece ready to export");
+                    // 已到达
+                    done = true;
+                    // 发送搬运请求
+                    ItemMoveRequest request = new ItemMoveRequest(this.request.getWpInfo().getWarehousePosition());
+                    myAgent.addBehaviour(new ItemImportBehaviour((WarehouseAgent) myAgent, request));
+
+                    LoggerUtil.agent.info("Workpiece arrived at import location");
                 } else {
                     LoggerUtil.agent.error("Performative error.");
                 }
@@ -70,6 +72,6 @@ public class CallForWarehouse extends SimpleBehaviour {
 
     @Override
     public boolean done() {
-        return isDone;
+        return done;
     }
 }

@@ -1,5 +1,7 @@
 package commons;
 
+import commons.tools.LoggerUtil;
+
 /**
  * 工位台.
  *
@@ -56,6 +58,8 @@ public class Buffer {
     }
 
     public void reset(){
+        LoggerUtil.hal.info(String.format("Buffer %d reset", index));
+        wpInfo = null;
         this.arrived = false;
         this.processed = false;
         this.onMachine = false;

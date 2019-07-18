@@ -10,10 +10,10 @@ import java.io.Serializable;
  * @since 1.8
  */
 
-public class ItemExportRequest implements Serializable {
+public class ItemMoveRequest implements Serializable {
     private Integer itemPosition;
 
-    public ItemExportRequest(Integer itemPosition) {
+    public ItemMoveRequest(Integer itemPosition) {
         this.itemPosition = itemPosition;
     }
 

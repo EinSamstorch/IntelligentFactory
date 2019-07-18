@@ -1,11 +1,10 @@
 package machines.real.warehouse.behaviours.cycle;
 
 import commons.tools.LoggerUtil;
-import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
-import machines.real.commons.ItemExportRequest;
+import machines.real.commons.ItemMoveRequest;
 import machines.real.warehouse.WarehouseAgent;
 import machines.real.warehouse.WarehouseHal;
 
@@ -37,9 +36,9 @@ public class ItemExportBehaviour extends CyclicBehaviour {
     public void action() {
         ACLMessage msg = requestQueue.poll();
         if(msg != null) {
-            ItemExportRequest request = null;
+            ItemMoveRequest request = null;
             try {
-                request = (ItemExportRequest) msg.getContentObject();
+                request = (ItemMoveRequest) msg.getContentObject();
             } catch (UnreadableException e) {
                 e.printStackTrace();
             }

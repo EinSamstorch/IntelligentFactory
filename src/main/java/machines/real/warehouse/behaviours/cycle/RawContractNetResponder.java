@@ -30,8 +30,7 @@ public class RawContractNetResponder extends ContractNetResponder {
     public RawContractNetResponder(WarehouseAgent whagent, MessageTemplate mt) {
         super(whagent, mt);
         this.whagent = whagent;
-        sqlite = new WarehouseSqlite(whagent.getSqlitePath());
-        sqlite.initTable();
+        sqlite = whagent.getSqlite();
     }
 
     /**

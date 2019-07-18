@@ -37,6 +37,7 @@ public class HandleWorkpiece extends CyclicBehaviour {
         if(processIndex >= processPlan.size()){
             // 所有工艺完成，回成品库
             LoggerUtil.hal.info(String.format("OrderId: %s, wpId: %s done.", wpInfo.getOrderId(), wpInfo.getWorkpieceId()));
+            processOn(wpInfo, DFServiceType.PRODUCT);
             // action here
             return ;
         }
@@ -64,7 +65,16 @@ public class HandleWorkpiece extends CyclicBehaviour {
     private void processOn(WorkpieceInfo wpInfo, String serviceType){
         try{
             ACLMessage msg = DFUtils.createCFPMsg(wpInfo);
-            msg = DFUtils.searchDF(wagent, msg, serviceType);
+            if(serviceType.equals(DFServiceType.PRODUCT)) {
+                msg = DFUtils.searchDF(wagent, msg, DFServiceType.WAREHOUSE);
+                msg.setLanguage("PRODUCT");
+            } else if(serviceType.equals(DFServiceType.WAREHOUSE)) {
+                msg = DFUtils.searchDF(wagent, msg, serviceType);
+                msg.setLanguage("RAW");
+            } else {
+                msg = DFUtils.searchDF(wagent, msg, serviceType);
+            }
+
             Behaviour b = new MyContractNetInitiator(wagent, msg);
             wagent.addBehaviour(b);
         } catch (Exception e) {

@@ -18,6 +18,5 @@ public class DFServiceType {
     public static final String DETECTOR = "detector";
     public static final String AGV = "agv";
     public static final String ARMROBOT = "armrobot";
-
-
+    public static final String PRODUCT = "product";
 }

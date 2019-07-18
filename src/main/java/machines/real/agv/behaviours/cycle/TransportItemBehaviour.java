@@ -2,13 +2,15 @@ package machines.real.agv.behaviours.cycle;
 
 import commons.NotifyFinish;
 import commons.tools.LoggerUtil;
+import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
+import jade.util.leap.Iterator;
 import machines.real.agv.AgvAgent;
 import machines.real.agv.AgvHal;
 import machines.real.agv.behaviours.simple.CallForWarehouse;
-import machines.real.commons.ItemExportRequest;
+import machines.real.commons.ItemMoveRequest;
 import machines.real.commons.TransportRequest;
 
 /**
@@ -68,7 +70,7 @@ public class TransportItemBehaviour extends CyclicBehaviour {
 //                int to = request.getTo();
 //                if (from == WAREHOUSE_EXPORT) {
 //                    // CALL FOR WAREHOUSE
-//                    ItemExportRequest exportRequest = new ItemExportRequest(request.getWpInfo().getWarehousePosition());
+//                    ItemMoveRequest exportRequest = new ItemMoveRequest(request.getWpInfo().getWarehousePosition());
 //                    myAgent.addBehaviour(new CallForWarehouse(myAgent, exportRequest));
 //                } else {
 //                    doTask();
@@ -82,14 +84,15 @@ public class TransportItemBehaviour extends CyclicBehaviour {
     }
 
     private void waitNotify() {
-        if(notifyFinish.getDone()) {
+        if (notifyFinish.getDone()) {
             state = STATE_DO_TASK;
         } else {
             block(1000);
         }
     }
+
     private void callForWarehouse() {
-        ItemExportRequest exportRequest = new ItemExportRequest(request.getWpInfo().getWarehousePosition());
+        ItemMoveRequest exportRequest = new ItemMoveRequest(request.getWpInfo().getWarehousePosition());
         notifyFinish = new NotifyFinish();
         myAgent.addBehaviour(new CallForWarehouse(myAgent, exportRequest, notifyFinish));
         state = STATE_WAIT_WH;
@@ -131,6 +134,18 @@ public class TransportItemBehaviour extends CyclicBehaviour {
             // 通知取货
             // TODO 修改aid 向 上一道工序的机床通知取货
             // 不可以修改myAgent AID
+            AID me = myAgent.getAID();
+            AID receiver = new AID(request.getWpInfo().getPreOwnerId(), false);
+            Iterator allAddresses = me.getAllAddresses();
+            while (allAddresses.hasNext()) {
+                receiver.addAddresses((String) allAddresses.next());
+            }
+            ACLMessage inform = new ACLMessage(ACLMessage.INFORM);
+            inform.addReceiver(receiver);
+            inform.setLanguage("BUFFER_INDEX");
+            inform.setContent(Integer.toString(from));
+            aagent.send(inform);
+
 //                    AID receiver = myAgent.getAID();
 //                    receiver.setLocalName(request.getWpInfo().getPreOwnerId());
 //
