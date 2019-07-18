@@ -46,11 +46,23 @@ public class MillContractNetResponder extends ContractNetResponder {
             throw new FailureException("WorkpieceInfo read error.");
         }
 
-        int evaluteTIme = hal.evaluate(wpInfo);
+        int evaluateTime = hal.evaluate(wpInfo);
+        for (Buffer buffer : magent.getBuffers()) {
+            // 工位台 未加工 工件 时间累计
+            boolean flag = buffer.getWpInfo() != null && (!buffer.isOnMachine() && !buffer.isProcessed());
+            if(flag) {
+                evaluateTime += buffer.getEvaluateTime();
+            }
+            // 正在加工工件时间计算
+            boolean flag2 = buffer.getWpInfo() != null && (buffer.isOnMachine() && !buffer.isProcessed());
+            if(flag2) {
+                evaluateTime += (System.currentTimeMillis() - buffer.getProcessTimestamp()) / 1000;
+            }
+        }
 
         ACLMessage propose = cfp.createReply();
         propose.setPerformative(ACLMessage.PROPOSE);
-        propose.setContent(String.valueOf(evaluteTIme));
+        propose.setContent(String.valueOf(evaluateTime));
         return propose;
     }
 
@@ -78,6 +90,7 @@ public class MillContractNetResponder extends ContractNetResponder {
         wpInfo.setBufferPos(to);
         // 放入机床buffer中
         buffer.setWpInfo(wpInfo);
+        buffer.setEvaluateTime(hal.evaluate(wpInfo));
         // call for agv
         TransportRequest request = new TransportRequest(from, to, wpInfo);
         magent.addBehaviour(new CallForAgv(magent, request, buffer));

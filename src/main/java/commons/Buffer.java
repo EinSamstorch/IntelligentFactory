@@ -16,6 +16,24 @@ public class Buffer {
     private Boolean arrived = false;
     private Boolean processed = false;
     private Boolean onMachine = false;
+    private Integer evaluateTime = 0;
+    private Long processTimestamp = 0L;
+
+    public Long getProcessTimestamp() {
+        return processTimestamp;
+    }
+
+    public void setProcessTimestamp(Long processTimestamp) {
+        this.processTimestamp = processTimestamp;
+    }
+
+    public Integer getEvaluateTime() {
+        return evaluateTime;
+    }
+
+    public void setEvaluateTime(Integer evaluateTime) {
+        this.evaluateTime = evaluateTime;
+    }
 
     public int getIndex() {
         return index;
@@ -58,8 +76,10 @@ public class Buffer {
     }
 
     public void reset(){
-        LoggerUtil.hal.info(String.format("Buffer %d reset", index));
+        LoggerUtil.hal.debug(String.format("Buffer %d reset", index));
         wpInfo = null;
+        evaluateTime = 0;
+        processTimestamp = 0L;
         this.arrived = false;
         this.processed = false;
         this.onMachine = false;

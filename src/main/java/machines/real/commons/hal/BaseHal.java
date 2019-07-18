@@ -91,7 +91,7 @@ public class BaseHal {
     }
 
 
-    protected synchronized boolean executeCmd(String cmd, Object extra) {
+    protected boolean executeCmd(String cmd, Object extra) {
         int taskNo = sendMessageToMachine(cmd, extra);
 
         JSONObject cmdResponse = getCmdResponse(taskNo);

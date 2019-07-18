@@ -87,7 +87,7 @@ public class DFUtils {
     public static ACLMessage createCFPMsg(Object content) throws MsgCreateFailedException {
         ACLMessage msg = new ACLMessage(ACLMessage.CFP);
         msg.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
-        msg.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
+        msg.setReplyByDate(new Date(System.currentTimeMillis() + 30000));
         msg = msgSetContent(msg, content);
         return msg;
     }

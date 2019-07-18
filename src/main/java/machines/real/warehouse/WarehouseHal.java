@@ -22,7 +22,7 @@ public class WarehouseHal extends BaseHal {
         super(port);
     }
 
-    public boolean moveItem(int from, int to) {
+    public synchronized boolean moveItem(int from, int to) {
         JSONObject extra = new JSONObject();
         extra.put(FIELD_FROM, from);
         extra.put(FIELD_TO, to);

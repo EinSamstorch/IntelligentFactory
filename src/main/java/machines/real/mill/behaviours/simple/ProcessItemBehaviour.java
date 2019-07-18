@@ -36,6 +36,7 @@ public class ProcessItemBehaviour extends OneShotBehaviour {
     public void action() {
         LoggerUtil.hal.info(String.format("Start processing item from buffer %d", buffer.getIndex()));
         WorkpieceInfo wpInfo = buffer.getWpInfo();
+        buffer.setProcessTimestamp(System.currentTimeMillis());
         if(hal.process(wpInfo)) {
             LoggerUtil.hal.info(String.format("Item orderid:%s, workpieceid:%s processed.", wpInfo.getOrderId(), wpInfo.getWorkpieceId()));
             String from = magent.getLocalName();
