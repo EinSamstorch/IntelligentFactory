@@ -38,7 +38,7 @@ public class GetOrder extends TickerBehaviour {
         if(result.equals("{\"flag\":\"failure\",\"message\":\"The resultSet is empty！\"}")) return;
         LoggerUtil.agent.info(result);
 
-        CloudMysql mysqlTool = new CloudMysql(cagent.getMysqlSetting());
+        // CloudMysql mysqlTool = new CloudMysql(cagent.getMysqlSetting());
         /*
           解析订单 JSONArray
           [{订单1},{订单2},{订单3}]
