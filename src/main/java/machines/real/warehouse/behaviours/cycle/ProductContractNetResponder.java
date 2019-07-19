@@ -9,7 +9,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetResponder;
-import machines.real.commons.TransportRequest;
+import machines.real.commons.request.AgvRequest;
 import machines.real.warehouse.WarehouseAgent;
 import machines.real.warehouse.WarehouseSqlite;
 import machines.real.warehouse.behaviours.simple.CallForAgv;
@@ -67,7 +67,7 @@ public class ProductContractNetResponder extends ContractNetResponder {
             wpInfo.setBufferPos(25);
 
             // call for agv
-            TransportRequest request = new TransportRequest(currentLocation, 25, wpInfo);
+            AgvRequest request = new AgvRequest(currentLocation, 25, wpInfo);
             whagent.addBehaviour(new CallForAgv(whagent, request));
 
             ACLMessage inform = accept.createReply();

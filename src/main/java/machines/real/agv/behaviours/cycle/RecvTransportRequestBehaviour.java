@@ -1,11 +1,9 @@
 package machines.real.agv.behaviours.cycle;
 
-import machines.real.commons.TransportRequest;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.lang.acl.UnreadableException;
 import machines.real.agv.AgvAgent;
 
 /**
@@ -34,7 +32,7 @@ public class RecvTransportRequestBehaviour extends CyclicBehaviour {
         if (receive != null) {
             aagent.getTransportRequestQueue().offer(receive);
 //            try {
-//                TransportRequest request = (TransportRequest) receive.getContentObject();
+//                AgvRequest request = (AgvRequest) receive.getContentObject();
 //                if(request != null) {
 //                    aagent.getTransportRequestQueue().offer(request);
 //                }

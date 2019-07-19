@@ -43,8 +43,4 @@ public class WorkerAgent extends AgentTemplate {
 
     }
 
-    @Override
-    protected void loadINI() {
-        // nothing to do
-    }
 }

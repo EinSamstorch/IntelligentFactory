@@ -1,6 +1,5 @@
 package machines.real.mill.behaviours.cycle;
 
-import commons.Buffer;
 import commons.WorkpieceInfo;
 import commons.tools.LoggerUtil;
 import jade.domain.FIPAAgentManagement.FailureException;
@@ -10,10 +9,14 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetResponder;
-import machines.real.commons.TransportRequest;
+import machines.real.commons.ContractNetContent;
+import machines.real.commons.request.AgvRequest;
+import machines.real.commons.buffer.Buffer;
 import machines.real.mill.MillAgent;
 import machines.real.mill.MillHal;
-import machines.real.mill.behaviours.simple.CallForAgv;
+import machines.real.commons.behaviours.simple.CallForAgv;
+
+import java.io.IOException;
 
 /**
  * .
@@ -24,18 +27,18 @@ import machines.real.mill.behaviours.simple.CallForAgv;
  */
 
 public class MillContractNetResponder extends ContractNetResponder {
-    private MillAgent magent;
+    private MillAgent millAgent;
     private MillHal hal;
-    public MillContractNetResponder(MillAgent a, MessageTemplate mt) {
-        super(a, mt);
-        magent = a;
-        hal = a.getHal();
+    public MillContractNetResponder(MillAgent millAgent, MessageTemplate mt) {
+        super(millAgent, mt);
+        this.millAgent = millAgent;
+        hal = (MillHal) millAgent.getHal();
     }
 
     @Override
     protected ACLMessage handleCfp(ACLMessage cfp) throws RefuseException, FailureException, NotUnderstoodException {
         LoggerUtil.agent.debug(String.format("CFP received from: %s.", cfp.getSender().getName()));
-        if(magent.isBufferFull()) {
+        if(millAgent.getBufferManger().isBufferFull()) {
             throw new RefuseException("Buffer Full!");
         }
         WorkpieceInfo wpInfo;
@@ -46,23 +49,18 @@ public class MillContractNetResponder extends ContractNetResponder {
             throw new FailureException("WorkpieceInfo read error.");
         }
 
+        // 预估时间作为标书内容
         int evaluateTime = hal.evaluate(wpInfo);
-        for (Buffer buffer : magent.getBuffers()) {
-            // 工位台 未加工 工件 时间累计
-            boolean flag = buffer.getWpInfo() != null && (!buffer.isOnMachine() && !buffer.isProcessed());
-            if(flag) {
-                evaluateTime += buffer.getEvaluateTime();
-            }
-            // 正在加工工件时间计算
-            boolean flag2 = buffer.getWpInfo() != null && (buffer.isOnMachine() && !buffer.isProcessed());
-            if(flag2) {
-                evaluateTime += (System.currentTimeMillis() - buffer.getProcessTimestamp()) / 1000;
-            }
-        }
+        evaluateTime += millAgent.getBufferManger().getAllWaitingTime();
+        ContractNetContent content = new ContractNetContent(evaluateTime);
 
         ACLMessage propose = cfp.createReply();
         propose.setPerformative(ACLMessage.PROPOSE);
-        propose.setContent(String.valueOf(evaluateTime));
+        try {
+            propose.setContentObject(content);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return propose;
     }
 
@@ -84,16 +82,19 @@ public class MillContractNetResponder extends ContractNetResponder {
             throw new FailureException("Unknown workpiece location.");
         }
         // 更新wpInfo
-        wpInfo.setCurOwnerId(magent.getLocalName());
-        Buffer buffer = magent.getBufferByIndex(magent.getEmptyBuffer());
+        wpInfo.setCurOwnerId(millAgent.getLocalName());
+        Buffer buffer = millAgent.getBufferManger().getEmptyBuffer();
+        if(buffer == null) {
+            throw new FailureException("Buffer Full!");
+        }
         int to = buffer.getIndex();
         wpInfo.setBufferPos(to);
         // 放入机床buffer中
         buffer.setWpInfo(wpInfo);
         buffer.setEvaluateTime(hal.evaluate(wpInfo));
         // call for agv
-        TransportRequest request = new TransportRequest(from, to, wpInfo);
-        magent.addBehaviour(new CallForAgv(magent, request, buffer));
+        AgvRequest request = new AgvRequest(from, to, wpInfo);
+        millAgent.addBehaviour(new CallForAgv(millAgent, request, buffer));
         // 完成本次招标动作
         ACLMessage inform = accept.createReply();
         inform.setPerformative(ACLMessage.INFORM);

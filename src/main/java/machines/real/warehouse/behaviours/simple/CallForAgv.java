@@ -1,6 +1,5 @@
 package machines.real.warehouse.behaviours.simple;
 
-import commons.exceptions.MsgCreateFailedException;
 import commons.tools.DFServiceType;
 import commons.tools.DFUtils;
 import commons.tools.LoggerUtil;
@@ -9,7 +8,7 @@ import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import machines.real.commons.ItemMoveRequest;
-import machines.real.commons.TransportRequest;
+import machines.real.commons.request.AgvRequest;
 import machines.real.warehouse.WarehouseAgent;
 
 import java.util.Random;
@@ -23,12 +22,12 @@ import java.util.Random;
  */
 
 public class CallForAgv extends SimpleBehaviour {
-    private TransportRequest request;
+    private AgvRequest request;
     private boolean init = true;
     private boolean done = false;
     private String conversationId;
 
-    public CallForAgv(Agent a, TransportRequest request) {
+    public CallForAgv(Agent a, AgvRequest request) {
         super(a);
         this.request = request;
         conversationId = String.format("CALL_FOR_AGV_%d", new Random().nextInt());

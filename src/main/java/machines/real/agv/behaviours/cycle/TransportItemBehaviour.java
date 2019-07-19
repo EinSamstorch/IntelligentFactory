@@ -11,7 +11,7 @@ import machines.real.agv.AgvAgent;
 import machines.real.agv.AgvHal;
 import machines.real.agv.behaviours.simple.CallForWarehouse;
 import machines.real.commons.ItemMoveRequest;
-import machines.real.commons.TransportRequest;
+import machines.real.commons.request.AgvRequest;
 
 /**
  * 执行运输任务.
@@ -30,7 +30,7 @@ public class TransportItemBehaviour extends CyclicBehaviour {
     private static final int STATE_DO_TASK = 3;
     private static final int STATE_WAIT_WH = 4;
     private int state;
-    private TransportRequest request;
+    private AgvRequest request;
     private ACLMessage requestMsg;
     private volatile NotifyFinish notifyFinish;
 
@@ -59,9 +59,9 @@ public class TransportItemBehaviour extends CyclicBehaviour {
         }
 //        ACLMessage msg = aagent.getTransportRequestQueue().poll();
 //        if (msg != null) {
-//            TransportRequest request = null;
+//            AgvRequest request = null;
 //            try {
-//                request = (TransportRequest) msg.getContentObject();
+//                request = (AgvRequest) msg.getContentObject();
 //            } catch (UnreadableException e) {
 //                e.printStackTrace();
 //            }
@@ -102,9 +102,9 @@ public class TransportItemBehaviour extends CyclicBehaviour {
         ACLMessage msg = aagent.getTransportRequestQueue().poll();
         if (msg != null) {
             this.requestMsg = msg;
-            TransportRequest request = null;
+            AgvRequest request = null;
             try {
-                request = (TransportRequest) msg.getContentObject();
+                request = (AgvRequest) msg.getContentObject();
             } catch (UnreadableException e) {
                 e.printStackTrace();
             }

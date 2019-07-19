@@ -2,8 +2,8 @@ package machines.real.agv;
 
 import commons.AgentTemplate;
 import commons.tools.DFServiceType;
+import commons.tools.IniLoader;
 import jade.lang.acl.ACLMessage;
-import machines.real.commons.TransportRequest;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import machines.real.agv.behaviours.cycle.RecvTransportRequestBehaviour;
@@ -28,7 +28,7 @@ public class AgvAgent extends AgentTemplate {
     protected void setup() {
         super.setup();
         registerDF(DFServiceType.AGV);
-
+        halPort = IniLoader.loadHalPort(getLocalName());
         hal = new AgvHal(halPort);
 
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
@@ -40,11 +40,6 @@ public class AgvAgent extends AgentTemplate {
         // 执行运输请求
         b = new TransportItemBehaviour(this);
         addBehaviour(tbf.wrap(b));
-    }
-
-    @Override
-    protected void loadINI() {
-
     }
 
     public Queue<ACLMessage> getTransportRequestQueue() {

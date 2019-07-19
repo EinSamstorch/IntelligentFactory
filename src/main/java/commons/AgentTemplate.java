@@ -16,10 +16,9 @@ import java.util.Map;
  * <p>
  * 继承步骤：
  * 1.继承该类
- * 2.实现 protected abstract void loadINI();
- * 3.重载 setup函数，并调用super.setup();
- * 4.调用registerDF();
- * 5.增加自定义行为
+ * 2.重载 setup函数，并调用super.setup();
+ * 3.调用registerDF();
+ * 4.增加自定义行为
  *
  * @author <a href="mailto:junfeng_pan96@qq.com">junfeng</a>
  * @version 1.0.0.0
@@ -32,29 +31,12 @@ public abstract class AgentTemplate extends Agent {
     @Override
     protected void setup() {
         super.setup();
-        loadINI();
-        loadHalPort();
     }
 
     /**
-     * load hal_port from [common] in setting.ini
-     */
-    private void loadHalPort(){
-        Map<String, String> setting = IniLoader.load(IniLoader.SECTION_COMMON);
-
-        String SETTING_HAL_PORT = "hal_port";
-        halPort = new Integer(setting.get(SETTING_HAL_PORT));
-    }
-
-    /**
-     * 从setting.ini配置文件中载入对应配置参数
-     */
-    protected abstract void loadINI();
-
-    /**
-     * 向DF注册服务
-     *
+     * 注册服务
      * @param serviceType 自身提供的服务类型，{@link commons.tools.DFServiceType}
+     * @param password 额外属性 使用该服务时 需要配对密码
      */
     protected void registerDF(String serviceType, String password) {
         DFAgentDescription dfd = new DFAgentDescription();

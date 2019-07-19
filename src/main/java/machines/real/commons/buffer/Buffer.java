@@ -1,5 +1,6 @@
-package commons;
+package machines.real.commons.buffer;
 
+import commons.WorkpieceInfo;
 import commons.tools.LoggerUtil;
 
 /**
@@ -11,16 +12,34 @@ import commons.tools.LoggerUtil;
  */
 
 public class Buffer {
+    /**
+     * Buffer编号 唯一
+     */
     private Integer index;
+    /**
+     * Buffer上 工件信息
+     */
     private WorkpieceInfo wpInfo;
-    private Boolean arrived = false;
-    private Boolean processed = false;
-    private Boolean onMachine = false;
+    /**
+     * Buffer状态信息
+     */
+    private BufferState bufferState = new BufferState();
+
+    /**
+     * Buffer上工件预估时间
+     */
     private Integer evaluateTime = 0;
+    /**
+     * Buffer上工件加工开始时间
+     */
     private Long processTimestamp = 0L;
 
-    public Long getProcessTimestamp() {
-        return processTimestamp;
+    /**
+     * 已返回加工时长
+     * @return 单位 秒
+     */
+    public Integer getProcessTime() {
+        return (int)(System.currentTimeMillis() - processTimestamp) / 1000;
     }
 
     public void setProcessTimestamp(Long processTimestamp) {
@@ -35,7 +54,7 @@ public class Buffer {
         this.evaluateTime = evaluateTime;
     }
 
-    public int getIndex() {
+    public Integer getIndex() {
         return index;
     }
 
@@ -47,41 +66,24 @@ public class Buffer {
         this.wpInfo = wpInfo;
     }
 
-    public Buffer(Integer index) {
+    public Buffer(int index) {
         this.index = index;
     }
 
-    public boolean isArrived() {
-        return arrived;
-    }
-
-    public void setArrived(boolean arrived) {
-        this.arrived = arrived;
-    }
-
-    public boolean isProcessed() {
-        return processed;
-    }
-
-    public void setProcessed(boolean processed) {
-        this.processed = processed;
-    }
-
-    public boolean isOnMachine() {
-        return onMachine;
-    }
-
-    public void setOnMachine(boolean onMachine) {
-        this.onMachine = onMachine;
-    }
 
     public void reset(){
         LoggerUtil.hal.debug(String.format("Buffer %d reset", index));
         wpInfo = null;
         evaluateTime = 0;
         processTimestamp = 0L;
-        this.arrived = false;
-        this.processed = false;
-        this.onMachine = false;
+        bufferState.resetState();
+    }
+
+    public Boolean isEmpty() {
+        return wpInfo == null;
+    }
+
+    public BufferState getBufferState() {
+        return bufferState;
     }
 }

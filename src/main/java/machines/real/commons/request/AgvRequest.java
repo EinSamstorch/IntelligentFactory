@@ -1,4 +1,4 @@
-package machines.real.commons;
+package machines.real.commons.request;
 
 import commons.WorkpieceInfo;
 
@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @since 1.8
  */
 
-public class TransportRequest implements Serializable {
+public class AgvRequest implements Serializable {
     /**
      * 从from地点取货 放置到 to 地点
      */
@@ -20,7 +20,7 @@ public class TransportRequest implements Serializable {
     private Integer to;
     private WorkpieceInfo wpInfo;
 
-    public TransportRequest(Integer from, Integer to, WorkpieceInfo wpInfo) {
+    public AgvRequest(Integer from, Integer to, WorkpieceInfo wpInfo) {
         this.from = from;
         this.to = to;
         this.wpInfo = wpInfo;

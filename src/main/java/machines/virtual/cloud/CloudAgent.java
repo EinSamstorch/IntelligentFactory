@@ -79,6 +79,7 @@ public class CloudAgent extends AgentTemplate {
         // 载入未完成订单
         //loadOrders();
         // 注册DF服务 订单状态更新服务
+        loadIni();
         registerDF(DFServiceType.CLOUD_UPDATE);
 
 
@@ -101,8 +102,8 @@ public class CloudAgent extends AgentTemplate {
     /**
      * 载入INI文件 并读取对应配置
      */
-    protected void loadINI() {
-        Map<String, String> setting = IniLoader.load(IniLoader.SECTION_CLOUD);
+    protected void loadIni() {
+        Map<String, String> setting = IniLoader.load(getLocalName());
         mysqlSetting = IniLoader.load(IniLoader.SECTION_MYSQL);
         website = setting.get("website");
 

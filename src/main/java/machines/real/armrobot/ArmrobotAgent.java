@@ -4,12 +4,10 @@ import commons.AgentTemplate;
 import commons.tools.DFServiceType;
 import commons.tools.IniLoader;
 import jade.core.behaviours.Behaviour;
-import jade.core.behaviours.ReceiverBehaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.lang.acl.ACLMessage;
 import machines.real.armrobot.behaviours.cycle.MoveItemBehaviour;
 import machines.real.armrobot.behaviours.cycle.RecvMoveItemBehaviour;
-import machines.real.commons.ArmrobotMoveItemRequest;
 
 import java.util.Map;
 import java.util.Queue;
@@ -24,12 +22,14 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 
 public class ArmrobotAgent extends AgentTemplate {
-    private String armPwd;
     private ArmrobotHal hal;
     private Queue<ACLMessage> requestQueue = new LinkedBlockingQueue<>();
     @Override
     protected void setup() {
         super.setup();
+
+        String armPwd = IniLoader.loadArmPassword(getLocalName());
+        halPort = IniLoader.loadHalPort(getLocalName());
         registerDF(DFServiceType.ARMROBOT, armPwd);
 
         hal = new ArmrobotHal(halPort);
@@ -43,16 +43,6 @@ public class ArmrobotAgent extends AgentTemplate {
         addBehaviour(tbf.wrap(b));
     }
 
-    /**
-     * load arm password
-     */
-    @Override
-    protected void loadINI() {
-        Map<String, String> setting = IniLoader.load(IniLoader.SECTION_COMMON);
-
-        final String SETTING_ARM_PASSWORD = "arm_password";
-        armPwd = setting.get(SETTING_ARM_PASSWORD);
-    }
 
     public ArmrobotHal getHal() {
         return hal;

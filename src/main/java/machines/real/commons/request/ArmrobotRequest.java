@@ -1,4 +1,4 @@
-package machines.real.commons;
+package machines.real.commons.request;
 
 import java.io.Serializable;
 
@@ -10,20 +10,20 @@ import java.io.Serializable;
  * @since 1.8
  */
 
-public class ArmrobotMoveItemRequest implements Serializable {
+public class ArmrobotRequest implements Serializable {
     private String from;
     private String to;
     private String goodsid;
     private Integer step;
 
-    public ArmrobotMoveItemRequest(String from, String to, String goodsid, Integer step) {
+    public ArmrobotRequest(String from, String to, String goodsid, Integer step) {
         this.from = from;
         this.to = to;
         this.goodsid = goodsid;
         this.step = step;
     }
 
-    public ArmrobotMoveItemRequest(String from, String to, String goodsid){
+    public ArmrobotRequest(String from, String to, String goodsid){
         this(from, to, goodsid, 0);
     }
 

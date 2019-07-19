@@ -1,13 +1,12 @@
 package machines.real.armrobot.behaviours.cycle;
 
 import commons.tools.LoggerUtil;
-import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
 import machines.real.armrobot.ArmrobotAgent;
 import machines.real.armrobot.ArmrobotHal;
-import machines.real.commons.ArmrobotMoveItemRequest;
+import machines.real.commons.request.ArmrobotRequest;
 
 import java.util.Queue;
 
@@ -35,9 +34,9 @@ public class MoveItemBehaviour extends CyclicBehaviour {
     public void action() {
         ACLMessage msg = requestQueue.poll();
         if(msg != null) {
-            ArmrobotMoveItemRequest request = null ;
+            ArmrobotRequest request = null ;
             try {
-                request = (ArmrobotMoveItemRequest) msg.getContentObject();
+                request = (ArmrobotRequest) msg.getContentObject();
             } catch (UnreadableException e) {
                 LoggerUtil.hal.error("Get Request Error.");
                 e.printStackTrace();

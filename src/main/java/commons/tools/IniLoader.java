@@ -1,5 +1,6 @@
 package commons.tools;
 
+import machines.real.commons.buffer.BufferManger;
 import org.ini4j.Ini;
 import org.ini4j.InvalidFileFormatException;
 
@@ -51,73 +52,81 @@ public class IniLoader {
      *
      * @return 加载配置文件的ini实例.
      */
-    private static Ini loadINI() {
+    private static Ini loadIni() {
         try {
             Ini ini = new Ini(new FileReader(CONFIG_NAME));
             return ini;
         } catch (InvalidFileFormatException ife) {
-            LoggerUtil.db.error("Reading ini file error, Invalid file format. " + ife.getMessage());
+            LoggerUtil.agent.error("Reading ini file error, Invalid file format. " + ife.getMessage());
             System.exit(1);
         } catch (IOException e) {
-            LoggerUtil.db.error("Reading ini file error, IOException. " + e.getMessage());
+            LoggerUtil.agent.error("Reading ini file error, IOException. " + e.getMessage());
             System.exit(1);
         }
         System.exit(1);
         return null;
     }
 
-//    /**
-//     * 通用配置读取方法.
-//     * @param secStr Section名字
-//     * @param keys 待读取参数列表
-//     * @return JSONObject 格式：{key1:value1,key2:value2, …} .
-//     */
-//    private static JSONObject load(String secStr, ArrayList<String> keys){
-//        Ini ini = loadINI();
-//        Ini.Section section = ini.get(secStr);
-//
-//
-//        JSONObject setting = new JSONObject();
-//
-//        for (String k : keys) {
-//            setting.put(k,section.get(k).trim());
-//        }
-//        return setting;
-//    }
 
     public static Map<String, String> load(String secName) {
-        Ini ini = loadINI();
+        Ini ini = loadIni();
         return ini.get(secName);
     }
-//    public static JSONObject loadCommon(){
-//        final String HOST = "host";
-//        ArrayList<String> keys = new ArrayList<>();
-//        keys.add(HOST);
-//        return load(SECTION_COMMON, keys);
-//    }
-//
-//    /**
-//     * 读取Cloud配置参数.
-//     * @return 云端网址，Mysql数据库信息
-//     */
-//    public static JSONObject loadCloud(){
-//        final String WEBSITE = "website";
-//        final String MYSQL_USER = "mysql_user";
-//        final String MYSQL_PWD = "mysql_pwd";
-//        final String MYSQL_DB = "mysql_db";
-//        final String MYSQL_IP = "mysql_ip";
-//        final String MYSQL_PORT = "mysql_port";
-//
-//        ArrayList<String> keys = new ArrayList<>();
-//        keys.add(WEBSITE);
-//        keys.add(MYSQL_USER);
-//        keys.add(MYSQL_PWD);
-//        keys.add(MYSQL_DB);
-//        keys.add(MYSQL_IP);
-//        keys.add(MYSQL_PORT);
-//
-//        return load(SECTION_CLOUD, keys);
-//    }
 
+     /**
+     * load arm_password from [{agent_local_name}] in setting.ini
+     * @return {arm_password} or {null} if there is no arm_password
+     */
+     public static String loadArmPassword(String sectionName){
+        Map<String, String> setting = IniLoader.load(sectionName);
+
+        final String SETTING_ARM_PASSWORD = "arm_password";
+        String password = setting.get(SETTING_ARM_PASSWORD);
+        return password == null ? "" : password;
+    }
+
+
+    /**
+     * load hal_port from [{agent_local_name}] in setting.ini
+     * @return {hal_port} or {5656} if there is no hal_port
+     */
+    public static Integer loadHalPort(String sectionName){
+        Map<String, String> setting = IniLoader.load(sectionName);
+
+        String SETTING_HAL_PORT = "hal_port";
+
+        String portStr = setting.get(SETTING_HAL_PORT);
+        // 无hal_port配置项 则默认 5656
+        if(portStr != null) {
+            return new Integer(portStr);
+        } else {
+            return 5656;
+        }
+
+    }
+
+
+
+    /**
+     * load buffer_index from [{agent_local_name}] in setting.ini
+     * @return int[] or {null} if there is no buffer_index
+     */
+    public static int[] loadBuffers(String sectionName){
+        Map<String, String> setting = IniLoader.load(sectionName);
+
+        final String SETTING_BUFFER_INDEX = "buffer_index";
+        String bufferIndexStr = setting.get(SETTING_BUFFER_INDEX);
+        if(bufferIndexStr == null) {
+            return null;
+        } else {
+            String[] split = bufferIndexStr.split(",");
+            int[] indexes = new int[split.length];
+            for (int i = 0; i < split.length; i++) {
+                indexes[i] = Integer.parseInt(split[i].trim());
+            }
+            return indexes;
+        }
+
+    }
 
 }

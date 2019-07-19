@@ -58,6 +58,7 @@ public class WarehouseAgent extends AgentTemplate {
     @Override
     protected void setup() {
         super.setup();
+        loadIni();
         registerDF(DFServiceType.WAREHOUSE);
 
         hal = new WarehouseHal(halPort);
@@ -74,14 +75,15 @@ public class WarehouseAgent extends AgentTemplate {
         addBehaviour(tbf.wrap(b));
     }
 
-    @Override
-    protected void loadINI() {
-        Map<String, String> setting = IniLoader.load(IniLoader.SECTION_WAREHOUSE);
+
+    protected void loadIni() {
+        Map<String, String> setting = IniLoader.load(getLocalName());
 
         String SETTING_SQLITE_PATH = "sqlite_path";
         String SETTING_POS_IN = "pos_in";
         String SETTING_POS_OUT = "pos_out";
 
+        halPort = IniLoader.loadHalPort(getLocalName());
         sqlitePath = setting.get(SETTING_SQLITE_PATH);
         posIn = new Integer(setting.get(SETTING_POS_IN));
         posOut = new Integer(setting.get(SETTING_POS_OUT));

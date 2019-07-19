@@ -1,13 +1,10 @@
 package machines.real.armrobot.behaviours.cycle;
 
-import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.lang.acl.UnreadableException;
 import machines.real.armrobot.ArmrobotAgent;
-import machines.real.commons.ArmrobotMoveItemRequest;
 
 /**
  * receive transport request.
