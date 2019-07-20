@@ -1,6 +1,6 @@
 package machines.real.commons.buffer;
 
-import commons.WorkpieceInfo;
+import commons.order.WorkpieceInfo;
 import commons.tools.LoggerUtil;
 
 /**
@@ -35,11 +35,11 @@ public class Buffer {
     private Long processTimestamp = 0L;
 
     /**
-     * 已返回加工时长
+     * 返回还有多长时间加工完成
      * @return 单位 秒
      */
-    public Integer getProcessTime() {
-        return (int)(System.currentTimeMillis() - processTimestamp) / 1000;
+    public Integer getRemainProcessTime() {
+        return evaluateTime - (int)(System.currentTimeMillis() - processTimestamp) / 1000;
     }
 
     public void setProcessTimestamp(Long processTimestamp) {

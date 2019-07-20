@@ -1,10 +1,9 @@
 package machines.virtual.cloud.behaviours.cycle;
 
 import machines.virtual.cloud.CloudAgent;
-import machines.virtual.cloud.CloudMysql;
 import commons.tools.HttpRequest;
 import commons.tools.LoggerUtil;
-import commons.OrderInfo;
+import commons.order.OrderInfo;
 import commons.tools.OrderTools;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;

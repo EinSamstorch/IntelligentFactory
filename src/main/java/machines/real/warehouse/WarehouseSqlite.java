@@ -1,6 +1,6 @@
 package machines.real.warehouse;
 
-import commons.WorkpieceInfo;
+import commons.order.WorkpieceInfo;
 import commons.tools.LoggerUtil;
 import commons.tools.db.SQLiteJDBC;
 

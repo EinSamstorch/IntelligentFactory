@@ -64,7 +64,7 @@ public class BufferManger {
                 totalTime += buffer.getEvaluateTime();
             } else if(buffer.getBufferState().getState() == BufferState.STATE_PROCESSING) {
                 // 正在加工  返回 当前时间 - 开始加工时间
-                totalTime += buffer.getProcessTime();
+                totalTime += buffer.getRemainProcessTime();
             }
         }
         return totalTime;

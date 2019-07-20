@@ -1,7 +1,7 @@
 package machines.real.commons.behaviours.simple;
 
 
-import commons.WorkpieceInfo;
+import commons.order.WorkpieceInfo;
 import commons.tools.DFServiceType;
 import commons.tools.DFUtils;
 import commons.tools.LoggerUtil;
@@ -58,7 +58,7 @@ public class SimpleCallForArm extends SimpleBehaviour {
     private void sendToWorker(WorkpieceInfo wpInfo) {
         try {
             ACLMessage msg = DFUtils.createRequestMsg(wpInfo);
-            msg = DFUtils.searchDF(myAgent, msg, DFServiceType.WORKER);
+            DFUtils.searchDF(myAgent, msg, DFServiceType.WORKER);
             myAgent.send(msg);
         } catch (Exception e) {
             e.printStackTrace();

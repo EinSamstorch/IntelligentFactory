@@ -1,5 +1,5 @@
 import machines.virtual.cloud.CloudMysql;
-import commons.OrderInfo;
+import commons.order.OrderInfo;
 import org.junit.Test;
 
 import java.sql.Connection;

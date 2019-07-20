@@ -1,4 +1,6 @@
-package commons;
+package commons.order;
+
+import commons.tools.DFServiceType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,25 +28,25 @@ public class ProcessPlan {
 
         List<String> flangePP = new ArrayList<String>(){
             {
-                add(MachineType.WAREHOUSE);
-                add(MachineType.LATHE);
-                add(MachineType.MILL);
+                add(DFServiceType.WAREHOUSE);
+                add(DFServiceType.LATHE);
+                add(DFServiceType.MILL);
             }
         };
         processPlan.put("001", flangePP);
 
         List<String> axisPP = new ArrayList<String>(){
             {
-                add(MachineType.WAREHOUSE);
-                add(MachineType.LATHE);
+                add(DFServiceType.WAREHOUSE);
+                add(DFServiceType.LATHE);
             }
         };
         processPlan.put("002", axisPP);
 
         List<String> plainPP = new ArrayList<String>(){
             {
-                add(MachineType.WAREHOUSE);
-                add(MachineType.MILL);
+                add(DFServiceType.WAREHOUSE);
+                add(DFServiceType.MILL);
             }
         };
         processPlan.put("003", plainPP);

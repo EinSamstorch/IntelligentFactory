@@ -1,6 +1,6 @@
 package machines.real.warehouse.behaviours.cycle;
 
-import commons.WorkpieceInfo;
+import commons.order.WorkpieceInfo;
 import commons.tools.LoggerUtil;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
@@ -9,10 +9,13 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetResponder;
+import machines.real.commons.ContractNetContent;
 import machines.real.commons.request.AgvRequest;
 import machines.real.warehouse.WarehouseAgent;
 import machines.real.warehouse.WarehouseSqlite;
 import machines.real.warehouse.behaviours.simple.CallForAgv;
+
+import java.io.IOException;
 
 /**
  * .
@@ -39,7 +42,11 @@ public class ProductContractNetResponder extends ContractNetResponder {
         if(quantity > 0) {
             ACLMessage propose = cfp.createReply();
             propose.setPerformative(ACLMessage.PROPOSE);
-            propose.setContent(String.valueOf(quantity));
+            try {
+                propose.setContentObject(new ContractNetContent(quantity));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return propose;
         } else {
             LoggerUtil.agent.info("Product Full!");

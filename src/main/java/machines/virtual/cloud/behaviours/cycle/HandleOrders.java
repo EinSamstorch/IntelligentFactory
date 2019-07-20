@@ -3,8 +3,8 @@ package machines.virtual.cloud.behaviours.cycle;
 import machines.virtual.cloud.CloudAgent;
 import commons.tools.DFServiceType;
 import commons.tools.DFUtils;
-import commons.OrderInfo;
-import commons.WorkpieceInfo;
+import commons.order.OrderInfo;
+import commons.order.WorkpieceInfo;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 
@@ -33,7 +33,7 @@ public class HandleOrders extends TickerBehaviour {
                 try {
                     // TODO 未来此处需要做处理，失败的消息需要记录并重试。
                     ACLMessage msg = DFUtils.createRequestMsg(wpInfo);
-                    msg = DFUtils.searchDF(cagent, msg, DFServiceType.WORKER);
+                    DFUtils.searchDF(cagent, msg, DFServiceType.WORKER);
                     cagent.send(msg);
                 } catch (Exception e) {
                     e.printStackTrace();

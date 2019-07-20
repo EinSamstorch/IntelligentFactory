@@ -19,17 +19,15 @@ import java.util.Queue;
  */
 
 public class ItemExportBehaviour extends CyclicBehaviour {
-    private WarehouseAgent wagent;
     private WarehouseHal hal;
     private Integer posOut;
     private Queue<ACLMessage> requestQueue;
 
-    public ItemExportBehaviour(WarehouseAgent wagent) {
-        super(wagent);
-        this.wagent = wagent;
-        hal = wagent.getHal();
-        posOut = wagent.getPosOut();
-        requestQueue = wagent.getExportQueue();
+    public ItemExportBehaviour(WarehouseAgent warehouseAgent) {
+        super(warehouseAgent);
+        hal = warehouseAgent.getHal();
+        posOut = warehouseAgent.getPosOut();
+        requestQueue = warehouseAgent.getExportQueue();
     }
 
     @Override
@@ -44,14 +42,15 @@ public class ItemExportBehaviour extends CyclicBehaviour {
             }
             if(request != null) {
                 Integer itemPosition = request.getItemPosition();
+                // 通知AGV取货
+                ACLMessage reply = msg.createReply();
+                reply.setPerformative(ACLMessage.INFORM);
+                myAgent.send(reply);
                 if(hal.moveItem(itemPosition, posOut)) {
-                    // 通知AGV取货
-                    ACLMessage reply = msg.createReply();
-                    reply.setPerformative(ACLMessage.INFORM);
-                    myAgent.send(reply);
                     LoggerUtil.hal.info(String.format("Succeed! Export item from %d", itemPosition));
                 } else{
                     LoggerUtil.hal.error(String.format("Failed! Export item from %d", itemPosition));
+                    myAgent.clean(false);
                 }
             } else {
                 LoggerUtil.hal.error("Request NPE Error.");

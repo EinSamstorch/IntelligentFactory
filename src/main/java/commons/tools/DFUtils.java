@@ -34,9 +34,8 @@ public class DFUtils {
      *
      * @param msg  招标消息
      * @param type 服务类型 {@link DFServiceType}
-     * @return 消息-已装填所有提供方地址
      */
-    public static ACLMessage searchDF(Agent agent, ACLMessage msg, String type, String password) throws Exception {
+    public static void searchDF(Agent agent, ACLMessage msg, String type, String password) throws Exception {
         DFAgentDescription template = new DFAgentDescription();
         ServiceDescription templateSd = new ServiceDescription();
         templateSd.setType(type);
@@ -50,8 +49,7 @@ public class DFUtils {
         try {
             DFAgentDescription[] results = DFService.search(agent, template, sc);
             if (results.length > 0) {
-                for (int i = 0; i < results.length; i++) {
-                    DFAgentDescription dfd = results[i];
+                for (DFAgentDescription dfd : results) {
                     AID provider = dfd.getName();
 
                     Iterator it = dfd.getAllServices();
@@ -68,11 +66,10 @@ public class DFUtils {
         } catch (FIPAException e) {
             LoggerUtil.agent.error(e.getMessage());
         }
-        return msg;
     }
 
-    public static ACLMessage searchDF(Agent agent, ACLMessage msg, String type) throws Exception{
-        return searchDF(agent, msg, type, null);
+    public static void searchDF(Agent agent, ACLMessage msg, String type) throws Exception{
+        searchDF(agent, msg, type, null);
     }
 
     /**
@@ -88,7 +85,7 @@ public class DFUtils {
         ACLMessage msg = new ACLMessage(ACLMessage.CFP);
         msg.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
         msg.setReplyByDate(new Date(System.currentTimeMillis() + 30000));
-        msg = msgSetContent(msg, content);
+        msgSetContent(msg, content);
         return msg;
     }
 
@@ -98,11 +95,10 @@ public class DFUtils {
      * 消息条约 REQUEST
      *
      * @param  content 消息载体 object类型 需实现Serializable接口
-     * @return 招标消息
      */
     public static ACLMessage createRequestMsg(Object content) throws MsgCreateFailedException {
         ACLMessage msg = createRequstMsgHeader();
-        msg = msgSetContent(msg, content);
+        msgSetContent(msg, content);
         return msg;
     }
 
@@ -113,13 +109,12 @@ public class DFUtils {
     }
 
 
-    private static ACLMessage msgSetContent(ACLMessage msg, Object content) throws MsgCreateFailedException{
+    private static void msgSetContent(ACLMessage msg, Object content) throws MsgCreateFailedException{
         try {
             msg.setContentObject((Serializable) content);
         } catch (IOException e) {
             LoggerUtil.commonTools.fatal(e.getMessage());
             throw new MsgCreateFailedException(e.getMessage());
         }
-        return msg;
     }
 }

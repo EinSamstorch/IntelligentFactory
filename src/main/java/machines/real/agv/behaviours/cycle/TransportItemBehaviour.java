@@ -57,30 +57,6 @@ public class TransportItemBehaviour extends CyclicBehaviour {
                 doTask();
                 break;
         }
-//        ACLMessage msg = aagent.getTransportRequestQueue().poll();
-//        if (msg != null) {
-//            AgvRequest request = null;
-//            try {
-//                request = (AgvRequest) msg.getContentObject();
-//            } catch (UnreadableException e) {
-//                e.printStackTrace();
-//            }
-//            if (request != null) {
-//                int from = request.getFrom();
-//                int to = request.getTo();
-//                if (from == WAREHOUSE_EXPORT) {
-//                    // CALL FOR WAREHOUSE
-//                    ItemMoveRequest exportRequest = new ItemMoveRequest(request.getWpInfo().getWarehousePosition());
-//                    myAgent.addBehaviour(new CallForWarehouse(myAgent, exportRequest));
-//                } else {
-//                    doTask();
-//                }
-//            } else {
-//                LoggerUtil.hal.error("Request NPE Error.");
-//            }
-//        } else {
-//            block(1000);
-//        }
     }
 
     private void waitNotify() {

@@ -6,7 +6,7 @@ import machines.virtual.cloud.behaviours.cycle.GetOrder;
 import machines.virtual.cloud.behaviours.cycle.HandleOrders;
 import commons.tools.*;
 import commons.AgentTemplate;
-import commons.OrderInfo;
+import commons.order.OrderInfo;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.domain.DFService;

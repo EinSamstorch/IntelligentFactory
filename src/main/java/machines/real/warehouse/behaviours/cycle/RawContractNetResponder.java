@@ -3,7 +3,8 @@ package machines.real.warehouse.behaviours.cycle;
 import commons.tools.DFServiceType;
 import commons.tools.DFUtils;
 import commons.tools.LoggerUtil;
-import commons.WorkpieceInfo;
+import commons.order.WorkpieceInfo;
+import machines.real.commons.ContractNetContent;
 import machines.real.warehouse.WarehouseAgent;
 import machines.real.warehouse.WarehouseSqlite;
 import jade.domain.FIPAAgentManagement.FailureException;
@@ -13,6 +14,8 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetResponder;
+
+import java.io.IOException;
 
 /**
  * 原材料 合同网 招标回应方.
@@ -59,7 +62,13 @@ public class RawContractNetResponder extends ContractNetResponder {
             // propose 内容: String quantity
             ACLMessage propose = cfp.createReply();
             propose.setPerformative(ACLMessage.PROPOSE);
-            propose.setContent(String.valueOf(quantity));
+
+            try {
+                propose.setContentObject(new ContractNetContent(quantity));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             return propose;
         } else {
             // 仓库余量不足
@@ -87,25 +96,13 @@ public class RawContractNetResponder extends ContractNetResponder {
 
             // 发送至Worker 进行下一轮招标
             ACLMessage msg = DFUtils.createRequestMsg(wpInfo);
-            msg = DFUtils.searchDF(whagent, msg, DFServiceType.WORKER);
+            DFUtils.searchDF(whagent, msg, DFServiceType.WORKER);
             whagent.send(msg);
 
             // 完成本次招标动作
             ACLMessage inform = accept.createReply();
             inform.setPerformative(ACLMessage.INFORM);
             return inform;
-//            String goodsid = ((WorkpieceInfo)cfp.getContentObject()).getGoodsId();
-//            if (quantity == sqlite.getRawQuantityByGoodsId(goodsid)) {
-//                ACLMessage inform = accept.createReply();
-//                inform.setPerformative(ACLMessage.INFORM);
-//
-//                String position = sqlite.getRaw(goodsid);
-//                // inform.setContent(position);
-//
-//                return inform;
-//            } else {
-//                throw new FailureException("Quantity changed.");
-//            }
         } catch (UnreadableException e) {
             e.printStackTrace();
             throw new FailureException("Get goodsid failed");

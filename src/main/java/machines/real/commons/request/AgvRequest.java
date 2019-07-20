@@ -1,6 +1,6 @@
 package machines.real.commons.request;
 
-import commons.WorkpieceInfo;
+import commons.order.WorkpieceInfo;
 
 import java.io.Serializable;
 

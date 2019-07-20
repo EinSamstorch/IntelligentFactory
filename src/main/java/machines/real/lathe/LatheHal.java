@@ -1,6 +1,6 @@
 package machines.real.lathe;
 
-import commons.WorkpieceInfo;
+import commons.order.WorkpieceInfo;
 import machines.real.commons.hal.BaseHal;
 
 /**

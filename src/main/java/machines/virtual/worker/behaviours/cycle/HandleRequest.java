@@ -1,7 +1,7 @@
 package machines.virtual.worker.behaviours.cycle;
 
 import commons.tools.LoggerUtil;
-import commons.WorkpieceInfo;
+import commons.order.WorkpieceInfo;
 import machines.virtual.worker.WorkerAgent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.FIPANames;

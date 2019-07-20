@@ -1,7 +1,7 @@
 import commons.tools.*;
 import commons.tools.db.MysqlJDBC;
 import commons.tools.db.SQLiteJDBC;
-import commons.OrderInfo;
+import commons.order.OrderInfo;
 import com.alibaba.fastjson.JSONObject;
 import org.junit.Test;
 

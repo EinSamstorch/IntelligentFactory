@@ -1,15 +1,15 @@
 package machines.virtual.worker.behaviours.cycle;
 
+import commons.order.WorkpieceInfo;
 import commons.tools.DFServiceType;
 import commons.tools.DFUtils;
-import commons.WorkpieceInfo;
 import commons.tools.LoggerUtil;
-import machines.virtual.worker.behaviours.simple.MyContractNetInitiator;
-import machines.virtual.worker.WorkerAgent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
-import commons.MachineType;
+import machines.virtual.worker.WorkerAgent;
+import machines.virtual.worker.behaviours.simple.MyContractNetInitiator;
+
 import java.util.List;
 
 /**
@@ -22,61 +22,45 @@ import java.util.List;
 
 
 public class HandleWorkpiece extends CyclicBehaviour {
-    private WorkerAgent wagent;
-    public HandleWorkpiece(WorkerAgent wagent) {
-        this.wagent = wagent;
+    private WorkerAgent workerAgent;
+    public HandleWorkpiece(WorkerAgent workerAgent) {
+        this.workerAgent = workerAgent;
     }
 
 
     @Override
     public void action() {
-        WorkpieceInfo wpInfo = wagent.getWpInfoQueue().poll();
+        WorkpieceInfo wpInfo = workerAgent.getWpInfoQueue().poll();
         if(wpInfo == null) return;
         List<String> processPlan = wpInfo.getProcessPlan();
         int processIndex = wpInfo.nextProcessIndex();
         if(processIndex >= processPlan.size()){
             // 所有工艺完成，回成品库
-            LoggerUtil.hal.info(String.format("OrderId: %s, wpId: %s done.", wpInfo.getOrderId(), wpInfo.getWorkpieceId()));
+            LoggerUtil.agent.info(String.format("OrderId: %s, wpId: %s done.",
+                    wpInfo.getOrderId(), wpInfo.getWorkpieceId()));
             processOn(wpInfo, DFServiceType.PRODUCT);
-            // action here
             return ;
         }
 
-        // TODO 未来修改 将 MachineType 去除 改用 DFServiceType
         String process = processPlan.get(processIndex);
-        switch (process){
-            case MachineType.WAREHOUSE:
-                processOn(wpInfo, DFServiceType.WAREHOUSE);
-                break;
-            case MachineType.LATHE:
-                processOn(wpInfo, DFServiceType.LATHE);
-                break;
-            case MachineType.MILL:
-                processOn(wpInfo, DFServiceType.MILL);
-                break;
-            case MachineType.DETECTOR:
-                processOn(wpInfo, DFServiceType.DETECTOR);
-                break;
-            default:
-                LoggerUtil.agent.error("Unknown process: " + process);
-        }
+        processOn(wpInfo, process);
     }
 
     private void processOn(WorkpieceInfo wpInfo, String serviceType){
         try{
             ACLMessage msg = DFUtils.createCFPMsg(wpInfo);
             if(serviceType.equals(DFServiceType.PRODUCT)) {
-                msg = DFUtils.searchDF(wagent, msg, DFServiceType.WAREHOUSE);
+                DFUtils.searchDF(workerAgent, msg, DFServiceType.WAREHOUSE);
                 msg.setLanguage("PRODUCT");
             } else if(serviceType.equals(DFServiceType.WAREHOUSE)) {
-                msg = DFUtils.searchDF(wagent, msg, serviceType);
+                DFUtils.searchDF(workerAgent, msg, serviceType);
                 msg.setLanguage("RAW");
             } else {
-                msg = DFUtils.searchDF(wagent, msg, serviceType);
+                DFUtils.searchDF(workerAgent, msg, serviceType);
             }
 
-            Behaviour b = new MyContractNetInitiator(wagent, msg);
-            wagent.addBehaviour(b);
+            Behaviour b = new MyContractNetInitiator(workerAgent, msg, serviceType);
+            workerAgent.addBehaviour(b);
         } catch (Exception e) {
             e.printStackTrace();
         }

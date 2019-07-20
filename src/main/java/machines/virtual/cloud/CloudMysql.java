@@ -1,10 +1,9 @@
 package machines.virtual.cloud;
 
 import commons.tools.LoggerUtil;
-import commons.OrderInfo;
+import commons.order.OrderInfo;
 import commons.tools.db.MysqlJDBC;
-import commons.WorkpieceInfo;
-import com.alibaba.fastjson.JSONObject;
+import commons.order.WorkpieceInfo;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

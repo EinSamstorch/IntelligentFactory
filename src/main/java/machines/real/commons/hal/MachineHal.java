@@ -1,6 +1,6 @@
 package machines.real.commons.hal;
 
-import commons.WorkpieceInfo;
+import commons.order.WorkpieceInfo;
 
 /**
  * 机床Hal 包含 加工和时间预估 两个功能

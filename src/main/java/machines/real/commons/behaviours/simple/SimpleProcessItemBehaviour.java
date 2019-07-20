@@ -1,7 +1,7 @@
 package machines.real.commons.behaviours.simple;
 
 
-import commons.WorkpieceInfo;
+import commons.order.WorkpieceInfo;
 import commons.tools.LoggerUtil;
 import jade.core.behaviours.OneShotBehaviour;
 import machines.real.commons.RealMachineAgent;

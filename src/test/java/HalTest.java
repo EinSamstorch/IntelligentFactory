@@ -1,5 +1,5 @@
 import machines.real.agv.AgvHal;
-import commons.WorkpieceInfo;
+import commons.order.WorkpieceInfo;
 import machines.real.lathe.LatheHal;
 import org.junit.Test;
 import machines.real.warehouse.WarehouseHal;

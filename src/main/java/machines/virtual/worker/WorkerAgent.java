@@ -2,7 +2,7 @@ package machines.virtual.worker;
 
 import commons.tools.DFServiceType;
 import commons.AgentTemplate;
-import commons.WorkpieceInfo;
+import commons.order.WorkpieceInfo;
 import machines.virtual.worker.behaviours.cycle.HandleRequest;
 import machines.virtual.worker.behaviours.cycle.HandleWorkpiece;
 import jade.core.behaviours.Behaviour;
