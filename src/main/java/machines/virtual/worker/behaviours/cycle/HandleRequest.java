@@ -1,13 +1,13 @@
 package machines.virtual.worker.behaviours.cycle;
 
-import commons.tools.LoggerUtil;
 import commons.order.WorkpieceInfo;
-import machines.virtual.worker.WorkerAgent;
+import commons.tools.LoggerUtil;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
+import machines.virtual.worker.WorkerAgent;
 
 /**
  * 接受REQUEST请求，并放入处理队列中
@@ -30,7 +30,7 @@ public class HandleRequest extends CyclicBehaviour {
         MessageTemplate mt = MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
                 MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST));
         ACLMessage msg = wagent.receive(mt);
-        if(msg != null){
+        if (msg != null) {
             try {
                 WorkpieceInfo wpInfo = (WorkpieceInfo) msg.getContentObject();
                 wagent.getWpInfoQueue().offer(wpInfo);
@@ -38,7 +38,7 @@ public class HandleRequest extends CyclicBehaviour {
             } catch (UnreadableException e) {
                 e.printStackTrace();
             }
-        }else{
+        } else {
             block();
         }
     }

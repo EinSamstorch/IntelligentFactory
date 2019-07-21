@@ -102,7 +102,7 @@ public class BaseHal {
         extraInfo = cmdResponse.get(SocketMessage.FIELD_EXTRA);
 
         JSONObject actionResponse = getActionResponse(taskNo);
-        if(!Objects.equals(SocketMessage.RESULT_SUCCESS,
+        if (!Objects.equals(SocketMessage.RESULT_SUCCESS,
                 actionResponse.getString(SocketMessage.FIELD_ACTION_RESULT))) {
             return false;
         }

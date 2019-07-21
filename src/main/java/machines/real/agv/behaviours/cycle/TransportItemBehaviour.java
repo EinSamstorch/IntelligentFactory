@@ -22,13 +22,13 @@ import machines.real.commons.request.AgvRequest;
  */
 
 public class TransportItemBehaviour extends CyclicBehaviour {
-    private AgvAgent aagent;
-    private AgvHal hal;
     private static final Integer WAREHOUSE_EXPORT = 26;
     private static final int STATE_READY = 1;
     private static final int STATE_CALL_WH = 2;
     private static final int STATE_DO_TASK = 3;
     private static final int STATE_WAIT_WH = 4;
+    private AgvAgent aagent;
+    private AgvHal hal;
     private int state;
     private AgvRequest request;
     private ACLMessage requestMsg;

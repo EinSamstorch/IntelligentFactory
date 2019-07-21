@@ -14,6 +14,7 @@ public class WarehouseHal extends BaseHal {
     private static final String CMD_MOVE_ITEM = "move_item";
     private static final String FIELD_FROM = "from";
     private static final String FIELD_TO = "to";
+
     public WarehouseHal() {
         super();
     }

@@ -29,7 +29,6 @@ public class HalTest {
 
         WorkpieceInfo wpInfo = new WorkpieceInfo("001","001","002","{\"L1\":10}");
         assertEquals(10, hal.evaluate(wpInfo));
-        wpInfo.setProcessStep(1);
         assertTrue(hal.process(wpInfo));
     }
 

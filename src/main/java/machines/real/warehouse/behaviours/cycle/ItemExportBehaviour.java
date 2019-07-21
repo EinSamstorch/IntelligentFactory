@@ -33,22 +33,22 @@ public class ItemExportBehaviour extends CyclicBehaviour {
     @Override
     public void action() {
         ACLMessage msg = requestQueue.poll();
-        if(msg != null) {
+        if (msg != null) {
             ItemMoveRequest request = null;
             try {
                 request = (ItemMoveRequest) msg.getContentObject();
             } catch (UnreadableException e) {
                 e.printStackTrace();
             }
-            if(request != null) {
+            if (request != null) {
                 Integer itemPosition = request.getItemPosition();
                 // 通知AGV取货
                 ACLMessage reply = msg.createReply();
                 reply.setPerformative(ACLMessage.INFORM);
                 myAgent.send(reply);
-                if(hal.moveItem(itemPosition, posOut)) {
+                if (hal.moveItem(itemPosition, posOut)) {
                     LoggerUtil.hal.info(String.format("Succeed! Export item from %d", itemPosition));
-                } else{
+                } else {
                     LoggerUtil.hal.error(String.format("Failed! Export item from %d", itemPosition));
                     myAgent.clean(false);
                 }

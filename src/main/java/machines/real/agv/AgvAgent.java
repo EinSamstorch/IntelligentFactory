@@ -3,9 +3,9 @@ package machines.real.agv;
 import commons.AgentTemplate;
 import commons.tools.DFServiceType;
 import commons.tools.IniLoader;
-import jade.lang.acl.ACLMessage;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
+import jade.lang.acl.ACLMessage;
 import machines.real.agv.behaviours.cycle.RecvTransportRequestBehaviour;
 import machines.real.agv.behaviours.cycle.TransportItemBehaviour;
 

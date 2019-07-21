@@ -27,8 +27,8 @@ public class MachineHal extends BaseHal {
     }
 
     public int evaluate(WorkpieceInfo wpInfo) {
-        if(executeCmd(CMD_EVALUATE, wpInfo)){
-            return (int) Float.parseFloat((String)getExtraInfo());
+        if (executeCmd(CMD_EVALUATE, wpInfo)) {
+            return (int) Float.parseFloat((String) getExtraInfo());
         } else {
             return 0;
         }

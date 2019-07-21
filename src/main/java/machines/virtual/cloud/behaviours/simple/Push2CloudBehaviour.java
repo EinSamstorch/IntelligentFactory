@@ -1,10 +1,10 @@
 package machines.virtual.cloud.behaviours.simple;
 
-import machines.virtual.cloud.CloudAgent;
+import com.alibaba.fastjson.JSONObject;
 import commons.tools.HttpRequest;
 import commons.tools.LoggerUtil;
-import com.alibaba.fastjson.JSONObject;
 import jade.core.behaviours.SimpleBehaviour;
+import machines.virtual.cloud.CloudAgent;
 
 
 /**

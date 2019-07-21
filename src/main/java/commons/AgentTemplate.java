@@ -1,6 +1,5 @@
 package commons;
 
-import commons.tools.IniLoader;
 import commons.tools.LoggerUtil;
 import jade.core.Agent;
 import jade.domain.DFService;
@@ -8,8 +7,6 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.Property;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
-
-import java.util.Map;
 
 /**
  * Agent模板，添加一些必须实现的函数.
@@ -28,6 +25,7 @@ import java.util.Map;
 
 public abstract class AgentTemplate extends Agent {
     protected Integer halPort;
+
     @Override
     protected void setup() {
         super.setup();
@@ -35,8 +33,9 @@ public abstract class AgentTemplate extends Agent {
 
     /**
      * 注册服务
+     *
      * @param serviceType 自身提供的服务类型，{@link commons.tools.DFServiceType}
-     * @param password 额外属性 使用该服务时 需要配对密码
+     * @param password    额外属性 使用该服务时 需要配对密码
      */
     protected void registerDF(String serviceType, String password) {
         DFAgentDescription dfd = new DFAgentDescription();
@@ -44,8 +43,8 @@ public abstract class AgentTemplate extends Agent {
         ServiceDescription sd = new ServiceDescription();
         sd.setName(getLocalName());
         sd.setType(serviceType);
-        if(password != null) {
-            sd.addProperties(new Property("password",password));
+        if (password != null) {
+            sd.addProperties(new Property("password", password));
         }
         dfd.addServices(sd);
         try {
@@ -65,8 +64,7 @@ public abstract class AgentTemplate extends Agent {
         // Deregister from the yellow pages
         try {
             DFService.deregister(this);
-        }
-        catch (FIPAException fe) {
+        } catch (FIPAException fe) {
             fe.printStackTrace();
         }
     }

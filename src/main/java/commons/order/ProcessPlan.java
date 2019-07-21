@@ -26,7 +26,7 @@ public class ProcessPlan {
         goodsidList.add("002");    // 轴
         goodsidList.add("003");    // 板
 
-        List<String> flangePP = new ArrayList<String>(){
+        List<String> flangePP = new ArrayList<String>() {
             {
                 add(DFServiceType.WAREHOUSE);
                 add(DFServiceType.LATHE);
@@ -35,7 +35,7 @@ public class ProcessPlan {
         };
         processPlan.put("001", flangePP);
 
-        List<String> axisPP = new ArrayList<String>(){
+        List<String> axisPP = new ArrayList<String>() {
             {
                 add(DFServiceType.WAREHOUSE);
                 add(DFServiceType.LATHE);
@@ -43,7 +43,7 @@ public class ProcessPlan {
         };
         processPlan.put("002", axisPP);
 
-        List<String> plainPP = new ArrayList<String>(){
+        List<String> plainPP = new ArrayList<String>() {
             {
                 add(DFServiceType.WAREHOUSE);
                 add(DFServiceType.MILL);

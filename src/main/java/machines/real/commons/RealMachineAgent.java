@@ -2,10 +2,14 @@ package machines.real.commons;
 
 import commons.AgentTemplate;
 import commons.tools.IniLoader;
+import jade.core.behaviours.Behaviour;
+import jade.core.behaviours.ThreadedBehaviourFactory;
+import jade.domain.FIPANames;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
+import machines.real.commons.behaviours.cycle.ProcessContractNetResponder;
 import machines.real.commons.buffer.BufferManger;
 import machines.real.commons.hal.MachineHal;
-
-import java.util.Map;
 
 /**
  * template for real machine agents.
@@ -17,10 +21,10 @@ import java.util.Map;
 
 public class RealMachineAgent extends AgentTemplate {
     protected Integer halPort;
+    protected MachineHal hal;
     private String armPwd;
     private BufferManger bufferManger;
     private MachineState machineState = new MachineState();
-    protected MachineHal hal;
 
     @Override
     protected void setup() {
@@ -28,11 +32,21 @@ public class RealMachineAgent extends AgentTemplate {
         halPort = IniLoader.loadHalPort(getLocalName());
         armPwd = IniLoader.loadArmPassword(getLocalName());
         int[] bufferIndexes = IniLoader.loadBuffers(getLocalName());
-        if(bufferIndexes != null) {
+        if (bufferIndexes != null) {
             bufferManger = new BufferManger(bufferIndexes);
         } else {
             bufferManger = null;
         }
+    }
+
+    protected void addContractNetResponder(ThreadedBehaviourFactory tbf) {
+
+        MessageTemplate mt = MessageTemplate.and(
+                MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
+                MessageTemplate.MatchPerformative(ACLMessage.CFP)
+        );
+        Behaviour b = new ProcessContractNetResponder(this, mt);
+        addBehaviour(tbf.wrap(b));
     }
 
 

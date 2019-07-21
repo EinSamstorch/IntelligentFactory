@@ -1,14 +1,14 @@
 package machines.virtual.cloud.behaviours.cycle;
 
-import machines.virtual.cloud.CloudAgent;
-import commons.tools.HttpRequest;
-import commons.tools.LoggerUtil;
-import commons.order.OrderInfo;
-import commons.tools.OrderTools;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import commons.order.OrderInfo;
+import commons.tools.HttpRequest;
+import commons.tools.LoggerUtil;
+import commons.tools.OrderTools;
 import jade.core.behaviours.TickerBehaviour;
+import machines.virtual.cloud.CloudAgent;
 
 /**
  * 从云端获取新订单并储存至本地mysql数据库中.
@@ -34,7 +34,7 @@ public class GetOrder extends TickerBehaviour {
         // 如果无新订单，则return
         if (result.equals("[]")) return;
         if (result.equals("{\"message\": \"The resultSet is empty！\"}")) return;
-        if(result.equals("{\"flag\":\"failure\",\"message\":\"The resultSet is empty！\"}")) return;
+        if (result.equals("{\"flag\":\"failure\",\"message\":\"The resultSet is empty！\"}")) return;
         LoggerUtil.agent.info(result);
 
         // CloudMysql mysqlTool = new CloudMysql(cagent.getMysqlSetting());
@@ -43,9 +43,9 @@ public class GetOrder extends TickerBehaviour {
           [{订单1},{订单2},{订单3}]
          */
         JSONObject rst_jo = (JSONObject) JSONObject.parse(result);
-        if(rst_jo.getString("flag").equals("success")){
+        if (rst_jo.getString("flag").equals("success")) {
             String orderList_str = rst_jo.getString("orderList");
-            try{
+            try {
                 JSONArray jsonArray = JSONArray.parseArray(orderList_str);
                 for (Object o : jsonArray) {
                     JSONObject jo = (JSONObject) o;
@@ -57,13 +57,11 @@ public class GetOrder extends TickerBehaviour {
                     // 储存订单信息到MYSQL中
                     //mysqlTool.storeOrderInfo(oi);
                 }
-            }catch (JSONException e){
+            } catch (JSONException e) {
                 // 解析失败JSONARRAY
                 LoggerUtil.agent.error(e.getMessage());
             }
         }
-
-
 
 
     }

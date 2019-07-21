@@ -1,12 +1,9 @@
 package machines.real.warehouse.behaviours.cycle;
 
+import commons.order.WorkpieceInfo;
 import commons.tools.DFServiceType;
 import commons.tools.DFUtils;
 import commons.tools.LoggerUtil;
-import commons.order.WorkpieceInfo;
-import machines.real.commons.ContractNetContent;
-import machines.real.warehouse.WarehouseAgent;
-import machines.real.warehouse.WarehouseSqlite;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
@@ -14,6 +11,9 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetResponder;
+import machines.real.commons.ContractNetContent;
+import machines.real.warehouse.WarehouseAgent;
+import machines.real.warehouse.WarehouseSqlite;
 
 import java.io.IOException;
 
@@ -84,7 +84,7 @@ public class RawContractNetResponder extends ContractNetResponder {
 
         try {
             // 对 workpieceInfo 添加 warehousePosition
-            WorkpieceInfo wpInfo = ((WorkpieceInfo)cfp.getContentObject());
+            WorkpieceInfo wpInfo = ((WorkpieceInfo) cfp.getContentObject());
             String goodsid = wpInfo.getGoodsId();
             Integer position = sqlite.getRaw(goodsid);
             wpInfo.setWarehousePosition(position);

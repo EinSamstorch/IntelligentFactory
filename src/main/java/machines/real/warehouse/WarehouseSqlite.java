@@ -25,12 +25,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class WarehouseSqlite extends SQLiteJDBC {
     private Map<Integer, String> rawTable;
     private Queue<Integer> productTable;
+    private String nullStr = "000";
 
     public WarehouseSqlite(String dbName) {
         super(dbName);
     }
-
-    private String nullStr = "000";
 
     public void initTable() {
         rawTable = getRawTable();
@@ -213,7 +212,7 @@ public class WarehouseSqlite extends SQLiteJDBC {
                     wpInfo.getOrderId(), wpInfo.getWorkpieceId(), position);
             Statement stmt = con.createStatement();
             int rst = stmt.executeUpdate(sqlCmd);
-            if(rst!=1) {
+            if (rst != 1) {
                 LoggerUtil.db.error(sqlCmd);
             }
         } catch (SQLException e) {

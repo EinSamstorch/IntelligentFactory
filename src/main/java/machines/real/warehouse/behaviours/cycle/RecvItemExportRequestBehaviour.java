@@ -29,7 +29,7 @@ public class RecvItemExportRequestBehaviour extends CyclicBehaviour {
                 MessageTemplate.MatchPerformative(ACLMessage.REQUEST)
         );
         ACLMessage receive = wagent.receive(mt);
-        if(receive != null) {
+        if (receive != null) {
             wagent.getExportQueue().offer(receive);
         } else {
             block();

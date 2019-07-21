@@ -21,13 +21,12 @@ public class SocketSender {
     private int port;
 
 
-
     public SocketSender(int port) {
         this.port = port;
         connect();
     }
 
-    public SocketSender(){
+    public SocketSender() {
         this(5656);
     }
 

@@ -14,6 +14,7 @@ public class AgvHal extends BaseHal {
     private static final String CMD_MOVE = "move";
     private static final String FIELD_FROM = "from";
     private static final String FIELD_TO = "to";
+
     public AgvHal() {
         super();
     }

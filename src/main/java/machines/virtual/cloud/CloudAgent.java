@@ -1,16 +1,18 @@
 package machines.virtual.cloud;
 
 
-import machines.virtual.cloud.behaviours.cycle.DetectUpdateMsg;
-import machines.virtual.cloud.behaviours.cycle.GetOrder;
-import machines.virtual.cloud.behaviours.cycle.HandleOrders;
-import commons.tools.*;
 import commons.AgentTemplate;
 import commons.order.OrderInfo;
+import commons.tools.DFServiceType;
+import commons.tools.IniLoader;
+import commons.tools.LoggerUtil;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
+import machines.virtual.cloud.behaviours.cycle.DetectUpdateMsg;
+import machines.virtual.cloud.behaviours.cycle.GetOrder;
+import machines.virtual.cloud.behaviours.cycle.HandleOrders;
 
 import java.util.Map;
 import java.util.Queue;

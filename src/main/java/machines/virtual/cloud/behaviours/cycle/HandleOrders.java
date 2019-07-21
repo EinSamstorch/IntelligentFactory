@@ -1,12 +1,12 @@
 package machines.virtual.cloud.behaviours.cycle;
 
-import machines.virtual.cloud.CloudAgent;
-import commons.tools.DFServiceType;
-import commons.tools.DFUtils;
 import commons.order.OrderInfo;
 import commons.order.WorkpieceInfo;
+import commons.tools.DFServiceType;
+import commons.tools.DFUtils;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
+import machines.virtual.cloud.CloudAgent;
 
 /**
  * 处理新订单.
@@ -19,6 +19,7 @@ import jade.lang.acl.ACLMessage;
 
 public class HandleOrders extends TickerBehaviour {
     private CloudAgent cagent;
+
     public HandleOrders(CloudAgent cagent, long period) {
         super(cagent, period);
         this.cagent = cagent;

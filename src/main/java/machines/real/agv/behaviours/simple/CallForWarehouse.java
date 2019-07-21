@@ -26,6 +26,7 @@ public class CallForWarehouse extends SimpleBehaviour {
     private String conversationId;
     private ItemMoveRequest request;
     private volatile NotifyFinish notifyFinish;
+
     public CallForWarehouse(Agent a, ItemMoveRequest request, NotifyFinish notifyFinish) {
         super(a);
         this.request = request;
@@ -36,7 +37,7 @@ public class CallForWarehouse extends SimpleBehaviour {
 
     @Override
     public void action() {
-        if(init) {
+        if (init) {
             // 发送出货请求
             ACLMessage msg = null;
             try {
@@ -53,8 +54,8 @@ public class CallForWarehouse extends SimpleBehaviour {
         } else {
             MessageTemplate mt = MessageTemplate.MatchConversationId(conversationId);
             ACLMessage receive = myAgent.receive(mt);
-            if(receive != null) {
-                if(receive.getPerformative() == ACLMessage.INFORM) {
+            if (receive != null) {
+                if (receive.getPerformative() == ACLMessage.INFORM) {
                     // 已到达出货口
                     isDone = true;
                     notifyFinish.setDone(true);

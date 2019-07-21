@@ -22,6 +22,7 @@ public class SQLiteJDBC {
     public SQLiteJDBC(String dbName) {
         this.dbName = dbName;
     }
+
     public void connect() {
         try {
             Class.forName("org.sqlite.JDBC");
@@ -34,7 +35,7 @@ public class SQLiteJDBC {
     }
 
     public void close() {
-        if(this.con != null) {
+        if (this.con != null) {
             try {
                 this.con.close();
             } catch (SQLException e) {

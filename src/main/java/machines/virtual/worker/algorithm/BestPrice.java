@@ -22,6 +22,7 @@ public class BestPrice {
 
     /**
      * 获得最优offer
+     *
      * @param msgArray offers
      * @param strategy 策略, 最高价 / 最低价
      * @return 最佳offer
@@ -47,7 +48,7 @@ public class BestPrice {
             if (content != null) {
                 // 最高价策略和最低价策略
                 int offerPrice = content.getOfferPrice();
-                if(offerPrice <= 0) {
+                if (offerPrice <= 0) {
                     // 价格非正数 跳过
                     continue;
                 }

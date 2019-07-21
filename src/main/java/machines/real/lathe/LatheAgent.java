@@ -1,4 +1,4 @@
-package machines.real.mill;
+package machines.real.lathe;
 
 import commons.tools.DFServiceType;
 import jade.core.behaviours.Behaviour;
@@ -15,22 +15,21 @@ import machines.real.commons.behaviours.cycle.MaintainBufferBehaviour;
  * @since 1.8
  */
 
-public class MillAgent extends RealMachineAgent {
-
+public class LatheAgent extends RealMachineAgent {
     @Override
     protected void setup() {
         super.setup();
-        registerDF(DFServiceType.MILL);
+        registerDF(DFServiceType.LATHE);
 
-        hal = new MillHal(halPort);
+        hal = new LatheHal(halPort);
 
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
         addContractNetResponder(tbf);
 
-        Behaviour b = new LoadItemBehaviour(this, LoadItemBehaviour.SIMPLE);
+        Behaviour b = new MaintainBufferBehaviour(this);
         addBehaviour(tbf.wrap(b));
 
-        b = new MaintainBufferBehaviour(this);
+        b = new LoadItemBehaviour(this, LoadItemBehaviour.COMPLEX);
         addBehaviour(tbf.wrap(b));
     }
 }

@@ -25,7 +25,7 @@ public class BufferState {
     }
 
     public void nextState() {
-        if(state != STATE_PROCESSED) {
+        if (state != STATE_PROCESSED) {
             state += 1;
         }
     }

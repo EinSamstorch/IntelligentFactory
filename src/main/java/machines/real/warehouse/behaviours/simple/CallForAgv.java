@@ -35,10 +35,10 @@ public class CallForAgv extends SimpleBehaviour {
 
     @Override
     public void action() {
-        if(init) {
+        if (init) {
             // 发送运输请求
             ACLMessage msg = null;
-            try{
+            try {
                 msg = DFUtils.createRequestMsg(request);
                 DFUtils.searchDF(myAgent, msg, DFServiceType.AGV);
                 msg.setConversationId(conversationId);
@@ -51,8 +51,8 @@ public class CallForAgv extends SimpleBehaviour {
         } else {
             MessageTemplate mt = MessageTemplate.MatchConversationId(conversationId);
             ACLMessage receive = myAgent.receive(mt);
-            if(receive!=null) {
-                if(receive.getPerformative() == ACLMessage.INFORM) {
+            if (receive != null) {
+                if (receive.getPerformative() == ACLMessage.INFORM) {
                     // 已到达
                     done = true;
                     // 发送搬运请求

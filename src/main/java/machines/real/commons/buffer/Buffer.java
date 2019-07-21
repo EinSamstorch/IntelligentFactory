@@ -34,12 +34,17 @@ public class Buffer {
      */
     private Long processTimestamp = 0L;
 
+    public Buffer(int index) {
+        this.index = index;
+    }
+
     /**
      * 返回还有多长时间加工完成
+     *
      * @return 单位 秒
      */
     public Integer getRemainProcessTime() {
-        return evaluateTime - (int)(System.currentTimeMillis() - processTimestamp) / 1000;
+        return evaluateTime - (int) (System.currentTimeMillis() - processTimestamp) / 1000;
     }
 
     public void setProcessTimestamp(Long processTimestamp) {
@@ -66,12 +71,7 @@ public class Buffer {
         this.wpInfo = wpInfo;
     }
 
-    public Buffer(int index) {
-        this.index = index;
-    }
-
-
-    public void reset(){
+    public void reset() {
         LoggerUtil.hal.debug(String.format("Buffer %d reset", index));
         wpInfo = null;
         evaluateTime = 0;

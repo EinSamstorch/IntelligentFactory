@@ -23,6 +23,7 @@ import java.util.List;
 
 public class HandleWorkpiece extends CyclicBehaviour {
     private WorkerAgent workerAgent;
+
     public HandleWorkpiece(WorkerAgent workerAgent) {
         this.workerAgent = workerAgent;
     }
@@ -31,28 +32,35 @@ public class HandleWorkpiece extends CyclicBehaviour {
     @Override
     public void action() {
         WorkpieceInfo wpInfo = workerAgent.getWpInfoQueue().poll();
-        if(wpInfo == null) return;
+        if (wpInfo == null) {
+            block(1000);
+            return;
+        }
+        ;
+        // 重置加工工步
+        wpInfo.resetProcessStep();
+
         List<String> processPlan = wpInfo.getProcessPlan();
         int processIndex = wpInfo.nextProcessIndex();
-        if(processIndex >= processPlan.size()){
+        if (processIndex >= processPlan.size()) {
             // 所有工艺完成，回成品库
             LoggerUtil.agent.info(String.format("OrderId: %s, wpId: %s done.",
                     wpInfo.getOrderId(), wpInfo.getWorkpieceId()));
             processOn(wpInfo, DFServiceType.PRODUCT);
-            return ;
+            return;
         }
 
         String process = processPlan.get(processIndex);
         processOn(wpInfo, process);
     }
 
-    private void processOn(WorkpieceInfo wpInfo, String serviceType){
-        try{
+    private void processOn(WorkpieceInfo wpInfo, String serviceType) {
+        try {
             ACLMessage msg = DFUtils.createCFPMsg(wpInfo);
-            if(serviceType.equals(DFServiceType.PRODUCT)) {
+            if (serviceType.equals(DFServiceType.PRODUCT)) {
                 DFUtils.searchDF(workerAgent, msg, DFServiceType.WAREHOUSE);
                 msg.setLanguage("PRODUCT");
-            } else if(serviceType.equals(DFServiceType.WAREHOUSE)) {
+            } else if (serviceType.equals(DFServiceType.WAREHOUSE)) {
                 DFUtils.searchDF(workerAgent, msg, serviceType);
                 msg.setLanguage("RAW");
             } else {

@@ -9,7 +9,6 @@ import jade.lang.acl.ACLMessage;
 import machines.real.armrobot.behaviours.cycle.MoveItemBehaviour;
 import machines.real.armrobot.behaviours.cycle.RecvMoveItemBehaviour;
 
-import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -24,6 +23,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class ArmrobotAgent extends AgentTemplate {
     private ArmrobotHal hal;
     private Queue<ACLMessage> requestQueue = new LinkedBlockingQueue<>();
+
     @Override
     protected void setup() {
         super.setup();

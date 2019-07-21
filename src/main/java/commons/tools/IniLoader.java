@@ -1,6 +1,5 @@
 package commons.tools;
 
-import machines.real.commons.buffer.BufferManger;
 import org.ini4j.Ini;
 import org.ini4j.InvalidFileFormatException;
 
@@ -73,11 +72,12 @@ public class IniLoader {
         return ini.get(secName);
     }
 
-     /**
+    /**
      * load arm_password from [{agent_local_name}] in setting.ini
+     *
      * @return {arm_password} or {null} if there is no arm_password
      */
-     public static String loadArmPassword(String sectionName){
+    public static String loadArmPassword(String sectionName) {
         Map<String, String> setting = IniLoader.load(sectionName);
 
         final String SETTING_ARM_PASSWORD = "arm_password";
@@ -88,16 +88,17 @@ public class IniLoader {
 
     /**
      * load hal_port from [{agent_local_name}] in setting.ini
+     *
      * @return {hal_port} or {5656} if there is no hal_port
      */
-    public static Integer loadHalPort(String sectionName){
+    public static Integer loadHalPort(String sectionName) {
         Map<String, String> setting = IniLoader.load(sectionName);
 
         String SETTING_HAL_PORT = "hal_port";
 
         String portStr = setting.get(SETTING_HAL_PORT);
         // 无hal_port配置项 则默认 5656
-        if(portStr != null) {
+        if (portStr != null) {
             return new Integer(portStr);
         } else {
             return 5656;
@@ -106,17 +107,17 @@ public class IniLoader {
     }
 
 
-
     /**
      * load buffer_index from [{agent_local_name}] in setting.ini
+     *
      * @return int[] or {null} if there is no buffer_index
      */
-    public static int[] loadBuffers(String sectionName){
+    public static int[] loadBuffers(String sectionName) {
         Map<String, String> setting = IniLoader.load(sectionName);
 
         final String SETTING_BUFFER_INDEX = "buffer_index";
         String bufferIndexStr = setting.get(SETTING_BUFFER_INDEX);
-        if(bufferIndexStr == null) {
+        if (bufferIndexStr == null) {
             return null;
         } else {
             String[] split = bufferIndexStr.split(",");

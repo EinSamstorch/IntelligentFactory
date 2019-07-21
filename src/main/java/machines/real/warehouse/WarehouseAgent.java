@@ -3,14 +3,14 @@ package machines.real.warehouse;
 import commons.AgentTemplate;
 import commons.tools.DFServiceType;
 import commons.tools.IniLoader;
-import machines.real.warehouse.behaviours.cycle.ItemExportBehaviour;
-import machines.real.warehouse.behaviours.cycle.ProductContractNetResponder;
-import machines.real.warehouse.behaviours.cycle.RawContractNetResponder;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import machines.real.warehouse.behaviours.cycle.ItemExportBehaviour;
+import machines.real.warehouse.behaviours.cycle.ProductContractNetResponder;
+import machines.real.warehouse.behaviours.cycle.RawContractNetResponder;
 import machines.real.warehouse.behaviours.cycle.RecvItemExportRequestBehaviour;
 
 import java.util.Map;

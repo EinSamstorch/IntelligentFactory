@@ -1,9 +1,9 @@
 package machines.virtual.cloud;
 
-import commons.tools.LoggerUtil;
 import commons.order.OrderInfo;
-import commons.tools.db.MysqlJDBC;
 import commons.order.WorkpieceInfo;
+import commons.tools.LoggerUtil;
+import commons.tools.db.MysqlJDBC;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

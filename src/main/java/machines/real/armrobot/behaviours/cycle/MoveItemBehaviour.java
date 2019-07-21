@@ -33,8 +33,8 @@ public class MoveItemBehaviour extends CyclicBehaviour {
     @Override
     public void action() {
         ACLMessage msg = requestQueue.poll();
-        if(msg != null) {
-            ArmrobotRequest request = null ;
+        if (msg != null) {
+            ArmrobotRequest request = null;
             try {
                 request = (ArmrobotRequest) msg.getContentObject();
             } catch (UnreadableException e) {

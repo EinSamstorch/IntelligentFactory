@@ -31,7 +31,7 @@ public class ArmrobotHal extends BaseHal {
         extra.put(FIELD_FROM, from);
         extra.put(FIELD_TO, to);
         extra.put(FIELD_GOODSID, goodsid);
-        if(step != 0) {
+        if (step != 0) {
             extra.put(FIELD_STEP, step);
         }
         return executeCmd(CMD_MOVE_ITEM, extra);

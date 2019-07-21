@@ -33,9 +33,9 @@ public class MaintainBufferBehaviour extends CyclicBehaviour {
                 MessageTemplate.MatchLanguage(MSG_LANGUAGE)
         );
         ACLMessage receive = myAgent.receive(mt);
-        if(receive != null) {
+        if (receive != null) {
             int bufferIndex = new Integer(receive.getContent());
-            if(machineAgent.getBufferManger().resetBufferByIndex(bufferIndex)) {
+            if (machineAgent.getBufferManger().resetBufferByIndex(bufferIndex)) {
                 LoggerUtil.agent.info(String.format("Item removed from buffer %d", bufferIndex));
             } else {
                 LoggerUtil.agent.error(String.format("Buffer %d not found!", bufferIndex));

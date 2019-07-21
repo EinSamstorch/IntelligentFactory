@@ -17,9 +17,11 @@ public class MachineState {
     public Boolean isBusy() {
         return state == STATE_BUSY;
     }
+
     public void resetBusy() {
         state = STATE_STAND_BY;
     }
+
     public void setBusy() {
         state = STATE_BUSY;
     }

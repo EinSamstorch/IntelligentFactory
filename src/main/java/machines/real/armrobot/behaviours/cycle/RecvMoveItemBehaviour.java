@@ -29,7 +29,7 @@ public class RecvMoveItemBehaviour extends CyclicBehaviour {
                 MessageTemplate.MatchPerformative(ACLMessage.REQUEST)
         );
         ACLMessage receive = armagent.receive(mt);
-        if(receive!=null){
+        if (receive != null) {
             armagent.getRequestQueue().offer(receive);
         } else {
             block();

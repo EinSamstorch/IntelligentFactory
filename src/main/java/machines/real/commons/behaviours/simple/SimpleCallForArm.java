@@ -5,6 +5,7 @@ import commons.order.WorkpieceInfo;
 import commons.tools.DFServiceType;
 import commons.tools.DFUtils;
 import commons.tools.LoggerUtil;
+import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -29,7 +30,7 @@ public class SimpleCallForArm extends SimpleBehaviour {
     private ArmrobotRequest request;
     private Boolean init = true;
     private Boolean isDone = false;
-    private String conversationId = String.format("CALL_FOR_ARM_%d", new Random().nextInt());;
+    private String conversationId = String.format("CALL_FOR_ARM_%d", new Random().nextInt());
     private String password;
     private Buffer buffer;
     private String operation;
@@ -46,7 +47,7 @@ public class SimpleCallForArm extends SimpleBehaviour {
 
     @Override
     public void action() {
-        if(init) {
+        if (init) {
             // 发出搬运请求
             initSendRequest();
         } else {
@@ -68,8 +69,8 @@ public class SimpleCallForArm extends SimpleBehaviour {
     private void waitForInform() {
         MessageTemplate mt = MessageTemplate.MatchConversationId(conversationId);
         ACLMessage receive = myAgent.receive(mt);
-        if(receive != null) {
-            if(receive.getPerformative() == ACLMessage.INFORM) {
+        if (receive != null) {
+            if (receive.getPerformative() == ACLMessage.INFORM) {
                 isDone = true;
                 switch (operation) {
                     case LOAD:
@@ -84,9 +85,11 @@ public class SimpleCallForArm extends SimpleBehaviour {
             block();
         }
     }
+
     private void loadAction() {
-        buffer.getBufferState().setState(BufferState.STATE_PROCESSING);
-        myAgent.addBehaviour(new SimpleProcessItemBehaviour(machineAgent, buffer));
+        Behaviour afterProcess = new SimpleCallForArm(machineAgent, request, buffer,
+                machineAgent.getArmPwd(), SimpleCallForArm.UNLOAD);
+        myAgent.addBehaviour(new SimpleProcessItemBehaviour(machineAgent, buffer, afterProcess));
         LoggerUtil.hal.info(String.format("Buffer %d load on machine.", buffer.getIndex()));
     }
 
@@ -101,7 +104,7 @@ public class SimpleCallForArm extends SimpleBehaviour {
     private void initSendRequest() {
         // 发送移动货物请求
         ACLMessage msg = null;
-        try{
+        try {
             msg = DFUtils.createRequestMsg(request);
             DFUtils.searchDF(myAgent, msg, DFServiceType.ARMROBOT, password);
 

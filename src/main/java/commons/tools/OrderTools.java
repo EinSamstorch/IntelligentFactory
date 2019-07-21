@@ -1,7 +1,7 @@
 package commons.tools;
 
-import commons.order.OrderInfo;
 import com.alibaba.fastjson.JSONObject;
+import commons.order.OrderInfo;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

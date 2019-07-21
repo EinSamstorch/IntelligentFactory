@@ -30,24 +30,6 @@ public class WorkpieceInfo implements Serializable {
     // 工序分步
     private Integer processStep;
 
-    public static void main(String[] args) {
-//        WorkpieceInfo wpInfo = new WorkpieceInfo("001","001","002","{\"L1\":10}");
-        WorkpieceInfo wpInfo = new WorkpieceInfo("001","001","003","");
-        JSONObject json = new JSONObject();
-        json.put("extra", wpInfo);
-        System.out.println(json.toJSONString());
-    }
-
-    private void initParamters(){
-        providerId = "";
-        preOwnerId = "";
-        curOwnerId = "";
-        lastAgvId = "";
-        bufferPos = 0;
-        warehousePosition = 0;
-        processStep = 0;
-    }
-
     public WorkpieceInfo(String orderId, String workpieceId, String goodsId, String detailSize) {
         this.orderId = orderId;
         this.workpieceId = workpieceId;
@@ -57,6 +39,24 @@ public class WorkpieceInfo implements Serializable {
         // 加载工艺路线
         processPlan = ProcessPlan.getProcessPlan(goodsId);
         initParamters();
+    }
+
+    public static void main(String[] args) {
+//        WorkpieceInfo wpInfo = new WorkpieceInfo("001","001","002","{\"L1\":10}");
+        WorkpieceInfo wpInfo = new WorkpieceInfo("001", "001", "003", "");
+        JSONObject json = new JSONObject();
+        json.put("extra", wpInfo);
+        System.out.println(json.toJSONString());
+    }
+
+    private void initParamters() {
+        providerId = "";
+        preOwnerId = "";
+        curOwnerId = "";
+        lastAgvId = "";
+        bufferPos = 0;
+        warehousePosition = 0;
+        processStep = 1;
     }
 
     public String getOrderId() {
@@ -144,6 +144,14 @@ public class WorkpieceInfo implements Serializable {
 
     public void setProcessStep(Integer processStep) {
         this.processStep = processStep;
+    }
+
+    public void resetProcessStep() {
+        this.processStep = 1;
+    }
+
+    public void setNextProcessStep() {
+        this.processStep += 1;
     }
 
     @Override

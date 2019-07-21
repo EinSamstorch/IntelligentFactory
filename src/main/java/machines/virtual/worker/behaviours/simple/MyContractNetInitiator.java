@@ -2,14 +2,12 @@ package machines.virtual.worker.behaviours.simple;
 
 import commons.tools.DFServiceType;
 import commons.tools.LoggerUtil;
-import jade.core.AID;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetInitiator;
 import jade.util.leap.Iterator;
 import machines.real.commons.ContractNetContent;
-import machines.virtual.worker.WorkerAgent;
 import machines.virtual.worker.algorithm.AlgorithmFactory;
 import machines.virtual.worker.algorithm.BestPrice;
 
@@ -27,8 +25,8 @@ import java.util.Vector;
 
 public class MyContractNetInitiator extends ContractNetInitiator {
 
-    private int nResponders = 0;
     private final String serviceType;
+    private int nResponders = 0;
 
     public MyContractNetInitiator(Agent a, ACLMessage cfp, String serviceType) {
         super(a, cfp);
@@ -47,6 +45,7 @@ public class MyContractNetInitiator extends ContractNetInitiator {
 
     /**
      * 竞价规则需要修改，对于仓库而言，原料越多越好；对于加工而言，用时越短越好。
+     *
      * @param responses
      * @param acceptances
      */
@@ -66,7 +65,7 @@ public class MyContractNetInitiator extends ContractNetInitiator {
             }
         }
         int strategy = 0;
-        if(serviceType.equals(DFServiceType.WAREHOUSE) || serviceType.equals(DFServiceType.PRODUCT)) {
+        if (serviceType.equals(DFServiceType.WAREHOUSE) || serviceType.equals(DFServiceType.PRODUCT)) {
             strategy = BestPrice.HIGHEST;
         } else {
             strategy = BestPrice.LOWEST;
@@ -79,14 +78,14 @@ public class MyContractNetInitiator extends ContractNetInitiator {
                 ACLMessage reply = msg.createReply();
                 reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
                 acceptances.addElement(reply);
-                if(msg.equals(bestOffer)) {
+                if (msg.equals(bestOffer)) {
                     accept = reply;
                     accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
                     accept.setContent(String.valueOf(bestProposal));
                 }
             }
             try {
-                int bestPrice = ((ContractNetContent)bestOffer.getContentObject()).getOfferPrice();
+                int bestPrice = ((ContractNetContent) bestOffer.getContentObject()).getOfferPrice();
                 LoggerUtil.agent.info(String.format("Accepting proposal %d from responder %s",
                         bestPrice, bestOffer.getSender().getName()));
             } catch (UnreadableException ex) {

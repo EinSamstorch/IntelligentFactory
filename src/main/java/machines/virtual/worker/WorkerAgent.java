@@ -1,12 +1,12 @@
 package machines.virtual.worker;
 
-import commons.tools.DFServiceType;
 import commons.AgentTemplate;
 import commons.order.WorkpieceInfo;
-import machines.virtual.worker.behaviours.cycle.HandleRequest;
-import machines.virtual.worker.behaviours.cycle.HandleWorkpiece;
+import commons.tools.DFServiceType;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
+import machines.virtual.worker.behaviours.cycle.HandleRequest;
+import machines.virtual.worker.behaviours.cycle.HandleWorkpiece;
 
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;

@@ -29,7 +29,7 @@ public class ProductContractNetResponder extends ContractNetResponder {
     private WarehouseAgent whagent;
     private WarehouseSqlite sqlite;
 
-    public ProductContractNetResponder(WarehouseAgent whagent, MessageTemplate mt){
+    public ProductContractNetResponder(WarehouseAgent whagent, MessageTemplate mt) {
         super(whagent, mt);
         this.whagent = whagent;
         sqlite = whagent.getSqlite();
@@ -39,7 +39,7 @@ public class ProductContractNetResponder extends ContractNetResponder {
     protected ACLMessage handleCfp(ACLMessage cfp) throws RefuseException, FailureException, NotUnderstoodException {
         LoggerUtil.agent.debug(String.format("CFP received from: %s.", cfp.getSender().getName()));
         int quantity = sqlite.getProductQuantity();
-        if(quantity > 0) {
+        if (quantity > 0) {
             ACLMessage propose = cfp.createReply();
             propose.setPerformative(ACLMessage.PROPOSE);
             try {
@@ -60,11 +60,11 @@ public class ProductContractNetResponder extends ContractNetResponder {
         int quantity = Integer.parseInt(accept.getContent());
         WorkpieceInfo wpInfo = null;
         try {
-            wpInfo = (WorkpieceInfo)cfp.getContentObject();
+            wpInfo = (WorkpieceInfo) cfp.getContentObject();
         } catch (UnreadableException e) {
             e.printStackTrace();
         }
-        if(wpInfo != null) {
+        if (wpInfo != null) {
             int position = sqlite.getProduct(wpInfo);
             wpInfo.setWarehousePosition(position);
             int currentLocation = wpInfo.getBufferPos();

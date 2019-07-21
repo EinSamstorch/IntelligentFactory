@@ -21,11 +21,12 @@ public class BufferManger {
 
     /**
      * 检查buffer是否已满
+     *
      * @return true 已满, false 未满
      */
     public Boolean isBufferFull() {
         for (Buffer buffer1 : buffers) {
-            if(buffer1.getWpInfo() == null) {
+            if (buffer1.getWpInfo() == null) {
                 return false;
             }
         }
@@ -34,14 +35,15 @@ public class BufferManger {
 
     /**
      * 获得一个空的buffer
+     *
      * @return 获得一个空的Buffer对象, 若buffer已满 则返回null
      */
     public Buffer getEmptyBuffer() {
-        if(isBufferFull()) {
+        if (isBufferFull()) {
             return null;
         }
         for (Buffer buffer : buffers) {
-            if(buffer.isEmpty()) {
+            if (buffer.isEmpty()) {
                 return buffer;
             }
         }
@@ -54,15 +56,16 @@ public class BufferManger {
 
     /**
      * 获取所有工位台加工时长总和
+     *
      * @return 单位 秒
      */
     public Integer getAllWaitingTime() {
         int totalTime = 0;
         for (Buffer buffer : buffers) {
-            if(buffer.getBufferState().getState() == BufferState.STATE_WAITING) {
+            if (buffer.getBufferState().getState() == BufferState.STATE_WAITING) {
                 // 待加工 返回 预估时间
                 totalTime += buffer.getEvaluateTime();
-            } else if(buffer.getBufferState().getState() == BufferState.STATE_PROCESSING) {
+            } else if (buffer.getBufferState().getState() == BufferState.STATE_PROCESSING) {
                 // 正在加工  返回 当前时间 - 开始加工时间
                 totalTime += buffer.getRemainProcessTime();
             }
@@ -72,11 +75,12 @@ public class BufferManger {
 
     /**
      * 获取 一个 等待加工的 buffer
+     *
      * @return 等待加工的buffer对象, {null} 若无待加工buffer
      */
     public Buffer getWaitingBuffer() {
         for (Buffer buffer : buffers) {
-            if(buffer.getBufferState().getState() == BufferState.STATE_WAITING) {
+            if (buffer.getBufferState().getState() == BufferState.STATE_WAITING) {
                 return buffer;
             }
         }
@@ -85,12 +89,13 @@ public class BufferManger {
 
     /**
      * 通过指定index reset指定buffer
+     *
      * @param index buffer 的 index
      * @return true 成功复位, false 未找到buffer
      */
     public Boolean resetBufferByIndex(int index) {
         for (Buffer buffer : buffers) {
-            if(buffer.getIndex() == index) {
+            if (buffer.getIndex() == index) {
                 buffer.reset();
                 return true;
             }

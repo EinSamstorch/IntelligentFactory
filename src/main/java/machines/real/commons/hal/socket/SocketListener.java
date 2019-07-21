@@ -46,9 +46,9 @@ public class SocketListener extends Thread {
     @Override
     public void run() {
         this.init();
-        while(true) {
+        while (true) {
             String response = receiveMessage();
-            if(checkMsgComplete(response)) {
+            if (checkMsgComplete(response)) {
                 JSONObject message = JsonTool.parseObject(response);
                 int taskNo = message.getIntValue(SocketMessage.FIELD_TASK_NO);
                 String type = parseMsgType(response);
@@ -66,11 +66,12 @@ public class SocketListener extends Thread {
 
     /**
      * 检查消息完整性
+     *
      * @param response socket server返回的消息
      * @return 是否完整
      */
     private boolean checkMsgComplete(String response) {
-        if(response == null) {
+        if (response == null) {
             return false;
         }
 
@@ -88,8 +89,8 @@ public class SocketListener extends Thread {
         boolean msgComplete = message.containsKey(SocketMessage.FIELD_TASK_NO)
                 && message.containsKey(SocketMessage.FIELD_EXTRA)
                 && (message.containsKey(SocketMessage.FIELD_CMD_RESULT)
-                    || message.containsKey(SocketMessage.FIELD_ACTION_RESULT));
-        if(!msgComplete) {
+                || message.containsKey(SocketMessage.FIELD_ACTION_RESULT));
+        if (!msgComplete) {
             // 消息结构缺失则返回false
             LoggerUtil.agent.warn("Message incomplete");
             return false;
@@ -100,10 +101,10 @@ public class SocketListener extends Thread {
 
     private String parseMsgType(String response) {
         JSONObject message = JsonTool.parseObject(response);
-        if(message.containsKey(SocketMessage.FIELD_CMD_RESULT)) {
+        if (message.containsKey(SocketMessage.FIELD_CMD_RESULT)) {
             return SocketMessage.FIELD_CMD_RESULT;
         }
-        if(message.containsKey(SocketMessage.FIELD_ACTION_RESULT)) {
+        if (message.containsKey(SocketMessage.FIELD_ACTION_RESULT)) {
             return SocketMessage.FIELD_ACTION_RESULT;
         }
         return "UNKNOWN";
@@ -139,6 +140,7 @@ public class SocketListener extends Thread {
 
     /**
      * 向socketserver发送字符串
+     *
      * @param words 待发送字符串
      */
     private void send(String words) {
@@ -153,6 +155,7 @@ public class SocketListener extends Thread {
 
     /**
      * 接收socketserver返回的字符串
+     *
      * @return 接收到的字符串
      */
     private String receiveMessage() {

@@ -39,7 +39,7 @@ public class DFUtils {
         DFAgentDescription template = new DFAgentDescription();
         ServiceDescription templateSd = new ServiceDescription();
         templateSd.setType(type);
-        if(password != null) {
+        if (password != null) {
             templateSd.addProperties(new Property("password", password));
         }
         template.addServices(templateSd);
@@ -68,7 +68,7 @@ public class DFUtils {
         }
     }
 
-    public static void searchDF(Agent agent, ACLMessage msg, String type) throws Exception{
+    public static void searchDF(Agent agent, ACLMessage msg, String type) throws Exception {
         searchDF(agent, msg, type, null);
     }
 
@@ -78,7 +78,7 @@ public class DFUtils {
      * 消息条约 合同网
      * 超时时间 10秒
      *
-     * @param  content 消息载体 object类型 需实现Serializable接口
+     * @param content 消息载体 object类型 需实现Serializable接口
      * @return 招标消息
      */
     public static ACLMessage createCFPMsg(Object content) throws MsgCreateFailedException {
@@ -94,7 +94,7 @@ public class DFUtils {
      * 消息类别 REQUEST
      * 消息条约 REQUEST
      *
-     * @param  content 消息载体 object类型 需实现Serializable接口
+     * @param content 消息载体 object类型 需实现Serializable接口
      */
     public static ACLMessage createRequestMsg(Object content) throws MsgCreateFailedException {
         ACLMessage msg = createRequstMsgHeader();
@@ -102,14 +102,14 @@ public class DFUtils {
         return msg;
     }
 
-    public static ACLMessage createRequstMsgHeader(){
+    public static ACLMessage createRequstMsgHeader() {
         ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
         msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
         return msg;
     }
 
 
-    private static void msgSetContent(ACLMessage msg, Object content) throws MsgCreateFailedException{
+    private static void msgSetContent(ACLMessage msg, Object content) throws MsgCreateFailedException {
         try {
             msg.setContentObject((Serializable) content);
         } catch (IOException e) {

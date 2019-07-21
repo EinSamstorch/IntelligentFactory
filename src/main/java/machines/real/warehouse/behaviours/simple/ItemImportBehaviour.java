@@ -1,7 +1,6 @@
 package machines.real.warehouse.behaviours.simple;
 
 import commons.tools.LoggerUtil;
-import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
 import machines.real.commons.ItemMoveRequest;
 import machines.real.warehouse.WarehouseAgent;
@@ -29,9 +28,9 @@ public class ItemImportBehaviour extends OneShotBehaviour {
 
     @Override
     public void action() {
-        if(request != null) {
+        if (request != null) {
             Integer itemPosition = request.getItemPosition();
-            if(hal.moveItem(posIn, itemPosition)) {
+            if (hal.moveItem(posIn, itemPosition)) {
                 LoggerUtil.hal.info(String.format("Succeed! Import item to %d", itemPosition));
             } else {
                 LoggerUtil.hal.info(String.format("Failed! Import item to %d", itemPosition));

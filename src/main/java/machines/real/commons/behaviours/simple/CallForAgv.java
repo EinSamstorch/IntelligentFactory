@@ -8,9 +8,9 @@ import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import machines.real.commons.buffer.Buffer;
 import machines.real.commons.buffer.BufferState;
 import machines.real.commons.request.AgvRequest;
-import machines.real.commons.buffer.Buffer;
 
 import java.util.Random;
 
@@ -38,7 +38,7 @@ public class CallForAgv extends SimpleBehaviour {
 
     @Override
     public void action() {
-        if(init) {
+        if (init) {
             // 发送运输请求
             initSendRequest();
         } else {
@@ -70,8 +70,8 @@ public class CallForAgv extends SimpleBehaviour {
     private void waitForInform() {
         MessageTemplate mt = MessageTemplate.MatchConversationId(conversationId);
         ACLMessage receive = myAgent.receive(mt);
-        if(receive != null) {
-            if(receive.getPerformative() == ACLMessage.INFORM) {
+        if (receive != null) {
+            if (receive.getPerformative() == ACLMessage.INFORM) {
                 // 已到达
                 isDone = true;
                 buffer.getBufferState().setState(BufferState.STATE_WAITING);
