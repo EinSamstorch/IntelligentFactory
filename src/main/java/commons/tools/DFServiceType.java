@@ -15,7 +15,7 @@ public class DFServiceType {
     public static final String LATHE = "lathe";
     public static final String WORKER = "worker";
     public static final String MILL = "mill";
-    public static final String DETECTOR = "detector";
+    public static final String VISION = "vision";
     public static final String AGV = "agv";
     public static final String ARMROBOT = "armrobot";
     public static final String PRODUCT = "product";

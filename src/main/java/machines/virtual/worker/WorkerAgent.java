@@ -3,11 +3,13 @@ package machines.virtual.worker;
 import commons.AgentTemplate;
 import commons.order.WorkpieceInfo;
 import commons.tools.DFServiceType;
+import commons.tools.IniLoader;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import machines.virtual.worker.behaviours.cycle.HandleRequest;
 import machines.virtual.worker.behaviours.cycle.HandleWorkpiece;
 
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -21,6 +23,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class WorkerAgent extends AgentTemplate {
+    private Integer detectRatio;
     private Queue<WorkpieceInfo> wpInfoQueue = new LinkedBlockingQueue<>();
 
     public Queue<WorkpieceInfo> getWpInfoQueue() {
@@ -33,6 +36,7 @@ public class WorkerAgent extends AgentTemplate {
         super.setup();
         registerDF(DFServiceType.WORKER);
 
+        detectRatio = loadDetectRatio();
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
 
         Behaviour b = new HandleRequest(this);
@@ -40,7 +44,14 @@ public class WorkerAgent extends AgentTemplate {
 
         b = new HandleWorkpiece(this);
         addBehaviour(tbf.wrap(b));
-
     }
 
+    private int loadDetectRatio() {
+        Map<String, String> setting = IniLoader.load(getLocalName());
+        return Integer.parseInt(setting.get("detect_ratio"));
+    }
+
+    public Integer getDetectRatio() {
+        return detectRatio;
+    }
 }

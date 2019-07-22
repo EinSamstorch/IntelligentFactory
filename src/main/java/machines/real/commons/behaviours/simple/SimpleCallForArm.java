@@ -87,7 +87,9 @@ public class SimpleCallForArm extends SimpleBehaviour {
     }
 
     private void loadAction() {
-        Behaviour afterProcess = new SimpleCallForArm(machineAgent, request, buffer,
+        ArmrobotRequest unloadRequet = new ArmrobotRequest(this.request.getTo(), this.request.getFrom(),
+                this.request.getGoodsid(), this.request.getStep());
+        Behaviour afterProcess = new SimpleCallForArm(machineAgent, unloadRequet, buffer,
                 machineAgent.getArmPwd(), SimpleCallForArm.UNLOAD);
         myAgent.addBehaviour(new SimpleProcessItemBehaviour(machineAgent, buffer, afterProcess));
         LoggerUtil.hal.info(String.format("Buffer %d load on machine.", buffer.getIndex()));

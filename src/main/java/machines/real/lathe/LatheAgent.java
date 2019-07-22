@@ -29,7 +29,7 @@ public class LatheAgent extends RealMachineAgent {
         Behaviour b = new MaintainBufferBehaviour(this);
         addBehaviour(tbf.wrap(b));
 
-        b = new LoadItemBehaviour(this, LoadItemBehaviour.COMPLEX);
+        b = new LoadItemBehaviour(this, LoadItemBehaviour.LATHE);
         addBehaviour(tbf.wrap(b));
     }
 }

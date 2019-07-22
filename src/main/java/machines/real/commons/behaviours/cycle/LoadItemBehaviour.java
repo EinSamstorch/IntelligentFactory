@@ -9,6 +9,8 @@ import machines.real.commons.buffer.Buffer;
 import machines.real.commons.request.ArmrobotRequest;
 import machines.real.lathe.LatheAgent;
 import machines.real.lathe.behaviours.simple.ComplexCallForArm;
+import machines.real.vision.VisionAgent;
+import machines.real.vision.behaviours.simple.VisionCallForArm;
 
 /**
  * 挑选工件装载入机床
@@ -19,8 +21,9 @@ import machines.real.lathe.behaviours.simple.ComplexCallForArm;
  */
 
 public class LoadItemBehaviour extends CyclicBehaviour {
-    public static final int SIMPLE = 1;
-    public static final int COMPLEX = 2;
+    public static final int MILL = 1;
+    public static final int LATHE = 2;
+    public static final int VISION = 3;
     private Integer type;
     private RealMachineAgent machineAgent;
 
@@ -44,12 +47,16 @@ public class LoadItemBehaviour extends CyclicBehaviour {
                 String goodsId = buffer.getWpInfo().getGoodsId();
                 ArmrobotRequest request = new ArmrobotRequest(from, to, goodsId);
                 String password = machineAgent.getArmPwd();
-                if (type == SIMPLE) {
+                if (type == MILL) {
                     machineAgent.addBehaviour(new SimpleCallForArm(machineAgent, request, buffer,
                             password, SimpleCallForArm.LOAD));
-                } else if (type == COMPLEX) {
+                } else if (type == LATHE) {
                     Behaviour b = new ComplexCallForArm((LatheAgent) machineAgent, request, buffer, password)
                             .loadItemBehaviour();
+                    machineAgent.addBehaviour(b);
+                } else if(type == VISION) {
+                    Behaviour b = VisionCallForArm
+                            .loadItemBehaviour((VisionAgent)machineAgent, request, buffer, password);
                     machineAgent.addBehaviour(b);
                 }
             }

@@ -11,6 +11,7 @@ import machines.virtual.worker.WorkerAgent;
 import machines.virtual.worker.behaviours.simple.MyContractNetInitiator;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * 处理工件招投标.
@@ -51,6 +52,9 @@ public class HandleWorkpiece extends CyclicBehaviour {
         }
 
         String process = processPlan.get(processIndex);
+        if (process.equals(DFServiceType.WAREHOUSE)) {
+            addVisionProcess(wpInfo);
+        }
         processOn(wpInfo, process);
     }
 
@@ -71,6 +75,15 @@ public class HandleWorkpiece extends CyclicBehaviour {
             workerAgent.addBehaviour(b);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void addVisionProcess(WorkpieceInfo wpInfo) {
+        int random = new Random().nextInt(100);
+        if (random < workerAgent.getDetectRatio()) {
+            LoggerUtil.agent.info(String.format("Item orderId:%s, wpId:%s add vision detect",
+                    wpInfo.getOrderId(), wpInfo.getWorkpieceId()));
+            wpInfo.getProcessPlan().add(DFServiceType.VISION);
         }
     }
 }
