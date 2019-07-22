@@ -6,9 +6,9 @@ import commons.tools.DFUtils;
 import commons.tools.LoggerUtil;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
+import machines.real.commons.RealMachineAgent;
 import machines.real.commons.buffer.Buffer;
 import machines.real.commons.buffer.BufferState;
-import machines.real.lathe.LatheAgent;
 
 /**
  * .
@@ -20,19 +20,19 @@ import machines.real.lathe.LatheAgent;
 
 public class ProcessFinishedBehaviour extends OneShotBehaviour {
     private boolean isDone = false;
-    private LatheAgent latheAgent;
+    private RealMachineAgent machineAgent;
     private Buffer buffer;
 
-    public ProcessFinishedBehaviour(LatheAgent latheAgent, Buffer buffer) {
-        super(latheAgent);
-        this.latheAgent = latheAgent;
+    public ProcessFinishedBehaviour(RealMachineAgent machineAgent, Buffer buffer) {
+        super(machineAgent);
+        this.machineAgent = machineAgent;
         this.buffer = buffer;
     }
 
     @Override
     public void action() {
         // 复位机床状态和工位台状态
-        latheAgent.getMachineState().resetBusy();
+        machineAgent.getMachineState().resetBusy();
         buffer.getBufferState().setState(BufferState.STATE_PROCESSED);
         // 提交给 worker 进行 下一步招标以及状态更新
         sendToWorker(buffer.getWpInfo());

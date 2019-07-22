@@ -40,7 +40,6 @@ public class RealMachineAgent extends AgentTemplate {
     }
 
     protected void addContractNetResponder(ThreadedBehaviourFactory tbf) {
-
         MessageTemplate mt = MessageTemplate.and(
                 MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
                 MessageTemplate.MatchPerformative(ACLMessage.CFP)

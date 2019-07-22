@@ -102,4 +102,15 @@ public class BufferManger {
         }
         return false;
     }
+
+
+    public int getFreeQuantity() {
+        int quantity = 0;
+        for (Buffer buffer : buffers) {
+            if(buffer.getWpInfo() == null) {
+                quantity += 1;
+            }
+        }
+        return quantity;
+    }
 }

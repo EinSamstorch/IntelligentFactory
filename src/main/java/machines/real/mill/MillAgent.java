@@ -27,7 +27,7 @@ public class MillAgent extends RealMachineAgent {
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
         addContractNetResponder(tbf);
 
-        Behaviour b = new LoadItemBehaviour(this, LoadItemBehaviour.SIMPLE);
+        Behaviour b = new LoadItemBehaviour(this, LoadItemBehaviour.MILL);
         addBehaviour(tbf.wrap(b));
 
         b = new MaintainBufferBehaviour(this);
