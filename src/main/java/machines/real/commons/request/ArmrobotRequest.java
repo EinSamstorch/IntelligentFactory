@@ -11,10 +11,10 @@ import java.io.Serializable;
  */
 
 public class ArmrobotRequest implements Serializable {
-    private String from;
-    private String to;
-    private String goodsid;
-    private Integer step;
+    private final String from;
+    private final String to;
+    private final String goodsid;
+    private final Integer step;
 
     public ArmrobotRequest(String from, String to, String goodsid, Integer step) {
         this.from = from;
@@ -24,14 +24,35 @@ public class ArmrobotRequest implements Serializable {
     }
 
     public ArmrobotRequest(ArmrobotRequest request) {
-        this.from = request.getFrom();
-        this.to = request.getTo();
-        this.goodsid = request.getGoodsid();
-        this.step = request.getStep();
+        this.from = request.from;
+        this.to = request.to;
+        this.goodsid = request.goodsid;
+        this.step = request.step;
     }
 
     public ArmrobotRequest(String from, String to, String goodsid) {
         this(from, to, goodsid, 0);
+    }
+
+    public static ArmrobotRequest unloadRequest(ArmrobotRequest request) {
+        return new ArmrobotRequest(request.to,
+                request.from,
+                request.goodsid,
+                0);
+    }
+
+    public static ArmrobotRequest reverseRequest(ArmrobotRequest request) {
+        return new ArmrobotRequest(request.to,
+                request.to,
+                request.goodsid,
+                0);
+    }
+
+    public static ArmrobotRequest nextStep(ArmrobotRequest request) {
+        return new ArmrobotRequest(request.from,
+                request.to,
+                request.goodsid,
+                request.step + 1);
     }
 
     public String getFrom() {
@@ -50,7 +71,4 @@ public class ArmrobotRequest implements Serializable {
         return step;
     }
 
-    public void setStep(Integer step) {
-        this.step = step;
-    }
 }

@@ -1,4 +1,4 @@
-package machines.real.lathe.behaviours.simple;
+package machines.real.commons.behaviours.simple;
 
 import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;

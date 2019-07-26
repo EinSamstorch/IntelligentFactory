@@ -27,6 +27,7 @@ import java.io.IOException;
 
 public class CheckItemContractNetResponder extends ContractNetResponder {
     private VisionAgent visionAgent;
+
     public CheckItemContractNetResponder(VisionAgent visionAgent, MessageTemplate mt) {
         super(visionAgent, mt);
         this.visionAgent = visionAgent;

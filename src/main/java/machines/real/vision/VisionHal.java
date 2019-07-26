@@ -1,7 +1,9 @@
 package machines.real.vision;
 
 import com.alibaba.fastjson.JSONObject;
-import machines.real.commons.hal.BaseHal;
+import commons.order.WorkpieceInfo;
+import commons.tools.LoggerUtil;
+import machines.real.commons.hal.MachineHal;
 
 /**
  * .
@@ -11,22 +13,37 @@ import machines.real.commons.hal.BaseHal;
  * @since 1.8
  */
 
-public class VisionHal extends BaseHal {
+public class VisionHal extends MachineHal {
     private static final String CMD_CHECK = "check";
+    private Object checkValue;
 
     public VisionHal() {
         super();
     }
+
     public VisionHal(int port) {
         super(port);
     }
 
-    public String check(String goodsid) {
+    @Override
+    public boolean process(WorkpieceInfo wpInfo) {
+        String goodsId = wpInfo.getGoodsId();
         JSONObject extra = new JSONObject();
-        extra.put("goodsid", goodsid);
-        if(executeCmd(CMD_CHECK, extra)) {
-            return ((JSONObject)getExtraInfo()).toJSONString();
+        extra.put("goodsid", goodsId);
+        if (executeCmd(CMD_CHECK, extra)) {
+            checkValue = ((JSONObject) getExtraInfo()).toJSONString();
+            LoggerUtil.hal.info(String.format("OrderId: %s, WorkpieceId: %s, GoodsId: %s. Values: %s",
+                    wpInfo.getOrderId(),
+                    wpInfo.getWorkpieceId(),
+                    wpInfo.getGoodsId(),
+                    checkValue));
+            return true;
         }
-        return null;
+        checkValue = null;
+        return false;
+    }
+
+    public Object getCheckValue() {
+        return checkValue;
     }
 }
