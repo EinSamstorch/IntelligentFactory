@@ -1,4 +1,4 @@
-# <font color="#A52A2A">Protocols between Warehouse Agent and Hardware</font>
+# Protocols between Warehouse Agent and Hardware
 
 - [move item](#move-item)
 - [control conveyor](#control-conveyor)

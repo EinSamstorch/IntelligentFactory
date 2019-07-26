@@ -41,7 +41,7 @@ Agent:
 }
 ```
 - workpiece_info : A json string contains detail information of workpiece. 
-                   See it [here](../Orders/definition.md/#workpiece-info)
+                   See it [here](./definition.md/#workpiece-info)
 
 Machine:
 ```json5
@@ -53,11 +53,13 @@ Machine:
 ```
 
 After evaluation.
+```
 {
   "task_no": 3,  
   "result": "success", 
   "extra": value           
 }
+```
 - value : String :depends on algorithm. Currently, the estimate time of processing the workpiece.
 
 ## process
@@ -70,8 +72,6 @@ Agent:
   "extra": workpiece_info
 }
 ```
-- workpiece_info : A json string contains detail information of workpiece.
-                   See it [here](../Orders/definition.md/#workpiece-info)
-
+- workpiece_info : A json string contains detail information of workpiece. See it [here](./definition.md/#workpiece-info)
 
 

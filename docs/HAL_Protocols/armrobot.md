@@ -19,10 +19,9 @@ Agent:
 ```
 - from : String :  where the item stays now.
 - to : String : where the item will be put.
-> For buffers, they would be a string number, such as "1", "12".
-
+> For buffers, they would be a string number, such as "01", "12".
 > For machines, they would be the machine id, such as "c1", "x1".
-- goodsid : String : see it [here](../Orders/Goodsid.md)
+
+- goodsid : String : see it [here](./definition.md/#goodsid)
 - step : Integer : **lathe Only** : the step of cooperation with lathe.
  
-

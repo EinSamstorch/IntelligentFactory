@@ -1,7 +1,7 @@
-## <font color="#A52A2A">Definition of Workpiece</font>
+# Definition of Workpiece
 
 
-#### <font color="#FF1493">Workpiece Info</font>
+## Workpiece Info
 
 |   Attribute   |   Format    |    Example     |          Explain           |
 | :-----------: | :---------: | :------------: | :------------------------: |
@@ -16,18 +16,20 @@
 |  buffer_pos   |   Integer   |       1        | current position in buffer |
 
 
-#### <font color="#FF1493">Deliver Request</font>
+## Deliver Request
 |   Attribute    |   Format    |              Example              |            Explain             |
 | :------------: | :---------: | :-------------------------------: | :----------------------------: |
 | workpiece_info | JSON String | see [definition](#workpiece-info) |                                |
 |    from_pos    |   Integer   |                25                 | Defined in Factory Machine Map |
 |     to_pos     |   Integer   |                 1                 | Defined in Factory Machine Map |
 
-#### <font color="#FF1493">GoodsID</font>
+## GoodsID
 | goodsid | description | extra |
 |:--------|:------------|:------|
 | 001     | flange      |       |
 | 002     | axis        |       |
 | 003     | plate       |       |
 
-#### <font color="#FF1493">Detail Size</font>
+## Detail Size
+
+remain to do
