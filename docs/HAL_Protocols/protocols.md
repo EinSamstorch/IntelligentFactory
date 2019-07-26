@@ -31,7 +31,7 @@ The basic framework of this protocols.
 - task_no : Integer : The same as Agent gives
 - rst_str : String : rst_str tells the action result. 
             It should be "success" if everything is ok.
-            Or "parse_failed" if the command is unknown.
+            Or "failed" if the command is unknown.
 - extra_info : String : For failure, it can be the reason why it fails.
                For rst_str = "success", it should be "" . 
 
@@ -45,11 +45,11 @@ The basic framework of this protocols.
 ```
 - task_no : Integer : The same as Agent gives
 - task_result : String
-  - "done" if the task is finished, 
+  - "success" if the task is finished, 
   - "failed" if the task is failed. 
 
 - extra_info : String
-  - if task_state = "done", extra_info can be the return value from the task,
+  - if task_state = "success", extra_info can be the return value from the task,
   - if task_state = "failed", extra_info can ben the reason why it failed.
   - or "" for other case. 
 
@@ -62,5 +62,5 @@ And shows some examples to run the action.
 3. [RFID](./rfid.md)
 4. [AGV](./agv.md)
 5. [Lathe](./lathe.md)
-6. [Miller](./miller.md)
+6. [Miller](mill.md)
 7. [Vision Detector](./vision.md)

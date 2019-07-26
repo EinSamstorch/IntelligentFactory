@@ -16,13 +16,11 @@ Agent:
   "cmd": "check",      
   "extra": {
     "goodsid": goodsid,
-    "size_name": size_name,
-    "size": size
   }
 }
 ```
-- goodsid : type of goods. see it [here](../Orders/definition.md/#goodsid)
-- size_name : waiting for check. see it [here](../Orders/definition.md/#detail-size)
+- goodsid : type of goods. see it [here](./definition.md/#goodsid)
+- size_name : waiting for check. see it [here](./definition.md/#detail-size)
 - size : design size compared with real size.
                    
 Machine:
@@ -42,4 +40,4 @@ After checking:
   "extra": value           
 }
 ```
-- value : String : not defined yet.
+- value : JSON String : all sizes of workpiece.
