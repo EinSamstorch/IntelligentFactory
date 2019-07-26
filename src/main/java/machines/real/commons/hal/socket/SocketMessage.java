@@ -26,7 +26,4 @@ public class SocketMessage {
     public static final String FIELD_ACTION_RESULT = "action_result";
 
     public static final String RESULT_SUCCESS = "success";
-    public static final String RESULT_FAILED = "failed";
-
-
 }

@@ -2,7 +2,7 @@ package machines.real.warehouse.behaviours.simple;
 
 import commons.tools.LoggerUtil;
 import jade.core.behaviours.OneShotBehaviour;
-import machines.real.commons.ItemMoveRequest;
+import machines.real.commons.request.WarehouseRequest;
 import machines.real.warehouse.WarehouseAgent;
 import machines.real.warehouse.WarehouseHal;
 
@@ -17,9 +17,9 @@ import machines.real.warehouse.WarehouseHal;
 public class ItemImportBehaviour extends OneShotBehaviour {
     private WarehouseHal hal;
     private Integer posIn;
-    private ItemMoveRequest request;
+    private WarehouseRequest request;
 
-    public ItemImportBehaviour(WarehouseAgent whagent, ItemMoveRequest request) {
+    public ItemImportBehaviour(WarehouseAgent whagent, WarehouseRequest request) {
         super(whagent);
         hal = whagent.getHal();
         posIn = whagent.getPosIn();

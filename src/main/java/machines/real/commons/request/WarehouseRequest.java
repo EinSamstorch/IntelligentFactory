@@ -1,4 +1,4 @@
-package machines.real.commons;
+package machines.real.commons.request;
 
 import java.io.Serializable;
 
@@ -10,10 +10,10 @@ import java.io.Serializable;
  * @since 1.8
  */
 
-public class ItemMoveRequest implements Serializable {
+public class WarehouseRequest implements Serializable {
     private Integer itemPosition;
 
-    public ItemMoveRequest(Integer itemPosition) {
+    public WarehouseRequest(Integer itemPosition) {
         this.itemPosition = itemPosition;
     }
 

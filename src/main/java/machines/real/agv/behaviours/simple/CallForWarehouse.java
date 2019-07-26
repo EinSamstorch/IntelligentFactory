@@ -8,7 +8,7 @@ import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import machines.real.commons.ItemMoveRequest;
+import machines.real.commons.request.WarehouseRequest;
 
 import java.util.Random;
 
@@ -24,10 +24,10 @@ public class CallForWarehouse extends SimpleBehaviour {
     private boolean init = true;
     private boolean isDone = false;
     private String conversationId;
-    private ItemMoveRequest request;
+    private WarehouseRequest request;
     private volatile NotifyFinish notifyFinish;
 
-    public CallForWarehouse(Agent a, ItemMoveRequest request, NotifyFinish notifyFinish) {
+    public CallForWarehouse(Agent a, WarehouseRequest request, NotifyFinish notifyFinish) {
         super(a);
         this.request = request;
         this.notifyFinish = notifyFinish;
