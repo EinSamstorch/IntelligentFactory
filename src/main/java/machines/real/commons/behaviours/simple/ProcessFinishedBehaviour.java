@@ -19,7 +19,6 @@ import machines.real.commons.buffer.BufferState;
  */
 
 public class ProcessFinishedBehaviour extends OneShotBehaviour {
-    private boolean isDone = false;
     private RealMachineAgent machineAgent;
     private Buffer buffer;
 

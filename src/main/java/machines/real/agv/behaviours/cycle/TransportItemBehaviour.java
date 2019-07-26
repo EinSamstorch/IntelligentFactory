@@ -10,7 +10,7 @@ import jade.util.leap.Iterator;
 import machines.real.agv.AgvAgent;
 import machines.real.agv.AgvHal;
 import machines.real.agv.behaviours.simple.CallForWarehouse;
-import machines.real.commons.ItemMoveRequest;
+import machines.real.commons.request.WarehouseRequest;
 import machines.real.commons.request.AgvRequest;
 
 /**
@@ -68,7 +68,7 @@ public class TransportItemBehaviour extends CyclicBehaviour {
     }
 
     private void callForWarehouse() {
-        ItemMoveRequest exportRequest = new ItemMoveRequest(request.getWpInfo().getWarehousePosition());
+        WarehouseRequest exportRequest = new WarehouseRequest(request.getWpInfo().getWarehousePosition());
         notifyFinish = new NotifyFinish();
         myAgent.addBehaviour(new CallForWarehouse(myAgent, exportRequest, notifyFinish));
         state = STATE_WAIT_WH;

@@ -7,7 +7,7 @@ import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import machines.real.commons.ItemMoveRequest;
+import machines.real.commons.request.WarehouseRequest;
 import machines.real.commons.request.AgvRequest;
 import machines.real.warehouse.WarehouseAgent;
 
@@ -56,7 +56,7 @@ public class CallForAgv extends SimpleBehaviour {
                     // 已到达
                     done = true;
                     // 发送搬运请求
-                    ItemMoveRequest request = new ItemMoveRequest(this.request.getWpInfo().getWarehousePosition());
+                    WarehouseRequest request = new WarehouseRequest(this.request.getWpInfo().getWarehousePosition());
                     myAgent.addBehaviour(new ItemImportBehaviour((WarehouseAgent) myAgent, request));
 
                     LoggerUtil.agent.info("Workpiece arrived at import location");
