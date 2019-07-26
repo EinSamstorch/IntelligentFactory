@@ -107,7 +107,7 @@ public class BufferManger {
     public int getFreeQuantity() {
         int quantity = 0;
         for (Buffer buffer : buffers) {
-            if(buffer.getWpInfo() == null) {
+            if (buffer.getWpInfo() == null) {
                 quantity += 1;
             }
         }

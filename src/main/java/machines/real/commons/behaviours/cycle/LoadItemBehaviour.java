@@ -4,13 +4,11 @@ package machines.real.commons.behaviours.cycle;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
 import machines.real.commons.RealMachineAgent;
-import machines.real.commons.behaviours.simple.SimpleCallForArm;
 import machines.real.commons.buffer.Buffer;
-import machines.real.commons.request.ArmrobotRequest;
-import machines.real.lathe.LatheAgent;
-import machines.real.lathe.behaviours.simple.ComplexCallForArm;
-import machines.real.vision.VisionAgent;
-import machines.real.vision.behaviours.simple.VisionCallForArm;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * 挑选工件装载入机床
@@ -21,16 +19,12 @@ import machines.real.vision.behaviours.simple.VisionCallForArm;
  */
 
 public class LoadItemBehaviour extends CyclicBehaviour {
-    public static final int MILL = 1;
-    public static final int LATHE = 2;
-    public static final int VISION = 3;
-    private Integer type;
     private RealMachineAgent machineAgent;
+    private Class processClass;
 
-    public LoadItemBehaviour(RealMachineAgent machineAgent, int type) {
-        super(machineAgent);
+    public LoadItemBehaviour(RealMachineAgent machineAgent, Class processClass) {
         this.machineAgent = machineAgent;
-        this.type = type;
+        this.processClass = processClass;
     }
 
     @Override
@@ -42,26 +36,20 @@ public class LoadItemBehaviour extends CyclicBehaviour {
             if (buffer != null) {
                 // 请求机械手 装载入机床
                 machineAgent.getMachineState().setBusy();
-                String from = String.valueOf(buffer.getIndex());
-                String to = machineAgent.getLocalName();
-                String goodsId = buffer.getWpInfo().getGoodsId();
-                ArmrobotRequest request = new ArmrobotRequest(from, to, goodsId);
                 String password = machineAgent.getArmPwd();
-                if (type == MILL) {
-                    machineAgent.addBehaviour(new SimpleCallForArm(machineAgent, request, buffer,
-                            password, SimpleCallForArm.LOAD));
-                } else if (type == LATHE) {
-                    Behaviour b = new ComplexCallForArm((LatheAgent) machineAgent, request, buffer, password)
-                            .loadItemBehaviour();
-                    machineAgent.addBehaviour(b);
-                } else if(type == VISION) {
-                    Behaviour b = VisionCallForArm
-                            .loadItemBehaviour((VisionAgent)machineAgent, request, buffer, password);
-                    machineAgent.addBehaviour(b);
+                // 利用反射进行加工处理
+                try {
+                    Constructor constructor = processClass.getConstructor(machineAgent.getClass(), Buffer.class, String.class);
+                    constructor.setAccessible(true);
+                    Object instance = constructor.newInstance(machineAgent, buffer, password);
+                    Method getBehaviour = processClass.getMethod("getBehaviour");
+                    Behaviour b = (Behaviour) getBehaviour.invoke(instance);
+                    myAgent.addBehaviour(b);
+                } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                    e.printStackTrace();
                 }
             }
         }
         block(1000);
-
     }
 }

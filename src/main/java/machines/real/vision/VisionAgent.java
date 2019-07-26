@@ -9,8 +9,8 @@ import jade.lang.acl.MessageTemplate;
 import machines.real.commons.RealMachineAgent;
 import machines.real.commons.behaviours.cycle.LoadItemBehaviour;
 import machines.real.commons.behaviours.cycle.MaintainBufferBehaviour;
-import machines.real.commons.behaviours.cycle.ProcessContractNetResponder;
 import machines.real.vision.behaviours.cycle.CheckItemContractNetResponder;
+import machines.real.vision.behaviours.sequential.VisionProcessItem;
 
 /**
  * .
@@ -32,7 +32,7 @@ public class VisionAgent extends RealMachineAgent {
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
         addContractNetResponder(tbf);
 
-        Behaviour b = new LoadItemBehaviour(this, LoadItemBehaviour.VISION);
+        Behaviour b = new LoadItemBehaviour(this, VisionProcessItem.class);
         addBehaviour(tbf.wrap(b));
 
         b = new MaintainBufferBehaviour(this);

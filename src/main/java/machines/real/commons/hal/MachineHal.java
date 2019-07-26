@@ -23,7 +23,11 @@ public class MachineHal extends BaseHal {
     }
 
     public boolean process(WorkpieceInfo wpInfo) {
-        return executeCmd(CMD_PROCESS, wpInfo);
+        if (executeCmd(CMD_PROCESS, wpInfo)) {
+            wpInfo.setNextProcessStep();
+            return true;
+        }
+        return false;
     }
 
     public int evaluate(WorkpieceInfo wpInfo) {

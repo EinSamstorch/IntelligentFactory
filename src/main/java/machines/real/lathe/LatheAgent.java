@@ -6,6 +6,7 @@ import jade.core.behaviours.ThreadedBehaviourFactory;
 import machines.real.commons.RealMachineAgent;
 import machines.real.commons.behaviours.cycle.LoadItemBehaviour;
 import machines.real.commons.behaviours.cycle.MaintainBufferBehaviour;
+import machines.real.lathe.behaviours.sequential.LatheProcessItem;
 
 /**
  * .
@@ -29,7 +30,8 @@ public class LatheAgent extends RealMachineAgent {
         Behaviour b = new MaintainBufferBehaviour(this);
         addBehaviour(tbf.wrap(b));
 
-        b = new LoadItemBehaviour(this, LoadItemBehaviour.LATHE);
+//        b = new LoadItemBehaviour(this, LoadItemBehaviour.LATHE);
+        b = new LoadItemBehaviour(this, LatheProcessItem.class);
         addBehaviour(tbf.wrap(b));
     }
 }

@@ -6,6 +6,7 @@ import jade.core.behaviours.ThreadedBehaviourFactory;
 import machines.real.commons.RealMachineAgent;
 import machines.real.commons.behaviours.cycle.LoadItemBehaviour;
 import machines.real.commons.behaviours.cycle.MaintainBufferBehaviour;
+import machines.real.mill.behaviours.simple.MIllProcessItem;
 
 /**
  * .
@@ -27,7 +28,8 @@ public class MillAgent extends RealMachineAgent {
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
         addContractNetResponder(tbf);
 
-        Behaviour b = new LoadItemBehaviour(this, LoadItemBehaviour.MILL);
+//        Behaviour b = new LoadItemBehaviour(this, LoadItemBehaviour.MILL);
+        Behaviour b = new LoadItemBehaviour(this, MIllProcessItem.class);
         addBehaviour(tbf.wrap(b));
 
         b = new MaintainBufferBehaviour(this);

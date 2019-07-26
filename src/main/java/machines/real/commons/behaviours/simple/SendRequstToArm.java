@@ -1,4 +1,4 @@
-package machines.real.lathe.behaviours.simple;
+package machines.real.commons.behaviours.simple;
 
 import commons.tools.DFServiceType;
 import commons.tools.DFUtils;
