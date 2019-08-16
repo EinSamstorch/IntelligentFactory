@@ -1,8 +1,8 @@
 package machines.real.commons.behaviours.simple;
 
 import commons.order.WorkpieceInfo;
-import commons.tools.DFServiceType;
-import commons.tools.DFUtils;
+import commons.tools.DfServiceType;
+import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -41,8 +41,8 @@ public class ProcessFinishedBehaviour extends OneShotBehaviour {
 
     private void sendToWorker(WorkpieceInfo wpInfo) {
         try {
-            ACLMessage msg = DFUtils.createRequestMsg(wpInfo);
-            DFUtils.searchDF(myAgent, msg, DFServiceType.WORKER);
+            ACLMessage msg = DfUtils.createRequestMsg(wpInfo);
+            DfUtils.searchDf(myAgent, msg, DfServiceType.WORKER);
             myAgent.send(msg);
         } catch (Exception e) {
             e.printStackTrace();

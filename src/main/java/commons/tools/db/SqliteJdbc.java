@@ -15,11 +15,11 @@ import java.sql.SQLException;
  */
 
 
-public class SQLiteJDBC {
+public class SqliteJdbc {
     protected Connection con = null;
     private String dbName;
 
-    public SQLiteJDBC(String dbName) {
+    public SqliteJdbc(String dbName) {
         this.dbName = dbName;
     }
 

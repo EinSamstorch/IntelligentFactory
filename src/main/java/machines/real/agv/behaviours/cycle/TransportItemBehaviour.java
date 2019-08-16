@@ -10,8 +10,8 @@ import jade.util.leap.Iterator;
 import machines.real.agv.AgvAgent;
 import machines.real.agv.AgvHal;
 import machines.real.agv.behaviours.simple.CallForWarehouse;
-import machines.real.commons.request.WarehouseRequest;
 import machines.real.commons.request.AgvRequest;
+import machines.real.commons.request.WarehouseRequest;
 
 /**
  * 执行运输任务.
@@ -56,6 +56,7 @@ public class TransportItemBehaviour extends CyclicBehaviour {
             case STATE_DO_TASK:
                 doTask();
                 break;
+            default:
         }
     }
 
@@ -121,14 +122,6 @@ public class TransportItemBehaviour extends CyclicBehaviour {
             inform.setLanguage("BUFFER_INDEX");
             inform.setContent(Integer.toString(from));
             aagent.send(inform);
-
-//                    AID receiver = myAgent.getAID();
-//                    receiver.setLocalName(request.getWpInfo().getPreOwnerId());
-//
-//                    ACLMessage inform = new ACLMessage(ACLMessage.INFORM);
-//                    inform.addReceiver(receiver);
-//                    inform.setLanguage("BUFFER_INDEX");
-//                    inform.setContent(Integer.toString(from));
 
             // 通知到货
             ACLMessage reply = requestMsg.createReply();

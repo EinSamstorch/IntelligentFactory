@@ -80,8 +80,8 @@ public class IniLoader {
     public static String loadArmPassword(String sectionName) {
         Map<String, String> setting = IniLoader.load(sectionName);
 
-        final String SETTING_ARM_PASSWORD = "arm_password";
-        String password = setting.get(SETTING_ARM_PASSWORD);
+        final String settingArmPassword = "arm_password";
+        String password = setting.get(settingArmPassword);
         return password == null ? "" : password;
     }
 
@@ -94,9 +94,9 @@ public class IniLoader {
     public static Integer loadHalPort(String sectionName) {
         Map<String, String> setting = IniLoader.load(sectionName);
 
-        String SETTING_HAL_PORT = "hal_port";
+        final String settingHalPort = "hal_port";
 
-        String portStr = setting.get(SETTING_HAL_PORT);
+        final String portStr = setting.get(settingHalPort);
         // 无hal_port配置项 则默认 5656
         if (portStr != null) {
             return new Integer(portStr);
@@ -115,8 +115,8 @@ public class IniLoader {
     public static int[] loadBuffers(String sectionName) {
         Map<String, String> setting = IniLoader.load(sectionName);
 
-        final String SETTING_BUFFER_INDEX = "buffer_index";
-        String bufferIndexStr = setting.get(SETTING_BUFFER_INDEX);
+        final String settingBufferIndex = "buffer_index";
+        String bufferIndexStr = setting.get(settingBufferIndex);
         if (bufferIndexStr == null) {
             return null;
         } else {

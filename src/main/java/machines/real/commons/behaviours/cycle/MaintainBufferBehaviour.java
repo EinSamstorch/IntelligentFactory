@@ -27,10 +27,10 @@ public class MaintainBufferBehaviour extends CyclicBehaviour {
 
     @Override
     public void action() {
-        final String MSG_LANGUAGE = "BUFFER_INDEX";
+        final String msgLanguage = "BUFFER_INDEX";
         MessageTemplate mt = MessageTemplate.and(
                 MessageTemplate.MatchPerformative(ACLMessage.INFORM),
-                MessageTemplate.MatchLanguage(MSG_LANGUAGE)
+                MessageTemplate.MatchLanguage(msgLanguage)
         );
         ACLMessage receive = myAgent.receive(mt);
         if (receive != null) {

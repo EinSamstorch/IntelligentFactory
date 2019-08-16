@@ -1,8 +1,8 @@
 package machines.real.warehouse.behaviours.cycle;
 
 import commons.order.WorkpieceInfo;
-import commons.tools.DFServiceType;
-import commons.tools.DFUtils;
+import commons.tools.DfServiceType;
+import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
@@ -95,8 +95,8 @@ public class RawContractNetResponder extends ContractNetResponder {
             wpInfo.setBufferPos(26);
 
             // 发送至Worker 进行下一轮招标
-            ACLMessage msg = DFUtils.createRequestMsg(wpInfo);
-            DFUtils.searchDF(whagent, msg, DFServiceType.WORKER);
+            ACLMessage msg = DfUtils.createRequestMsg(wpInfo);
+            DfUtils.searchDf(whagent, msg, DfServiceType.WORKER);
             whagent.send(msg);
 
             // 完成本次招标动作

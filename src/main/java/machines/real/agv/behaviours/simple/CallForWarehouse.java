@@ -1,8 +1,8 @@
 package machines.real.agv.behaviours.simple;
 
 import commons.NotifyFinish;
-import commons.tools.DFServiceType;
-import commons.tools.DFUtils;
+import commons.tools.DfServiceType;
+import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
 import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
@@ -41,8 +41,8 @@ public class CallForWarehouse extends SimpleBehaviour {
             // 发送出货请求
             ACLMessage msg = null;
             try {
-                msg = DFUtils.createRequestMsg(request);
-                DFUtils.searchDF(myAgent, msg, DFServiceType.WAREHOUSE);
+                msg = DfUtils.createRequestMsg(request);
+                DfUtils.searchDf(myAgent, msg, DfServiceType.WAREHOUSE);
                 // 发送运输请求
                 msg.setConversationId(conversationId);
                 myAgent.send(msg);

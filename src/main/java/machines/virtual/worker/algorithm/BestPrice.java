@@ -36,6 +36,7 @@ public class BestPrice {
             case LOWEST:
                 bestPrice = Integer.MAX_VALUE;
                 break;
+            default:
         }
         ACLMessage bestOffer = null;
         for (ACLMessage offerMsg : msgArray) {

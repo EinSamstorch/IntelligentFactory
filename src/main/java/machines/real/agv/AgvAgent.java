@@ -1,7 +1,7 @@
 package machines.real.agv;
 
-import commons.AgentTemplate;
-import commons.tools.DFServiceType;
+import commons.BaseAgent;
+import commons.tools.DfServiceType;
 import commons.tools.IniLoader;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
@@ -20,14 +20,14 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @since 1.8
  */
 
-public class AgvAgent extends AgentTemplate {
+public class AgvAgent extends BaseAgent {
     private Queue<ACLMessage> transportRequestQueue = new LinkedBlockingQueue<>();
     private AgvHal hal;
 
     @Override
     protected void setup() {
         super.setup();
-        registerDF(DFServiceType.AGV);
+        registerDf(DfServiceType.AGV);
         halPort = IniLoader.loadHalPort(getLocalName());
         hal = new AgvHal(halPort);
 

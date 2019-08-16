@@ -1,6 +1,6 @@
 package machines.real.commons;
 
-import commons.AgentTemplate;
+import commons.BaseAgent;
 import commons.tools.IniLoader;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
@@ -19,7 +19,7 @@ import machines.real.commons.hal.MachineHal;
  * @since 1.8
  */
 
-public class RealMachineAgent extends AgentTemplate {
+public class RealMachineAgent extends BaseAgent {
     protected Integer halPort;
     protected MachineHal hal;
     private String armPwd;

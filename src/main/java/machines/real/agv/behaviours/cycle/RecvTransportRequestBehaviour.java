@@ -31,14 +31,6 @@ public class RecvTransportRequestBehaviour extends CyclicBehaviour {
         ACLMessage receive = aagent.receive(mt);
         if (receive != null) {
             aagent.getTransportRequestQueue().offer(receive);
-//            try {
-//                AgvRequest request = (AgvRequest) receive.getContentObject();
-//                if(request != null) {
-//                    aagent.getTransportRequestQueue().offer(request);
-//                }
-//            } catch (UnreadableException e) {
-//                e.printStackTrace();
-//            }
         } else {
             block();
         }

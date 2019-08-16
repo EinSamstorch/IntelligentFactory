@@ -29,13 +29,17 @@ public class DetectUpdateMsg extends TickerBehaviour {
         String param;
         while (true) {
             param = cagent.getStateQueue().poll();
-            if (param == null) break;
+            if (param == null) {
+                break;
+            }
             b = new Push2CloudBehaviour(cagent, param, Push2CloudBehaviour.UPDATE_STATE);
             cagent.addBehaviour(tbf.wrap(b));
         }
         while (true) {
             param = cagent.getPosQueue().poll();
-            if (param == null) break;
+            if (param == null) {
+                break;
+            }
             b = new Push2CloudBehaviour(cagent, param, Push2CloudBehaviour.UPDATE_POSITION);
             cagent.addBehaviour(tbf.wrap(b));
         }

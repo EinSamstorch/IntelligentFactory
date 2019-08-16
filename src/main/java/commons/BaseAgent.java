@@ -1,5 +1,6 @@
 package commons;
 
+import commons.tools.DfServiceType;
 import commons.tools.LoggerUtil;
 import jade.core.Agent;
 import jade.domain.DFService;
@@ -23,7 +24,7 @@ import jade.domain.FIPAException;
  */
 
 
-public abstract class AgentTemplate extends Agent {
+public abstract class BaseAgent extends Agent {
     protected Integer halPort;
 
     @Override
@@ -34,10 +35,10 @@ public abstract class AgentTemplate extends Agent {
     /**
      * 注册服务
      *
-     * @param serviceType 自身提供的服务类型，{@link commons.tools.DFServiceType}
+     * @param serviceType 自身提供的服务类型，{@link DfServiceType}
      * @param password    额外属性 使用该服务时 需要配对密码
      */
-    protected void registerDF(String serviceType, String password) {
+    protected void registerDf(String serviceType, String password) {
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();
@@ -55,11 +56,14 @@ public abstract class AgentTemplate extends Agent {
         }
     }
 
-    protected void registerDF(String serviceType) {
-        registerDF(serviceType, null);
+    protected void registerDf(String serviceType) {
+        registerDf(serviceType, null);
     }
 
-    // Put agent clean-up operations here
+    /**
+     * Put agent clean-up operations here
+     */
+    @Override
     protected void takeDown() {
         // Deregister from the yellow pages
         try {

@@ -1,7 +1,7 @@
 package machines.real.commons.behaviours.simple;
 
-import commons.tools.DFServiceType;
-import commons.tools.DFUtils;
+import commons.tools.DfServiceType;
+import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
@@ -39,8 +39,8 @@ public class SendRequstToArm extends OneShotBehaviour {
         // 发送移动货物请求
         ACLMessage msg = null;
         try {
-            msg = DFUtils.createRequestMsg(request);
-            DFUtils.searchDF(myAgent, msg, DFServiceType.ARMROBOT, password);
+            msg = DfUtils.createRequestMsg(request);
+            DfUtils.searchDf(myAgent, msg, DfServiceType.ARMROBOT, password);
 
             msg.setConversationId(conversationId);
             myAgent.send(msg);

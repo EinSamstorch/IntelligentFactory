@@ -2,7 +2,7 @@ package machines.real.warehouse;
 
 import commons.order.WorkpieceInfo;
 import commons.tools.LoggerUtil;
-import commons.tools.db.SQLiteJDBC;
+import commons.tools.db.SqliteJdbc;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,7 +22,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 
 
-public class WarehouseSqlite extends SQLiteJDBC {
+public class WarehouseSqlite extends SqliteJdbc {
     private Map<Integer, String> rawTable;
     private Queue<Integer> productTable;
     private String nullStr = "000";
@@ -42,7 +42,7 @@ public class WarehouseSqlite extends SQLiteJDBC {
      * @return Map<String position, String goodsid>
      */
     private Map<Integer, String> getRawTable() {
-        Map<Integer, String> raw = new ConcurrentHashMap<>();
+        Map<Integer, String> raw = new ConcurrentHashMap<>(35);
 
         connect();
         try {

@@ -2,8 +2,8 @@ package machines.virtual.cloud.behaviours.cycle;
 
 import commons.order.OrderInfo;
 import commons.order.WorkpieceInfo;
-import commons.tools.DFServiceType;
-import commons.tools.DFUtils;
+import commons.tools.DfServiceType;
+import commons.tools.DfUtils;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import machines.virtual.cloud.CloudAgent;
@@ -29,12 +29,14 @@ public class HandleOrders extends TickerBehaviour {
     protected void onTick() {
         while (true) {
             OrderInfo oi = cagent.getOrderQueue().poll();
-            if (oi == null) break;
+            if (oi == null) {
+                break;
+            }
             for (WorkpieceInfo wpInfo : oi.getWpInfoList()) {
                 try {
                     // TODO 未来此处需要做处理，失败的消息需要记录并重试。
-                    ACLMessage msg = DFUtils.createRequestMsg(wpInfo);
-                    DFUtils.searchDF(cagent, msg, DFServiceType.WORKER);
+                    ACLMessage msg = DfUtils.createRequestMsg(wpInfo);
+                    DfUtils.searchDf(cagent, msg, DfServiceType.WORKER);
                     cagent.send(msg);
                 } catch (Exception e) {
                     e.printStackTrace();

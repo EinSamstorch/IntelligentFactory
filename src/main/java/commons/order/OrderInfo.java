@@ -140,7 +140,7 @@ public class OrderInfo {
      */
     private void parseDetails() {
         // orderDetails 不能为空 或 null
-        if (orderDetails != null && !orderDetails.equals("") && !orderDetails.equals("[]")) {
+        if (orderDetails != null && !"".equals(orderDetails) && !"[]".equals(orderDetails)) {
             // 本地工件编号计数器。 因为云端去掉了工件编号属性，故本地生成该属性
             int wpCnt = 0;
             JSONArray details = JSONArray.parseArray(orderDetails);

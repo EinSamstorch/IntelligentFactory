@@ -64,13 +64,13 @@ public class HttpRequest {
      * 从云端获取新订单
      *
      * @param host      云端地址
-     * @param num_todo  待处理订单数量
-     * @param num_doing 正在处理的订单数量
+     * @param numTodo  待处理订单数量
+     * @param numDoing 正在处理的订单数量
      * @return 网页返回的字符串
      */
-    public static String GetOrder(String host, int num_todo, int num_doing) {
+    public static String getOrder(String host, int numTodo, int numDoing) {
         return sendGet(String.format(API_GETORDER, host),
-                String.format("num_todo=%d&num_doing=%d", num_todo, num_doing));
+                String.format("num_todo=%d&num_doing=%d", numTodo, numDoing));
     }
 //    public static String sendPost(String url, String param) {
 //        PrintWriter out = null;

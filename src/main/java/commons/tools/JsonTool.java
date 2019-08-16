@@ -17,7 +17,7 @@ import java.io.StringWriter;
 public class JsonTool {
     public static JSONObject parseObject(String msg) throws IllegalArgumentException {
         JSONObject jsonMsg;
-        if (null == msg || msg.equals("") || msg.equals("{}")) {
+        if (null == msg || "".equals(msg) || "{}".equals(msg)) {
             throw new IllegalArgumentException("Empty Message");
         }
         try {

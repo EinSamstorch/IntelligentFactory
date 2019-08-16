@@ -1,6 +1,6 @@
 package machines.virtual.worker.behaviours.simple;
 
-import commons.tools.DFServiceType;
+import commons.tools.DfServiceType;
 import commons.tools.LoggerUtil;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
@@ -65,7 +65,7 @@ public class MyContractNetInitiator extends ContractNetInitiator {
             }
         }
         int strategy = 0;
-        if (serviceType.equals(DFServiceType.WAREHOUSE) || serviceType.equals(DFServiceType.PRODUCT)) {
+        if (serviceType.equals(DfServiceType.WAREHOUSE) || serviceType.equals(DfServiceType.PRODUCT)) {
             strategy = BestPrice.HIGHEST;
         } else {
             strategy = BestPrice.LOWEST;

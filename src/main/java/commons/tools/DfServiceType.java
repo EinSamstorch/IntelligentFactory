@@ -9,7 +9,7 @@ package commons.tools;
  */
 
 
-public class DFServiceType {
+public class DfServiceType {
     public static final String CLOUD_UPDATE = "cloud_update";
     public static final String WAREHOUSE = "warehouse";
     public static final String LATHE = "lathe";

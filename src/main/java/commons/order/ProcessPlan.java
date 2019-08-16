@@ -1,6 +1,6 @@
 package commons.order;
 
-import commons.tools.DFServiceType;
+import commons.tools.DfServiceType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,34 +22,37 @@ public class ProcessPlan {
 
     static {
         // 当前支持的goodsid
-        goodsidList.add("001");    // 法兰
-        goodsidList.add("002");    // 轴
-        goodsidList.add("003");    // 板
+        // 法兰
+        goodsidList.add("001");
+        // 轴
+        goodsidList.add("002");
+        // 板
+        goodsidList.add("003");
 
-        List<String> flangePP = new ArrayList<String>() {
+        List<String> flangeProcessPlan = new ArrayList<String>() {
             {
-                add(DFServiceType.WAREHOUSE);
-                add(DFServiceType.LATHE);
-                add(DFServiceType.MILL);
+                add(DfServiceType.WAREHOUSE);
+                add(DfServiceType.LATHE);
+                add(DfServiceType.MILL);
             }
         };
-        processPlan.put("001", flangePP);
+        processPlan.put("001", flangeProcessPlan);
 
-        List<String> axisPP = new ArrayList<String>() {
+        List<String> axisProcessPlan = new ArrayList<String>() {
             {
-                add(DFServiceType.WAREHOUSE);
-                add(DFServiceType.LATHE);
+                add(DfServiceType.WAREHOUSE);
+                add(DfServiceType.LATHE);
             }
         };
-        processPlan.put("002", axisPP);
+        processPlan.put("002", axisProcessPlan);
 
-        List<String> plainPP = new ArrayList<String>() {
+        List<String> plainProcessPlan = new ArrayList<String>() {
             {
-                add(DFServiceType.WAREHOUSE);
-                add(DFServiceType.MILL);
+                add(DfServiceType.WAREHOUSE);
+                add(DfServiceType.MILL);
             }
         };
-        processPlan.put("003", plainPP);
+        processPlan.put("003", plainProcessPlan);
     }
 
     public static List<String> getProcessPlan(String goodsid) {
