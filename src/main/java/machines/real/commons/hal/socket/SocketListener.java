@@ -59,6 +59,7 @@ public class SocketListener extends Thread {
                     case SocketMessage.FIELD_ACTION_RESULT:
                         actionResponseMap.put(taskNo, message);
                         break;
+                    default:
                 }
             }
         }

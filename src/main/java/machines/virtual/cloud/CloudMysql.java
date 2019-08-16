@@ -3,7 +3,7 @@ package machines.virtual.cloud;
 import commons.order.OrderInfo;
 import commons.order.WorkpieceInfo;
 import commons.tools.LoggerUtil;
-import commons.tools.db.MysqlJDBC;
+import commons.tools.db.MysqlJdbc;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,7 +19,7 @@ import java.util.Vector;
  * @version 1.0.0.1
  * @since 1.8
  */
-public class CloudMysql extends MysqlJDBC {
+public class CloudMysql extends MysqlJdbc {
     public CloudMysql(Map<String, String> mysqlInfo) {
         super(mysqlInfo);
     }

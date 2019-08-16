@@ -1,0 +1,145 @@
+package machines.real.warehouse;
+
+import commons.order.WorkpieceInfo;
+import commons.tools.LoggerUtil;
+import commons.tools.db.MysqlJdbc;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Map;
+
+/**
+ * .
+ *
+ * @author <a href="mailto:junfeng_pan96@qq.com">junfeng</a>
+ * @version 1.0.0.0
+ * @since 1.8
+ */
+
+public class WarehouseMysql extends MysqlJdbc {
+    /**
+     * 构造器 .
+     *
+     * @param mysqlInfo Map<String, String> 包含 mysql_ip, mysql_port, mysql_db, mysql_user 字段
+     */
+    public WarehouseMysql(Map<String, String> mysqlInfo) {
+        super(mysqlInfo);
+    }
+
+    /**
+     * 获得一个原料, 同时从raw table中删去库存
+     *
+     * @param goodsid 原料种类
+     * @return int positon,  0表示失败
+     */
+    public int getRaw(String goodsid) {
+        String cmd = String.format("SELECT position FROM raw WHERE goodsid='%s' limit 1", goodsid);
+        int position = 0;
+        connect();
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(cmd);
+            while (rs.next()) {
+                position = rs.getInt(1);
+            }
+            cmd = String.format("UPDATE raw SET goodsid=null WHERE position='%s'", position);
+            int rst = stmt.executeUpdate(cmd);
+            if (rst != 1) {
+                LoggerUtil.db.error(cmd);
+                position = 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close();
+        }
+        if (position == 0) {
+            throw new IllegalArgumentException("Position value can't be 0");
+        }
+        return position;
+    }
+
+    /**
+     * 查询raw table, 对应 goodsid的原料剩余数量
+     *
+     * @param goodsid 代查询种类
+     * @return 剩余原料数量, 不存在的原料 返回数量0
+     */
+    public int getRawQuantityByGoodsId(String goodsid) {
+        String cmd = String.format("SELECT COUNT(*) FROM raw WHERE goodsid='%s'", goodsid);
+        int quantity = 0;
+        connect();
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(cmd);
+            while (rs.next()) {
+                quantity = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            LoggerUtil.db.error(e.getMessage());
+        }
+        return quantity;
+    }
+
+    /**
+     * 获得一个空位 同时将数据信息更新到表里
+     *
+     * @return 空位id
+     */
+    public int getProduct(WorkpieceInfo wpInfo) {
+        int position = 0;
+        connect();
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT position FROM product WHERE orderid IS NULL and workpieceid IS NULL");
+            while(rs.next()){
+                position = rs.getInt(1);
+            }
+
+            if (position == 0) {
+                throw new IllegalArgumentException("Position value can't be 0");
+            }
+
+            PreparedStatement pstmt = con.prepareStatement("UPDATE product SET orderid = ?, workpieceid = ? WHERE position = ?");
+            pstmt.setString(1, wpInfo.getOrderId());
+            pstmt.setString(2, wpInfo.getWorkpieceId());
+            pstmt.setInt(3,position);
+
+            int result = pstmt.executeUpdate();
+            if(result != 1) {
+                LoggerUtil.db.error(String.format("Failed to update product table on position: %d", position));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LoggerUtil.db.error(e.getMessage());
+        } finally {
+            close();
+        }
+        return position;
+    }
+
+    /**
+     * 查询 product表 空位数量
+     *
+     * @return
+     */
+    public int getProductQuantity() {
+        int quantity = 0;
+        connect();
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM product WHERE orderid IS NULL and workpieceid IS NULL");
+            while(rs.next()) {
+                quantity = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally{
+            close();
+        }
+        return quantity;
+    }
+
+}

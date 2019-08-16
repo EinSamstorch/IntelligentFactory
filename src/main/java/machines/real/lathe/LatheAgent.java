@@ -1,6 +1,6 @@
 package machines.real.lathe;
 
-import commons.tools.DFServiceType;
+import commons.tools.DfServiceType;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import machines.real.commons.RealMachineAgent;
@@ -20,7 +20,7 @@ public class LatheAgent extends RealMachineAgent {
     @Override
     protected void setup() {
         super.setup();
-        registerDF(DFServiceType.LATHE);
+        registerDf(DfServiceType.LATHE);
 
         hal = new LatheHal(halPort);
 

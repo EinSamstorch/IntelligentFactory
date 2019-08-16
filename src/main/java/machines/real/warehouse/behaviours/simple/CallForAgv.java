@@ -1,7 +1,7 @@
 package machines.real.warehouse.behaviours.simple;
 
-import commons.tools.DFServiceType;
-import commons.tools.DFUtils;
+import commons.tools.DfServiceType;
+import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
 import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
@@ -39,8 +39,8 @@ public class CallForAgv extends SimpleBehaviour {
             // 发送运输请求
             ACLMessage msg = null;
             try {
-                msg = DFUtils.createRequestMsg(request);
-                DFUtils.searchDF(myAgent, msg, DFServiceType.AGV);
+                msg = DfUtils.createRequestMsg(request);
+                DfUtils.searchDf(myAgent, msg, DfServiceType.AGV);
                 msg.setConversationId(conversationId);
                 myAgent.send(msg);
             } catch (Exception e) {

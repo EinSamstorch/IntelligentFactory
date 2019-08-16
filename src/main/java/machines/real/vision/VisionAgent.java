@@ -1,6 +1,6 @@
 package machines.real.vision;
 
-import commons.tools.DFServiceType;
+import commons.tools.DfServiceType;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.domain.FIPANames;
@@ -26,7 +26,7 @@ public class VisionAgent extends RealMachineAgent {
     @Override
     protected void setup() {
         super.setup();
-        registerDF(DFServiceType.VISION);
+        registerDf(DfServiceType.VISION);
 
         hal = new VisionHal(halPort);
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();

@@ -1,12 +1,12 @@
 package machines.real.mill;
 
-import commons.tools.DFServiceType;
+import commons.tools.DfServiceType;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import machines.real.commons.RealMachineAgent;
 import machines.real.commons.behaviours.cycle.LoadItemBehaviour;
 import machines.real.commons.behaviours.cycle.MaintainBufferBehaviour;
-import machines.real.mill.behaviours.simple.MIllProcessItem;
+import machines.real.mill.behaviours.simple.MillProcessItem;
 
 /**
  * .
@@ -21,7 +21,7 @@ public class MillAgent extends RealMachineAgent {
     @Override
     protected void setup() {
         super.setup();
-        registerDF(DFServiceType.MILL);
+        registerDf(DfServiceType.MILL);
 
         hal = new MillHal(halPort);
 
@@ -29,7 +29,7 @@ public class MillAgent extends RealMachineAgent {
         addContractNetResponder(tbf);
 
 //        Behaviour b = new LoadItemBehaviour(this, LoadItemBehaviour.MILL);
-        Behaviour b = new LoadItemBehaviour(this, MIllProcessItem.class);
+        Behaviour b = new LoadItemBehaviour(this, MillProcessItem.class);
         addBehaviour(tbf.wrap(b));
 
         b = new MaintainBufferBehaviour(this);

@@ -28,37 +28,41 @@ public class GetOrder extends TickerBehaviour {
 
     @Override
     protected void onTick() {
-        String result = HttpRequest.GetOrder(cagent.getWebsite(), 0, 0);
+        String result = HttpRequest.getOrder(cagent.getWebsite(), 0, 0);
 
 
         // 如果无新订单，则return
-        if (result.equals("[]")) return;
-        if (result.equals("{\"message\": \"The resultSet is empty！\"}")) return;
-        if (result.equals("{\"flag\":\"failure\",\"message\":\"The resultSet is empty！\"}")) return;
+        if ("[]".equals(result)) {
+            return;
+        }
+        if ("{\"message\": \"The resultSet is empty！\"}".equals(result)) {
+            return;
+        }
+        if ("{\"flag\":\"failure\",\"message\":\"The resultSet is empty！\"}".equals(result)) {
+            return;
+        }
         LoggerUtil.agent.info(result);
 
-        // CloudMysql mysqlTool = new CloudMysql(cagent.getMysqlSetting());
         /*
           解析订单 JSONArray
           [{订单1},{订单2},{订单3}]
          */
-        JSONObject rst_jo = (JSONObject) JSONObject.parse(result);
-        if (rst_jo.getString("flag").equals("success")) {
-            String orderList_str = rst_jo.getString("orderList");
+        JSONObject resultJson = (JSONObject) JSONObject.parse(result);
+        if ("success".equals(resultJson.getString("flag"))) {
+            String orderListStr = resultJson.getString("orderList");
+
             try {
-                JSONArray jsonArray = JSONArray.parseArray(orderList_str);
+                JSONArray jsonArray = JSONArray.parseArray(orderListStr);
                 for (Object o : jsonArray) {
                     JSONObject jo = (JSONObject) o;
                     // 加入到 cloud Agent 待分配 列表中
                     OrderInfo oi = OrderTools.parseOrderInfo(jo);
-                    // ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
                     cagent.getOrderQueue().offer(oi);
 
                     // 储存订单信息到MYSQL中
                     //mysqlTool.storeOrderInfo(oi);
                 }
             } catch (JSONException e) {
-                // 解析失败JSONARRAY
                 LoggerUtil.agent.error(e.getMessage());
             }
         }

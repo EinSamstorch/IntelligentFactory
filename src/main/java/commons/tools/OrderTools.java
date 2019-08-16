@@ -41,7 +41,6 @@ public class OrderTools {
          */
         String orderDate = jo.getString("orderDate");
         String orderDetails = jo.getString("orderDetails");
-        //String orderDtime = jo.getString("orderDtime");
         String orderId = jo.getString("orderId");
         String orderPrior = jo.getString("orderPrior");
 

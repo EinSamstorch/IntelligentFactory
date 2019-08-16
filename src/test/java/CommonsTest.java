@@ -1,6 +1,6 @@
 import commons.tools.*;
-import commons.tools.db.MysqlJDBC;
-import commons.tools.db.SQLiteJDBC;
+import commons.tools.db.MysqlJdbc;
+import commons.tools.db.SqliteJdbc;
 import commons.order.OrderInfo;
 import com.alibaba.fastjson.JSONObject;
 import org.junit.Test;
@@ -40,7 +40,7 @@ public class CommonsTest {
 
     @Test
     public void testSQLiteJDBC() {
-        SQLiteJDBC sqlite = new SQLiteJDBC("resources/db/test.db");
+        SqliteJdbc sqlite = new SqliteJdbc("resources/db/test.db");
         assertNotNull(sqlite);
     }
 
@@ -53,7 +53,7 @@ public class CommonsTest {
         map.put("mysql_user", "root");
         map.put("mysql_pwd", "endlessloop");
 
-        MysqlJDBC mysql = new MysqlJDBC(map);
+        MysqlJdbc mysql = new MysqlJdbc(map);
         assertNotNull(mysql);
     }
 
@@ -112,7 +112,7 @@ public class CommonsTest {
 
     @Test
     public void testGetOrder() {
-        String rst = HttpRequest.GetOrder("120.26.53.90:8080", 0, 0);
+        String rst = HttpRequest.getOrder("120.26.53.90:8080", 0, 0);
         boolean matches = rst.matches("^\\[.*\\]$");
         System.out.println(rst);
         assertTrue(matches);

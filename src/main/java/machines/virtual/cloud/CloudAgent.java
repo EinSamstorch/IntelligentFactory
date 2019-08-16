@@ -1,9 +1,9 @@
 package machines.virtual.cloud;
 
 
-import commons.AgentTemplate;
+import commons.BaseAgent;
 import commons.order.OrderInfo;
-import commons.tools.DFServiceType;
+import commons.tools.DfServiceType;
 import commons.tools.IniLoader;
 import commons.tools.LoggerUtil;
 import jade.core.behaviours.Behaviour;
@@ -29,7 +29,7 @@ import java.util.concurrent.LinkedBlockingDeque;
  * @version 1.0.0.1
  * @since 1.8
  */
-public class CloudAgent extends AgentTemplate {
+public class CloudAgent extends BaseAgent {
     /**
      * TICKER周期，单位ms
      */
@@ -82,7 +82,7 @@ public class CloudAgent extends AgentTemplate {
         //loadOrders();
         // 注册DF服务 订单状态更新服务
         loadIni();
-        registerDF(DFServiceType.CLOUD_UPDATE);
+        registerDf(DfServiceType.CLOUD_UPDATE);
 
 
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();

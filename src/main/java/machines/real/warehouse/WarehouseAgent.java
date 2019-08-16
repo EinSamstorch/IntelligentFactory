@@ -1,7 +1,7 @@
 package machines.real.warehouse;
 
-import commons.AgentTemplate;
-import commons.tools.DFServiceType;
+import commons.BaseAgent;
+import commons.tools.DfServiceType;
 import commons.tools.IniLoader;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
@@ -27,7 +27,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 
 
-public class WarehouseAgent extends AgentTemplate {
+public class WarehouseAgent extends BaseAgent {
     private String sqlitePath;
     private Integer posIn;
     private Integer posOut;
@@ -59,7 +59,7 @@ public class WarehouseAgent extends AgentTemplate {
     protected void setup() {
         super.setup();
         loadIni();
-        registerDF(DFServiceType.WAREHOUSE);
+        registerDf(DfServiceType.WAREHOUSE);
 
         hal = new WarehouseHal(halPort);
         sqlite = new WarehouseSqlite(getSqlitePath());
@@ -79,14 +79,14 @@ public class WarehouseAgent extends AgentTemplate {
     protected void loadIni() {
         Map<String, String> setting = IniLoader.load(getLocalName());
 
-        String SETTING_SQLITE_PATH = "sqlite_path";
-        String SETTING_POS_IN = "pos_in";
-        String SETTING_POS_OUT = "pos_out";
+        final String settingSqlitePath = "sqlite_path";
+        final String settingPosIn = "pos_in";
+        final String settingPosOut = "pos_out";
 
         halPort = IniLoader.loadHalPort(getLocalName());
-        sqlitePath = setting.get(SETTING_SQLITE_PATH);
-        posIn = new Integer(setting.get(SETTING_POS_IN));
-        posOut = new Integer(setting.get(SETTING_POS_OUT));
+        sqlitePath = setting.get(settingSqlitePath);
+        posIn = new Integer(setting.get(settingPosIn));
+        posOut = new Integer(setting.get(settingPosOut));
     }
 
     private void addContractNetResponder(ThreadedBehaviourFactory tbf) {

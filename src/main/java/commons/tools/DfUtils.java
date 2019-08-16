@@ -26,16 +26,16 @@ import java.util.Iterator;
  */
 
 
-public class DFUtils {
+public class DfUtils {
     /**
      * 搜索 黄页服务
      * 按照 服务类型 搜索 提供方
      * 将提供方地址写入 消息 收件人
      *
      * @param msg  招标消息
-     * @param type 服务类型 {@link DFServiceType}
+     * @param type 服务类型 {@link DfServiceType}
      */
-    public static void searchDF(Agent agent, ACLMessage msg, String type, String password) throws Exception {
+    public static void searchDf(Agent agent, ACLMessage msg, String type, String password) throws Exception {
         DFAgentDescription template = new DFAgentDescription();
         ServiceDescription templateSd = new ServiceDescription();
         templateSd.setType(type);
@@ -68,8 +68,8 @@ public class DFUtils {
         }
     }
 
-    public static void searchDF(Agent agent, ACLMessage msg, String type) throws Exception {
-        searchDF(agent, msg, type, null);
+    public static void searchDf(Agent agent, ACLMessage msg, String type) throws Exception {
+        searchDf(agent, msg, type, null);
     }
 
     /**
@@ -81,7 +81,7 @@ public class DFUtils {
      * @param content 消息载体 object类型 需实现Serializable接口
      * @return 招标消息
      */
-    public static ACLMessage createCFPMsg(Object content) throws MsgCreateFailedException {
+    public static ACLMessage createCfpMsg(Object content) throws MsgCreateFailedException {
         ACLMessage msg = new ACLMessage(ACLMessage.CFP);
         msg.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
         msg.setReplyByDate(new Date(System.currentTimeMillis() + 30000));

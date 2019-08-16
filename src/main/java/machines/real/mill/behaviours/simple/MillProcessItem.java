@@ -19,14 +19,14 @@ import machines.real.mill.MillHal;
  * @since 1.8
  */
 
-public class MIllProcessItem implements ProcessItemInterface {
+public class MillProcessItem implements ProcessItemInterface {
     private MillAgent millAgent;
     private MillHal hal;
     private ArmrobotRequest request;
     private Buffer buffer;
     private String password;
 
-    public MIllProcessItem(MillAgent millAgent, Buffer buffer, String password) {
+    public MillProcessItem(MillAgent millAgent, Buffer buffer, String password) {
         this.millAgent = millAgent;
         this.buffer = buffer;
         this.password = password;

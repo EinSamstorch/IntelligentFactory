@@ -27,7 +27,9 @@ public class WorkpieceInfo implements Serializable {
     private List<String> processPlan;
     private Integer processIndex = 0;
     private Integer warehousePosition;
-    // 工序分步
+    /**
+     * 工序分步
+     */
     private Integer processStep;
 
     public WorkpieceInfo(String orderId, String workpieceId, String goodsId, String detailSize) {
@@ -42,7 +44,6 @@ public class WorkpieceInfo implements Serializable {
     }
 
     public static void main(String[] args) {
-//        WorkpieceInfo wpInfo = new WorkpieceInfo("001","001","002","{\"L1\":10}");
         WorkpieceInfo wpInfo = new WorkpieceInfo("001", "001", "003", "");
         JSONObject json = new JSONObject();
         json.put("extra", wpInfo);

@@ -1,8 +1,8 @@
 package machines.virtual.worker.behaviours.cycle;
 
 import commons.order.WorkpieceInfo;
-import commons.tools.DFServiceType;
-import commons.tools.DFUtils;
+import commons.tools.DfServiceType;
+import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
@@ -47,12 +47,12 @@ public class HandleWorkpiece extends CyclicBehaviour {
             // 所有工艺完成，回成品库
             LoggerUtil.agent.info(String.format("OrderId: %s, wpId: %s done.",
                     wpInfo.getOrderId(), wpInfo.getWorkpieceId()));
-            processOn(wpInfo, DFServiceType.PRODUCT);
+            processOn(wpInfo, DfServiceType.PRODUCT);
             return;
         }
 
         String process = processPlan.get(processIndex);
-        if (process.equals(DFServiceType.WAREHOUSE)) {
+        if (process.equals(DfServiceType.WAREHOUSE)) {
             addVisionProcess(wpInfo);
         }
         processOn(wpInfo, process);
@@ -60,15 +60,15 @@ public class HandleWorkpiece extends CyclicBehaviour {
 
     private void processOn(WorkpieceInfo wpInfo, String serviceType) {
         try {
-            ACLMessage msg = DFUtils.createCFPMsg(wpInfo);
-            if (serviceType.equals(DFServiceType.PRODUCT)) {
-                DFUtils.searchDF(workerAgent, msg, DFServiceType.WAREHOUSE);
+            ACLMessage msg = DfUtils.createCfpMsg(wpInfo);
+            if (serviceType.equals(DfServiceType.PRODUCT)) {
+                DfUtils.searchDf(workerAgent, msg, DfServiceType.WAREHOUSE);
                 msg.setLanguage("PRODUCT");
-            } else if (serviceType.equals(DFServiceType.WAREHOUSE)) {
-                DFUtils.searchDF(workerAgent, msg, serviceType);
+            } else if (serviceType.equals(DfServiceType.WAREHOUSE)) {
+                DfUtils.searchDf(workerAgent, msg, serviceType);
                 msg.setLanguage("RAW");
             } else {
-                DFUtils.searchDF(workerAgent, msg, serviceType);
+                DfUtils.searchDf(workerAgent, msg, serviceType);
             }
 
             Behaviour b = new MyContractNetInitiator(workerAgent, msg, serviceType);
@@ -83,7 +83,7 @@ public class HandleWorkpiece extends CyclicBehaviour {
         if (random < workerAgent.getDetectRatio()) {
             LoggerUtil.agent.info(String.format("Item orderId:%s, wpId:%s add vision detect",
                     wpInfo.getOrderId(), wpInfo.getWorkpieceId()));
-            wpInfo.getProcessPlan().add(DFServiceType.VISION);
+            wpInfo.getProcessPlan().add(DfServiceType.VISION);
         }
     }
 }

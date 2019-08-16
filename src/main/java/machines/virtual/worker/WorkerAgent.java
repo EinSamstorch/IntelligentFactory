@@ -1,8 +1,8 @@
 package machines.virtual.worker;
 
-import commons.AgentTemplate;
+import commons.BaseAgent;
 import commons.order.WorkpieceInfo;
-import commons.tools.DFServiceType;
+import commons.tools.DfServiceType;
 import commons.tools.IniLoader;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
@@ -22,7 +22,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 
 
-public class WorkerAgent extends AgentTemplate {
+public class WorkerAgent extends BaseAgent {
     private Integer detectRatio;
     private Queue<WorkpieceInfo> wpInfoQueue = new LinkedBlockingQueue<>();
 
@@ -34,7 +34,7 @@ public class WorkerAgent extends AgentTemplate {
     @Override
     protected void setup() {
         super.setup();
-        registerDF(DFServiceType.WORKER);
+        registerDf(DfServiceType.WORKER);
 
         detectRatio = loadDetectRatio();
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
