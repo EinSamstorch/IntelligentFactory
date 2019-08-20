@@ -4,6 +4,7 @@ import commons.order.WorkpieceInfo;
 import commons.tools.DfServiceType;
 import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
+import commons.tools.db.DbInterface;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
@@ -14,6 +15,8 @@ import jade.proto.ContractNetResponder;
 import machines.real.commons.ContractNetContent;
 import machines.real.warehouse.WarehouseAgent;
 import machines.real.warehouse.WarehouseSqlite;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import java.io.IOException;
 
@@ -28,12 +31,13 @@ import java.io.IOException;
 
 public class RawContractNetResponder extends ContractNetResponder {
     private WarehouseAgent whagent;
-    private WarehouseSqlite sqlite;
+    private DbInterface db;
 
     public RawContractNetResponder(WarehouseAgent whagent, MessageTemplate mt) {
         super(whagent, mt);
         this.whagent = whagent;
-        sqlite = whagent.getSqlite();
+        ApplicationContext ac = new FileSystemXmlApplicationContext("./resources/sql.xml");
+        db = ac.getBean("db", DbInterface.class);
     }
 
     /**
@@ -57,7 +61,7 @@ public class RawContractNetResponder extends ContractNetResponder {
             e.printStackTrace();
         }
         // 查询仓库余量
-        int quantity = sqlite.getRawQuantityByGoodsId(goodsid);
+        int quantity = db.getRawQuantityByGoodsId(goodsid);
         if (quantity > 0) {
             // propose 内容: String quantity
             ACLMessage propose = cfp.createReply();
@@ -86,7 +90,7 @@ public class RawContractNetResponder extends ContractNetResponder {
             // 对 workpieceInfo 添加 warehousePosition
             WorkpieceInfo wpInfo = ((WorkpieceInfo) cfp.getContentObject());
             String goodsid = wpInfo.getGoodsId();
-            Integer position = sqlite.getRaw(goodsid);
+            Integer position = db.getRaw(goodsid);
             wpInfo.setWarehousePosition(position);
             // 更新 wpInfo
             wpInfo.setProviderId(whagent.getLocalName());

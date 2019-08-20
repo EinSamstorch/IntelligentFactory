@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util" xsi:schemaLocation="
+        http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!-- 配置仓库Agent -->
+    <bean id="agent" class="machines.real.warehouse.WarehouseAgent">
+        <!-- 入库口 -->
+        <property name="posIn" value="1"/>
+        <!-- 出库口 -->
+        <property name="posOut" value="15"/>
+        <!-- 仓库agent 行为集-->
+        <property name="behaviours">
+            <list>
+                <!-- 入库动作 -->
+                <bean class="machines.real.warehouse.behaviours.cycle.ItemExportBehaviour">
+                    <constructor-arg name="warehouseAgent" ref="agent"/>
+                </bean>
+                <!-- 接收入库请求 -->
+                <bean class="machines.real.warehouse.behaviours.cycle.RecvItemExportRequestBehaviour">
+                    <constructor-arg name="warehouseAgent" ref="agent"/>
+                </bean>
+                <!-- 原料应标 -->
+                <bean class="machines.real.warehouse.behaviours.cycle.RawContractNetResponder">
+                    <constructor-arg name="whagent" ref="agent"/>
+                    <constructor-arg name="mt" ref="raw_mt"/>
+                </bean>
+                <!-- 成品应标 -->
+                <bean class="machines.real.warehouse.behaviours.cycle.ProductContractNetResponder">
+                    <constructor-arg name="whagent" ref="agent"/>
+                    <constructor-arg name="mt" ref="product_mt"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 配置 hal -->
+    <bean id="hal" class="machines.real.warehouse.WarehouseHal">
+        <!-- socket server监听端口 -->
+        <constructor-arg name="port" value="5656"/>
+    </bean>
+
+    <bean id="matchProtocal" class="jade.lang.acl.MessageTemplate" factory-method="and">
+        <!-- match Contract Net -->
+        <constructor-arg name="op1">
+            <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchProtocol">
+                <constructor-arg type="java.lang.String">
+                    <util:constant static-field="jade.domain.FIPANames.InteractionProtocol.FIPA_CONTRACT_NET"/>
+                </constructor-arg>
+            </bean>
+        </constructor-arg>
+        <!-- match CFP -->
+        <constructor-arg name="op2">
+            <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchPerformative">
+                <constructor-arg type="java.lang.Integer">
+                    <util:constant static-field="jade.lang.acl.ACLMessage.CFP"/>
+                </constructor-arg>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <!-- 原料应标消息模板 -->
+    <bean id="raw_mt" class="jade.lang.acl.MessageTemplate" factory-method="and">
+        <constructor-arg name="op1" ref="matchProtocal"/>
+        <constructor-arg name="op2">
+            <!-- 匹配 RAW -->
+            <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchLanguage">
+                <constructor-arg type="java.lang.String" value="RAW"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <!-- 成品应标消息模板 -->
+    <bean id="product_mt" class="jade.lang.acl.MessageTemplate" factory-method="and">
+        <constructor-arg name="op1" ref="matchProtocal"/>
+        <constructor-arg name="op2">
+            <!-- 匹配 RAW -->
+            <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchLanguage">
+                <constructor-arg type="java.lang.String" value="RAW"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+</beans>
+

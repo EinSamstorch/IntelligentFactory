@@ -5,6 +5,7 @@ import jade.core.behaviours.OneShotBehaviour;
 import machines.real.commons.request.WarehouseRequest;
 import machines.real.warehouse.WarehouseAgent;
 import machines.real.warehouse.WarehouseHal;
+import machines.real.warehouse.WarehouseHalInterface;
 
 /**
  * .
@@ -15,14 +16,14 @@ import machines.real.warehouse.WarehouseHal;
  */
 
 public class ItemImportBehaviour extends OneShotBehaviour {
-    private WarehouseHal hal;
+    private WarehouseHalInterface hal;
     private Integer posIn;
     private WarehouseRequest request;
 
     public ItemImportBehaviour(WarehouseAgent whagent, WarehouseRequest request) {
         super(whagent);
         hal = whagent.getHal();
-        posIn = whagent.getPosIn();
+        this.posIn= whagent.getPosIn();
         this.request = request;
     }
 

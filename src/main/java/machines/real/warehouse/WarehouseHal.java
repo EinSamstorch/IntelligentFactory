@@ -10,7 +10,7 @@ import machines.real.commons.hal.BaseHal;
  * @version 1.0.0.0
  * @since 1.8
  */
-public class WarehouseHal extends BaseHal {
+public class WarehouseHal extends BaseHal implements WarehouseHalInterface{
     private static final String CMD_MOVE_ITEM = "move_item";
     private static final String FIELD_FROM = "from";
     private static final String FIELD_TO = "to";
@@ -23,6 +23,7 @@ public class WarehouseHal extends BaseHal {
         super(port);
     }
 
+    @Override
     public synchronized boolean moveItem(int from, int to) {
         JSONObject extra = new JSONObject();
         extra.put(FIELD_FROM, from);

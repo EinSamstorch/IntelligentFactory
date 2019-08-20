@@ -26,7 +26,6 @@ import jade.domain.FIPAException;
 
 public abstract class BaseAgent extends Agent {
     protected Integer halPort;
-
     @Override
     protected void setup() {
         super.setup();

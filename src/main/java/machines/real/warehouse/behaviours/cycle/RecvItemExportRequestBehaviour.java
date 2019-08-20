@@ -15,11 +15,11 @@ import machines.real.warehouse.WarehouseAgent;
  */
 
 public class RecvItemExportRequestBehaviour extends CyclicBehaviour {
-    private WarehouseAgent wagent;
+    private WarehouseAgent warehouseAgent;
 
-    public RecvItemExportRequestBehaviour(WarehouseAgent wagent) {
-        super(wagent);
-        this.wagent = wagent;
+    public RecvItemExportRequestBehaviour(WarehouseAgent warehouseAgent) {
+        super(warehouseAgent);
+        this.warehouseAgent = warehouseAgent;
     }
 
     @Override
@@ -28,9 +28,9 @@ public class RecvItemExportRequestBehaviour extends CyclicBehaviour {
                 MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
                 MessageTemplate.MatchPerformative(ACLMessage.REQUEST)
         );
-        ACLMessage receive = wagent.receive(mt);
+        ACLMessage receive = warehouseAgent.receive(mt);
         if (receive != null) {
-            wagent.getExportQueue().offer(receive);
+            warehouseAgent.getExportQueue().offer(receive);
         } else {
             block();
         }

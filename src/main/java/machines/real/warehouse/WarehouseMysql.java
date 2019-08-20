@@ -2,6 +2,7 @@ package machines.real.warehouse;
 
 import commons.order.WorkpieceInfo;
 import commons.tools.LoggerUtil;
+import commons.tools.db.DbInterface;
 import commons.tools.db.MysqlJdbc;
 
 import java.sql.PreparedStatement;
@@ -18,7 +19,7 @@ import java.util.Map;
  * @since 1.8
  */
 
-public class WarehouseMysql extends MysqlJdbc {
+public class WarehouseMysql extends MysqlJdbc implements DbInterface {
     /**
      * 构造器 .
      *
@@ -28,12 +29,8 @@ public class WarehouseMysql extends MysqlJdbc {
         super(mysqlInfo);
     }
 
-    /**
-     * 获得一个原料, 同时从raw table中删去库存
-     *
-     * @param goodsid 原料种类
-     * @return int positon,  0表示失败
-     */
+
+    @Override
     public int getRaw(String goodsid) {
         String cmd = String.format("SELECT position FROM raw WHERE goodsid='%s' limit 1", goodsid);
         int position = 0;
@@ -61,12 +58,8 @@ public class WarehouseMysql extends MysqlJdbc {
         return position;
     }
 
-    /**
-     * 查询raw table, 对应 goodsid的原料剩余数量
-     *
-     * @param goodsid 代查询种类
-     * @return 剩余原料数量, 不存在的原料 返回数量0
-     */
+
+    @Override
     public int getRawQuantityByGoodsId(String goodsid) {
         String cmd = String.format("SELECT COUNT(*) FROM raw WHERE goodsid='%s'", goodsid);
         int quantity = 0;
@@ -83,11 +76,8 @@ public class WarehouseMysql extends MysqlJdbc {
         return quantity;
     }
 
-    /**
-     * 获得一个空位 同时将数据信息更新到表里
-     *
-     * @return 空位id
-     */
+
+    @Override
     public int getProduct(WorkpieceInfo wpInfo) {
         int position = 0;
         connect();
@@ -120,11 +110,8 @@ public class WarehouseMysql extends MysqlJdbc {
         return position;
     }
 
-    /**
-     * 查询 product表 空位数量
-     *
-     * @return
-     */
+
+    @Override
     public int getProductQuantity() {
         int quantity = 0;
         connect();

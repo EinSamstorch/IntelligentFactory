@@ -3,6 +3,7 @@ package machines.real.warehouse;
 import commons.BaseAgent;
 import commons.tools.DfServiceType;
 import commons.tools.IniLoader;
+import commons.tools.db.DbInterface;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.domain.FIPANames;
@@ -12,6 +13,9 @@ import machines.real.warehouse.behaviours.cycle.ItemExportBehaviour;
 import machines.real.warehouse.behaviours.cycle.ProductContractNetResponder;
 import machines.real.warehouse.behaviours.cycle.RawContractNetResponder;
 import machines.real.warehouse.behaviours.cycle.RecvItemExportRequestBehaviour;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import java.util.Map;
 import java.util.Queue;
@@ -28,82 +32,52 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class WarehouseAgent extends BaseAgent {
-    private String sqlitePath;
     private Integer posIn;
     private Integer posOut;
-    private WarehouseHal hal;
+    private WarehouseHalInterface hal;
     private Queue<ACLMessage> exportQueue = new LinkedBlockingQueue<>();
-    private WarehouseSqlite sqlite;
 
-    public WarehouseHal getHal() {
+    private Behaviour[] behaviours;
+
+    public void setBehaviours(Behaviour[] behaviours) {
+        this.behaviours = behaviours;
+    }
+
+    public WarehouseHalInterface getHal() {
         return hal;
     }
 
-    public String getSqlitePath() {
-        return sqlitePath;
-    }
-
-    public int getPosIn() {
+    public Integer getPosIn() {
         return posIn;
     }
 
-    public int getPosOut() {
+    public void setPosIn(Integer posIn) {
+        this.posIn = posIn;
+    }
+
+    public Integer getPosOut() {
         return posOut;
     }
 
-    public WarehouseSqlite getSqlite() {
-        return sqlite;
+    public void setPosOut(Integer posOut) {
+        this.posOut = posOut;
+    }
+
+    public Queue<ACLMessage> getExportQueue() {
+        return exportQueue;
     }
 
     @Override
     protected void setup() {
         super.setup();
-        loadIni();
         registerDf(DfServiceType.WAREHOUSE);
 
-        hal = new WarehouseHal(halPort);
-        sqlite = new WarehouseSqlite(getSqlitePath());
-        sqlite.initTable();
+        ApplicationContext ac2 = new FileSystemXmlApplicationContext("./resources/warehouse.xml");
+        hal = ac2.getBean("hal", WarehouseHalInterface.class);
 
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
-        addContractNetResponder(tbf);
-
-        Behaviour b = new RecvItemExportRequestBehaviour(this);
-        addBehaviour(tbf.wrap(b));
-
-        b = new ItemExportBehaviour(this);
-        addBehaviour(tbf.wrap(b));
-    }
-
-
-    protected void loadIni() {
-        Map<String, String> setting = IniLoader.load(getLocalName());
-
-        final String settingSqlitePath = "sqlite_path";
-        final String settingPosIn = "pos_in";
-        final String settingPosOut = "pos_out";
-
-        halPort = IniLoader.loadHalPort(getLocalName());
-        sqlitePath = setting.get(settingSqlitePath);
-        posIn = new Integer(setting.get(settingPosIn));
-        posOut = new Integer(setting.get(settingPosOut));
-    }
-
-    private void addContractNetResponder(ThreadedBehaviourFactory tbf) {
-        MessageTemplate mt = MessageTemplate.and(
-                MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
-                MessageTemplate.MatchPerformative(ACLMessage.CFP)
-        );
-        MessageTemplate mt1 = MessageTemplate.and(mt, MessageTemplate.MatchLanguage("RAW"));
-        Behaviour b = new RawContractNetResponder(this, mt1);
-        addBehaviour(tbf.wrap(b));
-
-        MessageTemplate mt2 = MessageTemplate.and(mt, MessageTemplate.MatchLanguage("PRODUCT"));
-        b = new ProductContractNetResponder(this, mt2);
-        addBehaviour(tbf.wrap(b));
-    }
-
-    public Queue<ACLMessage> getExportQueue() {
-        return exportQueue;
+        for (Behaviour behaviour : behaviours) {
+            addBehaviour(tbf.wrap(behaviour));
+        }
     }
 }
