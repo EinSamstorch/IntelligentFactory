@@ -9,7 +9,7 @@ import machines.real.commons.behaviours.simple.ProcessFinishedBehaviour;
 import machines.real.commons.behaviours.simple.ProcessItemBehaviour;
 import machines.real.commons.buffer.Buffer;
 import machines.real.commons.request.ArmrobotRequest;
-import machines.real.lathe.LatheHalImpl;
+import machines.real.lathe.LatheHal;
 import machines.real.lathe.behaviours.simple.LatheHalBehaviours;
 
 /**
@@ -22,7 +22,7 @@ import machines.real.lathe.behaviours.simple.LatheHalBehaviours;
 
 public class LatheProcessItem implements ProcessItem {
     private RealMachineAgent realAgent;
-    private LatheHalImpl hal;
+    private LatheHal hal;
     private ArmrobotRequest request;
     private Buffer buffer;
     private String armPwd;
@@ -30,7 +30,7 @@ public class LatheProcessItem implements ProcessItem {
     @Override
     public Behaviour getBehaviour(RealMachineAgent realAgent, Buffer buffer, String armPwd) {
         this.realAgent = realAgent;
-        this.hal = (LatheHalImpl) realAgent.getHal();
+        this.hal = (LatheHal) realAgent.getHal();
         this.request = new ArmrobotRequest(
                 String.valueOf(buffer.getIndex()),
                 this.realAgent.getLocalName(),

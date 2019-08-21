@@ -53,7 +53,7 @@ public class MysqlJdbc {
     }
 
     protected void close() {
-        if(con != null) {
+        if (con != null) {
             try {
                 con.close();
             } catch (SQLException e) {

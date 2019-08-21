@@ -38,13 +38,13 @@ public class Workpiece implements Serializable {
      *
      * @param jo 工件信息
      *           <pre>
-     *                       {
-     *                        "goodsId": "001",
-     *                        "id": 165,
-     *                        "jobDes": "{\"D1\":\"80\",\"D2\":\"35.5\",\"D3\":\"58.0\",\"D4\":\"8.0\",\"D5\":\"70.0\",\"N\":\"4\",\"L1\":\"15.0\",\"L2\":\"30.0\",\"Motto\":\"南航智造\"}",
-     *                        "jobNum": 1
-     *                       }
-     *                      </pre>
+     *                                 {
+     *                                  "goodsId": "001",
+     *                                  "id": 165,
+     *                                  "jobDes": "{\"D1\":\"80\",\"D2\":\"35.5\",\"D3\":\"58.0\",\"D4\":\"8.0\",\"D5\":\"70.0\",\"N\":\"4\",\"L1\":\"15.0\",\"L2\":\"30.0\",\"Motto\":\"南航智造\"}",
+     *                                  "jobNum": 1
+     *                                 }
+     *                                </pre>
      */
     public Workpiece(String orderId, JSONObject jo) {
         this.orderId = orderId;

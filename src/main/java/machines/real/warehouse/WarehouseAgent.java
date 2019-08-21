@@ -5,8 +5,6 @@ import commons.tools.DfServiceType;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.lang.acl.ACLMessage;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -29,16 +27,16 @@ public class WarehouseAgent extends BaseAgent {
 
     private Behaviour[] behaviours;
 
-    public void setHal(WarehouseHal hal) {
-        this.hal = hal;
-    }
-
     public void setBehaviours(Behaviour[] behaviours) {
         this.behaviours = behaviours;
     }
 
     public WarehouseHal getHal() {
         return hal;
+    }
+
+    public void setHal(WarehouseHal hal) {
+        this.hal = hal;
     }
 
     public Integer getPosIn() {

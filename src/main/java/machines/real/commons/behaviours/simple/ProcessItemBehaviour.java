@@ -4,7 +4,6 @@ import commons.order.WorkpieceInfo;
 import jade.core.behaviours.Behaviour;
 import machines.real.commons.buffer.Buffer;
 import machines.real.commons.hal.MachineHal;
-import machines.real.commons.hal.MachineHalImpl;
 
 import java.lang.reflect.Method;
 

@@ -34,26 +34,32 @@ public class Push2CloudBehaviour extends SimpleBehaviour {
     private final static int RETRY_MAX = 3;
     private CloudAgent cagent;
     /**
-     *  对应api网址
-        - http://{website}/ks/FactoryAction_updateJobState.action?
-        - http://{website}/ks/FactoryAction_updateJobMachine.action?
-    */
+     * 对应api网址
+     * - http://{website}/ks/FactoryAction_updateJobState.action?
+     * - http://{website}/ks/FactoryAction_updateJobMachine.action?
+     */
     private String url;
     /**
-     *  网址api需要的参数
-        - update state : jobId=003002003001&jobState=001001001001in
-        - update position : jobId=003004003010&machine=C001&process=2
-    */
+     * 网址api需要的参数
+     * - update state : jobId=003002003001&jobState=001001001001in
+     * - update position : jobId=003004003010&machine=C001&process=2
+     */
     private String param;
     /**
-     *  选择API
-     *  */
+     * 选择API
+     */
     private int choice;
-    /** 云端更新flag */
+    /**
+     * 云端更新flag
+     */
     private boolean cloudFlag = false;
-    /** 本地数据库更新flag */
+    /**
+     * 本地数据库更新flag
+     */
     private boolean sqlFlag = false;
-    /** 失败重试计数器 */
+    /**
+     * 失败重试计数器
+     */
     private int retryCnt = 0;
 
     /**

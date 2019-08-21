@@ -7,10 +7,6 @@ import machines.real.commons.ProcessItem;
 import machines.real.commons.RealMachineAgent;
 import machines.real.commons.buffer.Buffer;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 /**
  * 挑选工件装载入机床
  *

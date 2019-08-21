@@ -1,10 +1,12 @@
 package machines;
+
 import jade.core.Agent;
-import jade.core.Runtime;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
-import jade.wrapper.*;
-import org.springframework.beans.factory.annotation.Value;
+import jade.core.Runtime;
+import jade.wrapper.AgentController;
+import jade.wrapper.ContainerController;
+import jade.wrapper.StaleProxyException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
@@ -23,22 +25,23 @@ public class AgentRunner {
     public static void main(String[] args) {
         startAgent();
     }
+
     private static void startAgent() {
         Runtime rt = Runtime.instance();
         ApplicationContext jadeContext = new FileSystemXmlApplicationContext("./resources/jade.xml");
         Properties jadeProps = jadeContext.getBean("jadeConfig", Properties.class);
         String ip = jadeProps.getProperty("setting.ip", null);
-        int port = Integer.parseInt(jadeProps.getProperty("setting.port","-1"));
+        int port = Integer.parseInt(jadeProps.getProperty("setting.port", "-1"));
         String agentName = jadeProps.getProperty("setting.name", String.format("Agent%d", new Random().nextInt()));
         String xmlPath = jadeProps.getProperty("setting.xml");
 
-        Profile p = new ProfileImpl(ip,port,null,false);
-        ContainerController cc =rt.createAgentContainer(p);
+        Profile p = new ProfileImpl(ip, port, null, false);
+        ContainerController cc = rt.createAgentContainer(p);
 
         try {
             ApplicationContext context = new FileSystemXmlApplicationContext(xmlPath);
             Agent agent = context.getBean("agent", Agent.class);
-            AgentController ac = cc.acceptNewAgent(agentName,agent);
+            AgentController ac = cc.acceptNewAgent(agentName, agent);
             ac.start();
         } catch (StaleProxyException e) {
             throw new RuntimeException(e);

@@ -83,7 +83,7 @@ public class WarehouseMysql extends MysqlJdbc implements DbInterface {
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT position FROM product WHERE orderid IS NULL and workpieceid IS NULL");
-            while(rs.next()){
+            while (rs.next()) {
                 position = rs.getInt(1);
             }
 
@@ -94,10 +94,10 @@ public class WarehouseMysql extends MysqlJdbc implements DbInterface {
             PreparedStatement pstmt = con.prepareStatement("UPDATE product SET orderid = ?, workpieceid = ? WHERE position = ?");
             pstmt.setString(1, wpInfo.getOrderId());
             pstmt.setString(2, wpInfo.getWorkpieceId());
-            pstmt.setInt(3,position);
+            pstmt.setInt(3, position);
 
             int result = pstmt.executeUpdate();
-            if(result != 1) {
+            if (result != 1) {
                 LoggerUtil.db.error(String.format("Failed to update product table on position: %d", position));
             }
         } catch (SQLException e) {
@@ -117,12 +117,12 @@ public class WarehouseMysql extends MysqlJdbc implements DbInterface {
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM product WHERE orderid IS NULL and workpieceid IS NULL");
-            while(rs.next()) {
+            while (rs.next()) {
                 quantity = rs.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally{
+        } finally {
             close();
         }
         return quantity;

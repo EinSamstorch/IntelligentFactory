@@ -10,6 +10,7 @@ public interface DbInterface {
      * @return int positon,  0表示失败
      */
     int getRaw(String goodsid);
+
     /**
      * 查询raw table, 对应 goodsid的原料剩余数量
      *
@@ -17,12 +18,14 @@ public interface DbInterface {
      * @return 剩余原料数量, 不存在的原料 返回数量0
      */
     int getRawQuantityByGoodsId(String goodsid);
+
     /**
      * 获得一个空位 同时将数据信息更新到表里
      *
      * @return 空位id
      */
     int getProduct(WorkpieceInfo wpInfo);
+
     /**
      * 查询 product表 空位数量
      *

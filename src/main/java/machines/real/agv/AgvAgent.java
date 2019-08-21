@@ -2,7 +2,6 @@ package machines.real.agv;
 
 import commons.BaseAgent;
 import commons.tools.DfServiceType;
-import commons.tools.IniLoader;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.lang.acl.ACLMessage;

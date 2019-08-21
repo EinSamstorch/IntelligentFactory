@@ -1,12 +1,6 @@
 package machines.real.mill;
 
-import commons.tools.DfServiceType;
-import jade.core.behaviours.Behaviour;
-import jade.core.behaviours.ThreadedBehaviourFactory;
 import machines.real.commons.RealMachineAgent;
-import machines.real.commons.behaviours.cycle.LoadItemBehaviour;
-import machines.real.commons.behaviours.cycle.MaintainBufferBehaviour;
-import machines.real.mill.behaviours.simple.MillProcessItem;
 
 /**
  * .
