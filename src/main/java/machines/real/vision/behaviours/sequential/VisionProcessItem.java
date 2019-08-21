@@ -2,7 +2,7 @@ package machines.real.vision.behaviours.sequential;
 
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.SequentialBehaviour;
-import machines.real.commons.ProcessItemInterface;
+import machines.real.commons.ProcessItem;
 import machines.real.commons.RealMachineAgent;
 import machines.real.commons.behaviours.sequantial.SequentialCallForArm;
 import machines.real.commons.behaviours.simple.ProcessFinishedBehaviour;
@@ -19,33 +19,21 @@ import machines.real.commons.request.ArmrobotRequest;
  * @since 1.8
  */
 
-public class VisionProcessItem implements ProcessItemInterface {
-    private RealMachineAgent visionAgent;
-    private MachineHal hal;
-    private ArmrobotRequest request;
-    private Buffer buffer;
-    private String password;
-
-    public VisionProcessItem(RealMachineAgent visionAgent, Buffer buffer, String password) {
-        this.visionAgent = visionAgent;
-        this.buffer = buffer;
-        this.password = password;
-
-        this.hal = visionAgent.getHal();
-        this.request = new ArmrobotRequest(
-                String.valueOf(buffer.getIndex()),
-                visionAgent.getLocalName(),
-                buffer.getWpInfo().getGoodsId());
-    }
-
+public class VisionProcessItem implements ProcessItem {
     @Override
-    public Behaviour getBehaviour() {
+    public Behaviour getBehaviour(RealMachineAgent realAgent, Buffer buffer, String armPwd) {
+        MachineHal hal = realAgent.getHal();
+        ArmrobotRequest request = new ArmrobotRequest(
+                String.valueOf(buffer.getIndex()),
+                realAgent.getLocalName(),
+                buffer.getWpInfo().getGoodsId());
+
         SequentialBehaviour s = new SequentialBehaviour();
         // 上料
         s.addSubBehaviour(SequentialCallForArm
-                .getBehaviour(visionAgent,
+                .getBehaviour(realAgent,
                         request,
-                        password,
+                        armPwd,
                         String.format("Load item from buffer %d.", buffer.getIndex())));
 
         // 检查
@@ -53,12 +41,12 @@ public class VisionProcessItem implements ProcessItemInterface {
         // 下料
         ArmrobotRequest unloadRequest = ArmrobotRequest.unloadRequest(request);
         s.addSubBehaviour(SequentialCallForArm
-                .getBehaviour(visionAgent,
+                .getBehaviour(realAgent,
                         unloadRequest,
-                        password,
+                        armPwd,
                         String.format("Unload item from buffer %d.", buffer.getIndex())));
         // 下一步工序 更新机床和工位台状态
-        s.addSubBehaviour(new ProcessFinishedBehaviour(visionAgent, buffer));
+        s.addSubBehaviour(new ProcessFinishedBehaviour(realAgent, buffer));
         return s;
     }
 }

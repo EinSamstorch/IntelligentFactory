@@ -19,8 +19,9 @@
                 <!-- 上料行为 -->
                 <bean class="machines.real.commons.behaviours.cycle.LoadItemBehaviour">
                     <constructor-arg name="machineAgent" ref="agent"/>
-                    <constructor-arg name="processClass" type="java.lang.Class"
-                                     value="machines.real.vision.behaviours.sequential.VisionProcessItem"/>
+                    <constructor-arg name="processItem">
+                        <bean class="machines.real.vision.behaviours.sequential.VisionProcessItem"/>
+                    </constructor-arg>
                 </bean>
                 <!-- 检测仪服务应标 -->
                 <bean class="machines.real.vision.behaviours.cycle.CheckItemContractNetResponder">

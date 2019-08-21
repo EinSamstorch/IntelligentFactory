@@ -2,7 +2,7 @@ package machines.real.lathe.behaviours.sequential;
 
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.SequentialBehaviour;
-import machines.real.commons.ProcessItemInterface;
+import machines.real.commons.ProcessItem;
 import machines.real.commons.RealMachineAgent;
 import machines.real.commons.behaviours.sequantial.SequentialCallForArm;
 import machines.real.commons.behaviours.simple.ProcessFinishedBehaviour;
@@ -20,26 +20,27 @@ import machines.real.lathe.behaviours.simple.LatheHalBehaviours;
  * @since 1.8
  */
 
-public class LatheProcessItem implements ProcessItemInterface {
-    private RealMachineAgent latheAgent;
+public class LatheProcessItem implements ProcessItem {
+    private RealMachineAgent realAgent;
     private LatheHalImpl hal;
     private ArmrobotRequest request;
     private Buffer buffer;
-    private String password;
-
-    public LatheProcessItem(RealMachineAgent latheAgent, Buffer buffer, String password) {
-        this.latheAgent = latheAgent;
-        this.hal = (LatheHalImpl) latheAgent.getHal();
-        this.request = new ArmrobotRequest(
-                String.valueOf(buffer.getIndex()),
-                latheAgent.getLocalName(),
-                buffer.getWpInfo().getGoodsId());
-        this.buffer = buffer;
-        this.password = password;
-    }
+    private String armPwd;
 
     @Override
-    public Behaviour getBehaviour() {
+    public Behaviour getBehaviour(RealMachineAgent realAgent, Buffer buffer, String armPwd) {
+        this.realAgent = realAgent;
+        this.hal = (LatheHalImpl) realAgent.getHal();
+        this.request = new ArmrobotRequest(
+                String.valueOf(buffer.getIndex()),
+                this.realAgent.getLocalName(),
+                buffer.getWpInfo().getGoodsId());
+        this.buffer = buffer;
+        this.armPwd = armPwd;
+        return this.getBehaviour();
+    }
+
+    private Behaviour getBehaviour() {
         SequentialBehaviour s = new SequentialBehaviour();
         s.addSubBehaviour(loadItemBehaviour());
         s.addSubBehaviour(reverseLoadItemBehaviour());
@@ -53,9 +54,9 @@ public class LatheProcessItem implements ProcessItemInterface {
         // 装夹 工步1 送料到车床
         ArmrobotRequest request1 = ArmrobotRequest.nextStep(this.request);
         s.addSubBehaviour(SequentialCallForArm
-                .getBehaviour(latheAgent,
+                .getBehaviour(realAgent,
                         request1,
-                        password,
+                        armPwd,
                         String.format("Load item from buffer %d.", buffer.getIndex())));
         // 车床夹紧
         s.addSubBehaviour(LatheHalBehaviours.grabItem(hal));
@@ -64,9 +65,9 @@ public class LatheProcessItem implements ProcessItemInterface {
         // 装夹工步2 机械手松开离开
         ArmrobotRequest request2 = ArmrobotRequest.nextStep(request1);
         s.addSubBehaviour(SequentialCallForArm
-                .getBehaviour(latheAgent,
+                .getBehaviour(realAgent,
                         request2,
-                        password,
+                        armPwd,
                         "Release item"));
         // 机床加工
         s.addSubBehaviour(ProcessItemBehaviour.getBehaviour(hal, buffer));
@@ -83,16 +84,16 @@ public class LatheProcessItem implements ProcessItemInterface {
         // 装夹 工步1 机械手抓住工件
         ArmrobotRequest request1 = ArmrobotRequest.nextStep(reverseRequest);
         s.addSubBehaviour(SequentialCallForArm
-                .getBehaviour(latheAgent, request1, password, "Grab item."));
+                .getBehaviour(realAgent, request1, armPwd, "Grab item."));
         // 车床松开
         s.addSubBehaviour(LatheHalBehaviours.releaseItem(hal));
 
         // 装夹工步2 机械手掉转工件,机床夹紧
         ArmrobotRequest request2 = ArmrobotRequest.nextStep(request1);
         s.addSubBehaviour(SequentialCallForArm
-                .getBehaviour(latheAgent,
+                .getBehaviour(realAgent,
                         request2,
-                        password,
+                        armPwd,
                         "Reverse item."));
         // 机床夹紧
         s.addSubBehaviour(LatheHalBehaviours.grabItem(hal));
@@ -100,7 +101,7 @@ public class LatheProcessItem implements ProcessItemInterface {
         // 装夹工步3 机械手离开 机床加工
         ArmrobotRequest request3 = ArmrobotRequest.nextStep(request2);
         s.addSubBehaviour(SequentialCallForArm
-                .getBehaviour(latheAgent, request3, password, "Release item."));
+                .getBehaviour(realAgent, request3, armPwd, "Release item."));
         // 机床加工
         s.addSubBehaviour(ProcessItemBehaviour.getBehaviour(hal, buffer));
         return s;
@@ -114,21 +115,20 @@ public class LatheProcessItem implements ProcessItemInterface {
         // 装夹 工步1 机械手抓住工件
         ArmrobotRequest request1 = ArmrobotRequest.nextStep(unloadRequest);
         s.addSubBehaviour(SequentialCallForArm
-                .getBehaviour(latheAgent, request1, password, "Grab item."));
+                .getBehaviour(realAgent, request1, armPwd, "Grab item."));
         // 车床松开
         s.addSubBehaviour(LatheHalBehaviours.releaseItem(hal));
 
         // 装夹工步2 机械手带着工件离开
         ArmrobotRequest request2 = ArmrobotRequest.nextStep(request1);
         s.addSubBehaviour(SequentialCallForArm
-                .getBehaviour(latheAgent,
+                .getBehaviour(realAgent,
                         request2,
-                        password,
+                        armPwd,
                         String.format("Unload item to buffer %d.", buffer.getIndex())));
-        s.addSubBehaviour(new ProcessFinishedBehaviour(latheAgent, buffer));
+        s.addSubBehaviour(new ProcessFinishedBehaviour(realAgent, buffer));
 
         return s;
     }
-
 
 }

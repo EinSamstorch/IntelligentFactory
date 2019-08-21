@@ -3,6 +3,7 @@ package machines.real.commons.behaviours.cycle;
 
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
+import machines.real.commons.ProcessItem;
 import machines.real.commons.RealMachineAgent;
 import machines.real.commons.buffer.Buffer;
 
@@ -20,11 +21,11 @@ import java.lang.reflect.Method;
 
 public class LoadItemBehaviour extends CyclicBehaviour {
     private RealMachineAgent machineAgent;
-    private Class processClass;
+    private ProcessItem processItem;
 
-    public LoadItemBehaviour(RealMachineAgent machineAgent, Class processClass) {
+    public LoadItemBehaviour(RealMachineAgent machineAgent, ProcessItem processItem) {
         this.machineAgent = machineAgent;
-        this.processClass = processClass;
+        this.processItem = processItem;
     }
 
     @Override
@@ -37,17 +38,8 @@ public class LoadItemBehaviour extends CyclicBehaviour {
                 // 请求机械手 装载入机床
                 machineAgent.getMachineState().setBusy();
                 String password = machineAgent.getArmPwd();
-                // 利用反射进行加工处理
-                try {
-                    Constructor constructor = processClass.getConstructor(machineAgent.getClass(), Buffer.class, String.class);
-                    constructor.setAccessible(true);
-                    Object instance = constructor.newInstance(machineAgent, buffer, password);
-                    Method getBehaviour = processClass.getMethod("getBehaviour");
-                    Behaviour b = (Behaviour) getBehaviour.invoke(instance);
-                    myAgent.addBehaviour(b);
-                } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                    e.printStackTrace();
-                }
+                Behaviour b = processItem.getBehaviour(machineAgent, buffer, password);
+                myAgent.addBehaviour(b);
             }
         }
         block(1000);
