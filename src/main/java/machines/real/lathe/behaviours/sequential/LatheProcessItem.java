@@ -3,13 +3,13 @@ package machines.real.lathe.behaviours.sequential;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.SequentialBehaviour;
 import machines.real.commons.ProcessItemInterface;
+import machines.real.commons.RealMachineAgent;
 import machines.real.commons.behaviours.sequantial.SequentialCallForArm;
 import machines.real.commons.behaviours.simple.ProcessFinishedBehaviour;
 import machines.real.commons.behaviours.simple.ProcessItemBehaviour;
 import machines.real.commons.buffer.Buffer;
 import machines.real.commons.request.ArmrobotRequest;
-import machines.real.lathe.LatheAgent;
-import machines.real.lathe.LatheHal;
+import machines.real.lathe.LatheHalImpl;
 import machines.real.lathe.behaviours.simple.LatheHalBehaviours;
 
 /**
@@ -21,15 +21,15 @@ import machines.real.lathe.behaviours.simple.LatheHalBehaviours;
  */
 
 public class LatheProcessItem implements ProcessItemInterface {
-    private LatheAgent latheAgent;
-    private LatheHal hal;
+    private RealMachineAgent latheAgent;
+    private LatheHalImpl hal;
     private ArmrobotRequest request;
     private Buffer buffer;
     private String password;
 
-    public LatheProcessItem(LatheAgent latheAgent, Buffer buffer, String password) {
+    public LatheProcessItem(RealMachineAgent latheAgent, Buffer buffer, String password) {
         this.latheAgent = latheAgent;
-        this.hal = (LatheHal) latheAgent.getHal();
+        this.hal = (LatheHalImpl) latheAgent.getHal();
         this.request = new ArmrobotRequest(
                 String.valueOf(buffer.getIndex()),
                 latheAgent.getLocalName(),

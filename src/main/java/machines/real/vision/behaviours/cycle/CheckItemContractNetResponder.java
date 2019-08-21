@@ -10,10 +10,10 @@ import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetResponder;
 import machines.real.commons.ContractNetContent;
+import machines.real.commons.RealMachineAgent;
 import machines.real.commons.behaviours.simple.CallForAgv;
 import machines.real.commons.buffer.Buffer;
 import machines.real.commons.request.AgvRequest;
-import machines.real.vision.VisionAgent;
 
 import java.io.IOException;
 
@@ -26,9 +26,9 @@ import java.io.IOException;
  */
 
 public class CheckItemContractNetResponder extends ContractNetResponder {
-    private VisionAgent visionAgent;
+    private RealMachineAgent visionAgent;
 
-    public CheckItemContractNetResponder(VisionAgent visionAgent, MessageTemplate mt) {
+    public CheckItemContractNetResponder(RealMachineAgent visionAgent, MessageTemplate mt) {
         super(visionAgent, mt);
         this.visionAgent = visionAgent;
     }

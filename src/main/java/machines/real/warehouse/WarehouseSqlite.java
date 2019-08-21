@@ -2,7 +2,6 @@ package machines.real.warehouse;
 
 import commons.order.WorkpieceInfo;
 import commons.tools.LoggerUtil;
-import commons.tools.db.DbInterface;
 import commons.tools.db.SqliteJdbc;
 
 import java.sql.ResultSet;

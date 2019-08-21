@@ -9,7 +9,7 @@ import machines.real.commons.behaviours.simple.ProcessItemBehaviour;
 import machines.real.commons.buffer.Buffer;
 import machines.real.commons.request.ArmrobotRequest;
 import machines.real.mill.MillAgent;
-import machines.real.mill.MillHal;
+import machines.real.mill.MillHalImpl;
 
 /**
  * 铣床加工工件行为.
@@ -21,7 +21,7 @@ import machines.real.mill.MillHal;
 
 public class MillProcessItem implements ProcessItemInterface {
     private MillAgent millAgent;
-    private MillHal hal;
+    private MillHalImpl hal;
     private ArmrobotRequest request;
     private Buffer buffer;
     private String password;
@@ -31,7 +31,7 @@ public class MillProcessItem implements ProcessItemInterface {
         this.buffer = buffer;
         this.password = password;
 
-        this.hal = (MillHal) millAgent.getHal();
+        this.hal = (MillHalImpl) millAgent.getHal();
         this.request = new ArmrobotRequest(
                 String.valueOf(buffer.getIndex()),
                 millAgent.getLocalName(),

@@ -1,8 +1,8 @@
 import machines.real.agv.AgvHal;
 import commons.order.WorkpieceInfo;
-import machines.real.lathe.LatheHal;
+import machines.real.lathe.LatheHalImpl;
 import org.junit.Test;
-import machines.real.warehouse.WarehouseHal;
+import machines.real.warehouse.WarehouseHalImpl;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
@@ -17,13 +17,13 @@ import static junit.framework.TestCase.assertTrue;
 public class HalTest {
     @Test
     public void testWarehouseHal(){
-        WarehouseHal hal = new WarehouseHal();
+        WarehouseHalImpl hal = new WarehouseHalImpl();
         assertTrue(hal.moveItem(1,10));
     }
 
     @Test
     public void testLatheHal(){
-        LatheHal hal = new LatheHal();
+        LatheHalImpl hal = new LatheHalImpl();
         assertTrue(hal.grabItem());
         assertTrue(hal.releaseItem());
 

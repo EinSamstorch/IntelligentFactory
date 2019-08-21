@@ -2,7 +2,7 @@ package machines.real.lathe.behaviours.simple;
 
 import jade.core.behaviours.Behaviour;
 import machines.real.commons.behaviours.simple.ExecuteActionBehaviour;
-import machines.real.lathe.LatheHal;
+import machines.real.lathe.LatheHalImpl;
 
 import java.lang.reflect.Method;
 
@@ -15,18 +15,18 @@ import java.lang.reflect.Method;
  */
 
 public class LatheHalBehaviours {
-    public static Behaviour grabItem(LatheHal hal) {
+    public static Behaviour grabItem(LatheHalImpl hal) {
         return getBehaviour(hal, "grabItem", "Grab item.");
     }
 
-    public static Behaviour releaseItem(LatheHal hal) {
+    public static Behaviour releaseItem(LatheHalImpl hal) {
         return getBehaviour(hal, "releaseItem", "Release item.");
     }
 
-    private static Behaviour getBehaviour(LatheHal hal, String methodName, String infoStr) {
+    private static Behaviour getBehaviour(LatheHalImpl hal, String methodName, String infoStr) {
         Method grabItemMethod = null;
         try {
-            grabItemMethod = LatheHal.class.getMethod(methodName);
+            grabItemMethod = LatheHalImpl.class.getMethod(methodName);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }

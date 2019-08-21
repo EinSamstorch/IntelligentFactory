@@ -21,18 +21,7 @@ public class MillAgent extends RealMachineAgent {
     @Override
     protected void setup() {
         super.setup();
-        registerDf(DfServiceType.MILL);
 
-        hal = new MillHal(halPort);
 
-        ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
-        addContractNetResponder(tbf);
-
-//        Behaviour b = new LoadItemBehaviour(this, LoadItemBehaviour.MILL);
-        Behaviour b = new LoadItemBehaviour(this, MillProcessItem.class);
-        addBehaviour(tbf.wrap(b));
-
-        b = new MaintainBufferBehaviour(this);
-        addBehaviour(tbf.wrap(b));
     }
 }

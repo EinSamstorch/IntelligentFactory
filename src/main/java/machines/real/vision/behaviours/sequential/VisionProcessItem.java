@@ -3,13 +3,13 @@ package machines.real.vision.behaviours.sequential;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.SequentialBehaviour;
 import machines.real.commons.ProcessItemInterface;
+import machines.real.commons.RealMachineAgent;
 import machines.real.commons.behaviours.sequantial.SequentialCallForArm;
 import machines.real.commons.behaviours.simple.ProcessFinishedBehaviour;
 import machines.real.commons.behaviours.simple.ProcessItemBehaviour;
 import machines.real.commons.buffer.Buffer;
+import machines.real.commons.hal.MachineHal;
 import machines.real.commons.request.ArmrobotRequest;
-import machines.real.vision.VisionAgent;
-import machines.real.vision.VisionHal;
 
 /**
  * .
@@ -20,18 +20,18 @@ import machines.real.vision.VisionHal;
  */
 
 public class VisionProcessItem implements ProcessItemInterface {
-    private VisionAgent visionAgent;
-    private VisionHal hal;
+    private RealMachineAgent visionAgent;
+    private MachineHal hal;
     private ArmrobotRequest request;
     private Buffer buffer;
     private String password;
 
-    public VisionProcessItem(VisionAgent visionAgent, Buffer buffer, String password) {
+    public VisionProcessItem(RealMachineAgent visionAgent, Buffer buffer, String password) {
         this.visionAgent = visionAgent;
         this.buffer = buffer;
         this.password = password;
 
-        this.hal = visionAgent.getVisionHal();
+        this.hal = visionAgent.getHal();
         this.request = new ArmrobotRequest(
                 String.valueOf(buffer.getIndex()),
                 visionAgent.getLocalName(),

@@ -1,6 +1,6 @@
 package machines.real.mill;
 
-import machines.real.commons.hal.MachineHal;
+import machines.real.commons.hal.MachineHalImpl;
 
 /**
  * 铣床hal 仅 加工和时间预估两个功能
@@ -10,12 +10,12 @@ import machines.real.commons.hal.MachineHal;
  * @since 1.8
  */
 
-public class MillHal extends MachineHal {
-    public MillHal() {
+public class MillHalImpl extends MachineHalImpl {
+    public MillHalImpl() {
         super();
     }
 
-    public MillHal(int port) {
+    public MillHalImpl(int port) {
         super(port);
     }
 }

@@ -3,7 +3,7 @@ package machines.real.vision;
 import com.alibaba.fastjson.JSONObject;
 import commons.order.WorkpieceInfo;
 import commons.tools.LoggerUtil;
-import machines.real.commons.hal.MachineHal;
+import machines.real.commons.hal.MachineHalImpl;
 
 /**
  * .
@@ -13,15 +13,15 @@ import machines.real.commons.hal.MachineHal;
  * @since 1.8
  */
 
-public class VisionHal extends MachineHal {
+public class VisionHalImpl extends MachineHalImpl {
     private static final String CMD_CHECK = "check";
     private Object checkValue;
 
-    public VisionHal() {
+    public VisionHalImpl() {
         super();
     }
 
-    public VisionHal(int port) {
+    public VisionHalImpl(int port) {
         super(port);
     }
 

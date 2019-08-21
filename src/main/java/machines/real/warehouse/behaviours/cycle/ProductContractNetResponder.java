@@ -2,7 +2,7 @@ package machines.real.warehouse.behaviours.cycle;
 
 import commons.order.WorkpieceInfo;
 import commons.tools.LoggerUtil;
-import commons.tools.db.DbInterface;
+import machines.real.warehouse.DbInterface;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
@@ -13,7 +13,6 @@ import jade.proto.ContractNetResponder;
 import machines.real.commons.ContractNetContent;
 import machines.real.commons.request.AgvRequest;
 import machines.real.warehouse.WarehouseAgent;
-import machines.real.warehouse.WarehouseSqlite;
 import machines.real.warehouse.behaviours.simple.CallForAgv;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;

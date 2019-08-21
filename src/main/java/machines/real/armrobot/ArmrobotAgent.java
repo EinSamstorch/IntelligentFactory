@@ -29,10 +29,8 @@ public class ArmrobotAgent extends BaseAgent {
         super.setup();
 
         String armPwd = IniLoader.loadArmPassword(getLocalName());
-        halPort = IniLoader.loadHalPort(getLocalName());
         registerDf(DfServiceType.ARMROBOT, armPwd);
 
-        hal = new ArmrobotHal(halPort);
 
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
 

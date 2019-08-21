@@ -28,8 +28,6 @@ public class AgvAgent extends BaseAgent {
     protected void setup() {
         super.setup();
         registerDf(DfServiceType.AGV);
-        halPort = IniLoader.loadHalPort(getLocalName());
-        hal = new AgvHal(halPort);
 
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
 

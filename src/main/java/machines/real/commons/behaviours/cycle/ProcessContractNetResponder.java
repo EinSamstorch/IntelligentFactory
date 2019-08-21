@@ -14,6 +14,7 @@ import machines.real.commons.RealMachineAgent;
 import machines.real.commons.behaviours.simple.CallForAgv;
 import machines.real.commons.buffer.Buffer;
 import machines.real.commons.hal.MachineHal;
+import machines.real.commons.hal.MachineHalImpl;
 import machines.real.commons.request.AgvRequest;
 
 import java.io.IOException;

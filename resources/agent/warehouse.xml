@@ -11,6 +11,7 @@
         <property name="posIn" value="1"/>
         <!-- 出库口 -->
         <property name="posOut" value="15"/>
+        <property name="hal" ref="hal"/>
         <!-- 仓库agent 行为集-->
         <property name="behaviours">
             <list>
@@ -25,24 +26,24 @@
                 <!-- 原料应标 -->
                 <bean class="machines.real.warehouse.behaviours.cycle.RawContractNetResponder">
                     <constructor-arg name="whagent" ref="agent"/>
-                    <constructor-arg name="mt" ref="raw_mt"/>
+                    <constructor-arg name="mt" ref="rawMessageTemplate"/>
                 </bean>
                 <!-- 成品应标 -->
                 <bean class="machines.real.warehouse.behaviours.cycle.ProductContractNetResponder">
                     <constructor-arg name="whagent" ref="agent"/>
-                    <constructor-arg name="mt" ref="product_mt"/>
+                    <constructor-arg name="mt" ref="productMessageTemplate"/>
                 </bean>
             </list>
         </property>
     </bean>
 
     <!-- 配置 hal -->
-    <bean id="hal" class="machines.real.warehouse.WarehouseHal">
+    <bean id="hal" class="machines.real.warehouse.WarehouseHalImpl">
         <!-- socket server监听端口 -->
         <constructor-arg name="port" value="5656"/>
     </bean>
 
-    <bean id="matchProtocal" class="jade.lang.acl.MessageTemplate" factory-method="and">
+    <bean id="matchProtocol" class="jade.lang.acl.MessageTemplate" factory-method="and">
         <!-- match Contract Net -->
         <constructor-arg name="op1">
             <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchProtocol">
@@ -54,7 +55,7 @@
         <!-- match CFP -->
         <constructor-arg name="op2">
             <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchPerformative">
-                <constructor-arg type="java.lang.Integer">
+                <constructor-arg name="value">
                     <util:constant static-field="jade.lang.acl.ACLMessage.CFP"/>
                 </constructor-arg>
             </bean>
@@ -62,8 +63,8 @@
     </bean>
 
     <!-- 原料应标消息模板 -->
-    <bean id="raw_mt" class="jade.lang.acl.MessageTemplate" factory-method="and">
-        <constructor-arg name="op1" ref="matchProtocal"/>
+    <bean id="rawMessageTemplate" class="jade.lang.acl.MessageTemplate" factory-method="and">
+        <constructor-arg name="op1" ref="matchProtocol"/>
         <constructor-arg name="op2">
             <!-- 匹配 RAW -->
             <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchLanguage">
@@ -73,8 +74,8 @@
     </bean>
 
     <!-- 成品应标消息模板 -->
-    <bean id="product_mt" class="jade.lang.acl.MessageTemplate" factory-method="and">
-        <constructor-arg name="op1" ref="matchProtocal"/>
+    <bean id="productMessageTemplate" class="jade.lang.acl.MessageTemplate" factory-method="and">
+        <constructor-arg name="op1" ref="matchProtocol"/>
         <constructor-arg name="op2">
             <!-- 匹配 RAW -->
             <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchLanguage">

@@ -7,7 +7,6 @@ import jade.lang.acl.UnreadableException;
 import machines.real.commons.request.WarehouseRequest;
 import machines.real.warehouse.WarehouseAgent;
 import machines.real.warehouse.WarehouseHal;
-import machines.real.warehouse.WarehouseHalInterface;
 
 import java.util.Queue;
 
@@ -20,7 +19,7 @@ import java.util.Queue;
  */
 
 public class ItemExportBehaviour extends CyclicBehaviour {
-    private WarehouseHalInterface hal;
+    private WarehouseHal hal;
     private Integer posOut;
     private Queue<ACLMessage> requestQueue;
 

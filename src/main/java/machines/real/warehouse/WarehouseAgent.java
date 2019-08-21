@@ -2,22 +2,12 @@ package machines.real.warehouse;
 
 import commons.BaseAgent;
 import commons.tools.DfServiceType;
-import commons.tools.IniLoader;
-import commons.tools.db.DbInterface;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
-import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
-import jade.lang.acl.MessageTemplate;
-import machines.real.warehouse.behaviours.cycle.ItemExportBehaviour;
-import machines.real.warehouse.behaviours.cycle.ProductContractNetResponder;
-import machines.real.warehouse.behaviours.cycle.RawContractNetResponder;
-import machines.real.warehouse.behaviours.cycle.RecvItemExportRequestBehaviour;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
-import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -34,16 +24,20 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class WarehouseAgent extends BaseAgent {
     private Integer posIn;
     private Integer posOut;
-    private WarehouseHalInterface hal;
+    private WarehouseHal hal;
     private Queue<ACLMessage> exportQueue = new LinkedBlockingQueue<>();
 
     private Behaviour[] behaviours;
+
+    public void setHal(WarehouseHal hal) {
+        this.hal = hal;
+    }
 
     public void setBehaviours(Behaviour[] behaviours) {
         this.behaviours = behaviours;
     }
 
-    public WarehouseHalInterface getHal() {
+    public WarehouseHal getHal() {
         return hal;
     }
 
@@ -71,9 +65,6 @@ public class WarehouseAgent extends BaseAgent {
     protected void setup() {
         super.setup();
         registerDf(DfServiceType.WAREHOUSE);
-
-        ApplicationContext ac2 = new FileSystemXmlApplicationContext("./resources/warehouse.xml");
-        hal = ac2.getBean("hal", WarehouseHalInterface.class);
 
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
         for (Behaviour behaviour : behaviours) {

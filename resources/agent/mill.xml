@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+    <bean id="agent" class="machines.real.commons.RealMachineAgent">
+        <property name="armPwd" value="xi"/>
+        <property name="hal" ref="hal"/>
+        <property name="bufferManger" ref="bufferManager"/>
+        <property name="machineState" ref="machineState"/>
+        <property name="serviceType">
+            <util:constant static-field="commons.tools.DfServiceType.MILL"/>
+        </property>
+        <property name="behaviours">
+            <list>
+                <!-- buffer管理行为 -->
+                <bean class="machines.real.commons.behaviours.cycle.MaintainBufferBehaviour">
+                    <constructor-arg name="machineAgent" ref="agent"/>
+                </bean>
+                <!-- 上料行为 -->
+                <bean class="machines.real.commons.behaviours.cycle.LoadItemBehaviour">
+                    <constructor-arg name="machineAgent" ref="agent"/>
+                    <constructor-arg name="processClass" type="java.lang.Class"
+                                     value="machines.real.mill.behaviours.simple.MillProcessItem"/>
+                </bean>
+                <!-- 铣床服务应标 -->
+                <bean class="machines.real.commons.behaviours.cycle.ProcessContractNetResponder">
+                    <constructor-arg name="machineAgent" ref="agent"/>
+                    <constructor-arg name="mt" ref="matchProtocol"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+    <bean id="hal" class="machines.real.mill.MillHalImpl">
+        <constructor-arg name="port" value="5656"/>
+    </bean>
+    <bean id="bufferManager" class="machines.real.commons.buffer.BufferManger">
+        <constructor-arg name="indexes">
+            <list>
+                <value>13</value>
+                <value>14</value>
+                <value>15</value>
+                <value>16</value>
+            </list>
+        </constructor-arg>
+    </bean>
+    <bean id="machineState" class="machines.real.commons.MachineState"/>
+
+    <bean id="matchProtocol" class="jade.lang.acl.MessageTemplate" factory-method="and">
+        <!-- match Contract Net -->
+        <constructor-arg name="op1">
+            <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchProtocol">
+                <constructor-arg type="java.lang.String">
+                    <util:constant static-field="jade.domain.FIPANames.InteractionProtocol.FIPA_CONTRACT_NET"/>
+                </constructor-arg>
+            </bean>
+        </constructor-arg>
+        <!-- match CFP -->
+        <constructor-arg name="op2">
+            <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchPerformative">
+                <constructor-arg name="value">
+                    <util:constant static-field="jade.lang.acl.ACLMessage.CFP"/>
+                </constructor-arg>
+            </bean>
+        </constructor-arg>
+    </bean>
+</beans>

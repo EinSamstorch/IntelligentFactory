@@ -15,8 +15,8 @@
         </constructor-arg>
     </bean>
 
-    <bean id="sqlite_db" class="machines.real.warehouse.WarehouseSqlite" init-method="initTable">
-        <constructor-arg name="dbName" value="resources/db/warehouse.db"/>
-    </bean>
+<!--    <bean id="db" class="machines.real.warehouse.WarehouseSqlite" init-method="initTable">-->
+<!--        <constructor-arg name="dbName" value="resources/db/warehouse.db"/>-->
+<!--    </bean>-->
 
 </beans>
