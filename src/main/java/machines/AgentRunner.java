@@ -28,7 +28,7 @@ public class AgentRunner {
 
     private static void startAgent() {
         Runtime rt = Runtime.instance();
-        ApplicationContext jadeContext = new FileSystemXmlApplicationContext("./resources/jade.xml");
+        ApplicationContext jadeContext = new FileSystemXmlApplicationContext("resources/jade.xml");
         Properties jadeProps = jadeContext.getBean("jadeConfig", Properties.class);
         String ip = jadeProps.getProperty("setting.ip", null);
         int port = Integer.parseInt(jadeProps.getProperty("setting.port", "-1"));

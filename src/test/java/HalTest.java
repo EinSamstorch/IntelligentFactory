@@ -15,26 +15,26 @@ import static junit.framework.TestCase.assertTrue;
  */
 
 public class HalTest {
-    @Test
-    public void testWarehouseHal(){
-        WarehouseHalImpl hal = new WarehouseHalImpl();
-        assertTrue(hal.moveItem(1,10));
-    }
-
-    @Test
-    public void testLatheHal(){
-        LatheHalImpl hal = new LatheHalImpl();
-        assertTrue(hal.grabItem());
-        assertTrue(hal.releaseItem());
-
-        WorkpieceStatus wpInfo = new WorkpieceStatus("001","001","002","{\"L1\":10}");
-        assertEquals(10, hal.evaluate(wpInfo));
-        assertTrue(hal.process(wpInfo));
-    }
-
-    @Test
-    public void testAgvHal(){
-        AgvHalImpl hal = new AgvHalImpl();
-        assertTrue(hal.move(1, 10));
-    }
+//    @Test
+//    public void testWarehouseHal(){
+//        WarehouseHalImpl hal = new WarehouseHalImpl();
+//        assertTrue(hal.moveItem(1,10));
+//    }
+//
+//    @Test
+//    public void testLatheHal(){
+//        LatheHalImpl hal = new LatheHalImpl();
+//        assertTrue(hal.grabItem());
+//        assertTrue(hal.releaseItem());
+//
+//        WorkpieceStatus wpInfo = new WorkpieceStatus("001","001","002","{\"L1\":10}");
+//        assertEquals(10, hal.evaluate(wpInfo));
+//        assertTrue(hal.process(wpInfo));
+//    }
+//
+//    @Test
+//    public void testAgvHal(){
+//        AgvHalImpl hal = new AgvHalImpl();
+//        assertTrue(hal.move(1, 10));
+//    }
 }

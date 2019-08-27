@@ -22,92 +22,92 @@ import static junit.framework.TestCase.*;
 
 public class CommonsTest {
 
-
-    @Test
-    public void testLoggerUtil() {
-        assertNotNull(LoggerUtil.db);
-        assertNotNull(LoggerUtil.agent);
-    }
-
-    @Test
-    public void testSQLiteJDBC() {
-        SqliteJdbc sqlite = new SqliteJdbc("resources/db/test.db");
-        assertNotNull(sqlite);
-    }
-
-    @Test
-    public void testMysqlJDBC() {
-        Map<String, String> map = new HashMap<>();
-        map.put("mysql_ip", "127.0.0.1");
-        map.put("mysql_port", String.valueOf(3306));
-        map.put("mysql_db", "smartfactory");
-        map.put("mysql_user", "root");
-        map.put("mysql_pwd", "endlessloop");
-
-        MysqlJdbc mysql = new MysqlJdbc(map);
-        assertNotNull(mysql);
-    }
-
-    @Test
-    public void testHttp() {
-        String rst = HttpRequest.sendGet("http://www.baidu.com", "");
-        assertNotNull(rst);
-    }
-
-    @Test
-    public void testParseOrderInfo() {
-        String orderId = "999999";
-        String orderDate = "2019-2-4 14:58:37";
-        String orderPrior = "0";
-        String orderDetails = "[{ \"goodsId\": \"001\", \"id\": 999, \"jobDes\": {\"D1\":\"80\",\"D2\":\"35.5\",\"D3\":\"58.0\",\"D4\":\"8.0\",\"D5\":\"70.0\",\"N\":\"4\",\"L1\":\"15.0\",\"L2\":\"30.0\",\"Motto\":\"南航智造\"}, \"jobNum\": 1 }]";
-
-
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = new Date();
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(date);
-        calendar.add(Calendar.HOUR, 10);
-        date = calendar.getTime();
-        String orderDtime = format.format(date);
-
-        OrderInfo oi = new OrderInfo(orderDate, orderDtime, orderId, orderPrior, orderDetails);
-
-        JSONObject jo = (JSONObject) JSONObject.parse(oi.toString());
-        OrderInfo oi2 = OrderTools.parseOrderInfo(jo);
-
-        class OrderInfoComparator implements Comparator<OrderInfo> {
-
-            @Override
-            public int compare(OrderInfo o1, OrderInfo o2) {
-                if (!o1.getOrderId().equals(o2.getOrderId())) {
-                    return 1;
-                }
-                if (!o1.getOrderDate().equals(o2.getOrderDate())) {
-                    return 2;
-                }
-//                if (!o1.getOrderDtime().equals(o2.getOrderDtime())) {
-//                    return 3;
+//
+//    @Test
+//    public void testLoggerUtil() {
+//        assertNotNull(LoggerUtil.db);
+//        assertNotNull(LoggerUtil.agent);
+//    }
+//
+////    @Test
+////    public void testSQLiteJDBC() {
+////        SqliteJdbc sqlite = new SqliteJdbc("resources/db/test.db");
+////        assertNotNull(sqlite);
+////    }
+//
+////    @Test
+////    public void testMysqlJDBC() {
+////        Map<String, String> map = new HashMap<>();
+////        map.put("mysql_ip", "127.0.0.1");
+////        map.put("mysql_port", String.valueOf(3306));
+////        map.put("mysql_db", "smartfactory");
+////        map.put("mysql_user", "root");
+////        map.put("mysql_pwd", "endlessloop");
+////
+////        MysqlJdbc mysql = new MysqlJdbc(map);
+////        assertNotNull(mysql);
+////    }
+//
+//    @Test
+//    public void testHttp() {
+//        String rst = HttpRequest.sendGet("http://www.baidu.com", "");
+//        assertNotNull(rst);
+//    }
+//
+//    @Test
+//    public void testParseOrderInfo() {
+//        String orderId = "999999";
+//        String orderDate = "2019-2-4 14:58:37";
+//        String orderPrior = "0";
+//        String orderDetails = "[{ \"goodsId\": \"001\", \"id\": 999, \"jobDes\": {\"D1\":\"80\",\"D2\":\"35.5\",\"D3\":\"58.0\",\"D4\":\"8.0\",\"D5\":\"70.0\",\"N\":\"4\",\"L1\":\"15.0\",\"L2\":\"30.0\",\"Motto\":\"南航智造\"}, \"jobNum\": 1 }]";
+//
+//
+//        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        Date date = new Date();
+//        Calendar calendar = new GregorianCalendar();
+//        calendar.setTime(date);
+//        calendar.add(Calendar.HOUR, 10);
+//        date = calendar.getTime();
+//        String orderDtime = format.format(date);
+//
+//        OrderInfo oi = new OrderInfo(orderDate, orderDtime, orderId, orderPrior, orderDetails);
+//
+//        JSONObject jo = (JSONObject) JSONObject.parse(oi.toString());
+//        OrderInfo oi2 = OrderTools.parseOrderInfo(jo);
+//
+//        class OrderInfoComparator implements Comparator<OrderInfo> {
+//
+//            @Override
+//            public int compare(OrderInfo o1, OrderInfo o2) {
+//                if (!o1.getOrderId().equals(o2.getOrderId())) {
+//                    return 1;
 //                }
-                if (!o1.getOrderPrior().equals((o2.getOrderPrior()))) {
-                    return 4;
-                }
-                if (!o1.getOrderDetails().equals(o2.getOrderDetails())) {
-                    return 5;
-                }
-                return 0;
-            }
-        }
-        OrderInfoComparator oic = new OrderInfoComparator();
-        assertEquals(0, oic.compare(oi, oi2));
-    }
-
-    @Test
-    public void testGetOrder() {
-        String rst = HttpRequest.getOrder("120.26.53.90:8080", 0, 0);
-        boolean matches = rst.matches("^\\[.*\\]$");
-        System.out.println(rst);
-        assertTrue(matches);
-    }
+//                if (!o1.getOrderDate().equals(o2.getOrderDate())) {
+//                    return 2;
+//                }
+////                if (!o1.getOrderDtime().equals(o2.getOrderDtime())) {
+////                    return 3;
+////                }
+//                if (!o1.getOrderPrior().equals((o2.getOrderPrior()))) {
+//                    return 4;
+//                }
+//                if (!o1.getOrderDetails().equals(o2.getOrderDetails())) {
+//                    return 5;
+//                }
+//                return 0;
+//            }
+//        }
+//        OrderInfoComparator oic = new OrderInfoComparator();
+//        assertEquals(0, oic.compare(oi, oi2));
+//    }
+//
+//    @Test
+//    public void testGetOrder() {
+//        String rst = HttpRequest.getOrder("120.26.53.90:8080", 0, 0);
+//        boolean matches = rst.matches("^\\[.*\\]$");
+//        System.out.println(rst);
+//        assertTrue(matches);
+//    }
 
 //    @Test
 //    public void testWarehouseSqlite() {
