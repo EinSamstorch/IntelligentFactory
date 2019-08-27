@@ -1,11 +1,11 @@
-package machines.real.armrobot.behaviours.cycle;
+package machines.real.arm.behaviours.cycle;
 
 import commons.tools.LoggerUtil;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
-import machines.real.armrobot.ArmrobotAgent;
-import machines.real.armrobot.ArmrobotHal;
+import machines.real.arm.ArmAgent;
+import machines.real.arm.ArmHal;
 import machines.real.commons.request.ArmrobotRequest;
 
 import java.util.Queue;
@@ -19,15 +19,13 @@ import java.util.Queue;
  */
 
 public class MoveItemBehaviour extends CyclicBehaviour {
-    private ArmrobotAgent armagent;
-    private ArmrobotHal hal;
+    private ArmHal hal;
     private Queue<ACLMessage> requestQueue;
 
-    public MoveItemBehaviour(ArmrobotAgent a) {
-        super(a);
-        this.armagent = a;
-        hal = armagent.getHal();
-        requestQueue = armagent.getRequestQueue();
+    public MoveItemBehaviour(ArmAgent armAgent) {
+        super(armAgent);
+        hal = armAgent.getHal();
+        requestQueue = armAgent.getRequestQueue();
     }
 
     @Override
@@ -52,7 +50,7 @@ public class MoveItemBehaviour extends CyclicBehaviour {
                     // 搬运完成通知
                     ACLMessage reply = msg.createReply();
                     reply.setPerformative(ACLMessage.INFORM);
-                    armagent.send(reply);
+                    myAgent.send(reply);
                 } else {
                     LoggerUtil.hal.error(String.format("Failed! Move item from %s to %s, goodsid: %s, step: %d.",
                             from, to, goodsid, step));

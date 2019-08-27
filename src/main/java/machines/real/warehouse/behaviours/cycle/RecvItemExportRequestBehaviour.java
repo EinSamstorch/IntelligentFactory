@@ -6,6 +6,8 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import machines.real.warehouse.WarehouseAgent;
 
+import java.util.Queue;
+
 /**
  * receieve item export request.
  *
@@ -15,11 +17,11 @@ import machines.real.warehouse.WarehouseAgent;
  */
 
 public class RecvItemExportRequestBehaviour extends CyclicBehaviour {
-    private WarehouseAgent warehouseAgent;
+    private Queue<ACLMessage> queue;
 
     public RecvItemExportRequestBehaviour(WarehouseAgent warehouseAgent) {
         super(warehouseAgent);
-        this.warehouseAgent = warehouseAgent;
+        queue = warehouseAgent.getExportQueue();
     }
 
     @Override
@@ -28,9 +30,9 @@ public class RecvItemExportRequestBehaviour extends CyclicBehaviour {
                 MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
                 MessageTemplate.MatchPerformative(ACLMessage.REQUEST)
         );
-        ACLMessage receive = warehouseAgent.receive(mt);
+        ACLMessage receive = myAgent.receive(mt);
         if (receive != null) {
-            warehouseAgent.getExportQueue().offer(receive);
+            queue.offer(receive);
         } else {
             block();
         }

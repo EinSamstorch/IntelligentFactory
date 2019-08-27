@@ -1,6 +1,6 @@
 package machines.real.commons.behaviours.simple;
 
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 import commons.tools.LoggerUtil;
 import jade.core.behaviours.SimpleBehaviour;
 import machines.real.commons.buffer.Buffer;
@@ -36,7 +36,7 @@ public class ExecuteActionBehaviour extends SimpleBehaviour {
 
     @Override
     public void action() {
-        WorkpieceInfo wpInfo = null;
+        WorkpieceStatus wpInfo = null;
         if (buffer != null) {
             wpInfo = buffer.getWpInfo();
         }

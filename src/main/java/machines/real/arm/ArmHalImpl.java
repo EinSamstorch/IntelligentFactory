@@ -1,4 +1,4 @@
-package machines.real.armrobot;
+package machines.real.arm;
 
 import com.alibaba.fastjson.JSONObject;
 import machines.real.commons.hal.BaseHal;
@@ -11,21 +11,22 @@ import machines.real.commons.hal.BaseHal;
  * @since 1.8
  */
 
-public class ArmrobotHal extends BaseHal {
+public class ArmHalImpl extends BaseHal implements ArmHal {
     private static final String CMD_MOVE_ITEM = "move_item";
     private static final String FIELD_FROM = "from";
     private static final String FIELD_TO = "to";
     private static final String FIELD_GOODSID = "goodsid";
     private static final String FIELD_STEP = "step";
 
-    public ArmrobotHal() {
+    public ArmHalImpl() {
         super();
     }
 
-    public ArmrobotHal(int port) {
+    public ArmHalImpl(int port) {
         super(port);
     }
 
+    @Override
     public boolean moveItem(String from, String to, String goodsid, int step) {
         JSONObject extra = new JSONObject();
         extra.put(FIELD_FROM, from);
@@ -37,6 +38,7 @@ public class ArmrobotHal extends BaseHal {
         return executeCmd(CMD_MOVE_ITEM, extra);
     }
 
+    @Override
     public boolean moveItem(String from, String to, String goodsid) {
         return moveItem(from, to, goodsid, 0);
     }

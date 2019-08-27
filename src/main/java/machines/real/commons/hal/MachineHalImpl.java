@@ -1,6 +1,6 @@
 package machines.real.commons.hal;
 
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 
 /**
  * 机床Hal 包含 加工和时间预估 两个功能
@@ -23,7 +23,7 @@ public class MachineHalImpl extends BaseHal implements MachineHal {
     }
 
     @Override
-    public boolean process(WorkpieceInfo wpInfo) {
+    public boolean process(WorkpieceStatus wpInfo) {
         if (executeCmd(CMD_PROCESS, wpInfo)) {
             wpInfo.setNextProcessStep();
             return true;
@@ -32,7 +32,7 @@ public class MachineHalImpl extends BaseHal implements MachineHal {
     }
 
     @Override
-    public int evaluate(WorkpieceInfo wpInfo) {
+    public int evaluate(WorkpieceStatus wpInfo) {
         if (executeCmd(CMD_EVALUATE, wpInfo)) {
             return (int) Float.parseFloat((String) getExtraInfo());
         } else {

@@ -1,6 +1,6 @@
 package machines.virtual.worker.behaviours.cycle;
 
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 import commons.tools.LoggerUtil;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.FIPANames;
@@ -32,7 +32,7 @@ public class HandleRequest extends CyclicBehaviour {
         ACLMessage msg = wagent.receive(mt);
         if (msg != null) {
             try {
-                WorkpieceInfo wpInfo = (WorkpieceInfo) msg.getContentObject();
+                WorkpieceStatus wpInfo = (WorkpieceStatus) msg.getContentObject();
                 wagent.getWpInfoQueue().offer(wpInfo);
                 LoggerUtil.agent.info("Receive Request From: " + msg.getSender().getName());
             } catch (UnreadableException e) {

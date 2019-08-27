@@ -1,7 +1,7 @@
 package machines.virtual.cloud;
 
 import commons.order.OrderInfo;
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 import commons.tools.LoggerUtil;
 import commons.tools.db.MysqlJdbc;
 
@@ -41,7 +41,7 @@ public class CloudMysql extends MysqlJdbc {
             if (rst != 1) {
                 LoggerUtil.db.error(String.format("INSERT OrderInfo FAILED, %s", oi.toString()));
             }
-            for (WorkpieceInfo wpInfo : oi.getWpInfoList()) {
+            for (WorkpieceStatus wpInfo : oi.getWpInfoList()) {
                 cmd = "INSERT INTO OrderDetails(orderId,id,goodsid,num,jobdes) VALUES (?,?,?,?,?)";
                 ps = con.prepareStatement(cmd);
                 ps.setString(1, oi.getOrderId());
@@ -88,7 +88,7 @@ public class CloudMysql extends MysqlJdbc {
                 Statement stmt2 = con.createStatement();
                 ResultSet rs2 = stmt2.executeQuery(cmd);
                 while (rs2.next()) {
-                    WorkpieceInfo wpInfo = new WorkpieceInfo(oi.getOrderId(),
+                    WorkpieceStatus wpInfo = new WorkpieceStatus(oi.getOrderId(),
                             rs2.getString("id"),
                             rs2.getString("goodsid"),
                             rs2.getString("jobDes"));

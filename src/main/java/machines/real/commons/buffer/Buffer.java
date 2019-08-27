@@ -1,6 +1,6 @@
 package machines.real.commons.buffer;
 
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 import commons.tools.LoggerUtil;
 
 /**
@@ -19,7 +19,7 @@ public class Buffer {
     /**
      * Buffer上 工件信息
      */
-    private WorkpieceInfo wpInfo;
+    private WorkpieceStatus wpInfo;
     /**
      * Buffer状态信息
      */
@@ -63,11 +63,11 @@ public class Buffer {
         return index;
     }
 
-    public WorkpieceInfo getWpInfo() {
+    public WorkpieceStatus getWpInfo() {
         return wpInfo;
     }
 
-    public void setWpInfo(WorkpieceInfo wpInfo) {
+    public void setWpInfo(WorkpieceStatus wpInfo) {
         this.wpInfo = wpInfo;
     }
 

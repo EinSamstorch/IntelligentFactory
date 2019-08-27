@@ -1,6 +1,6 @@
 package machines.virtual.worker.behaviours.cycle;
 
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 import commons.tools.DfServiceType;
 import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
@@ -32,7 +32,7 @@ public class HandleWorkpiece extends CyclicBehaviour {
 
     @Override
     public void action() {
-        WorkpieceInfo wpInfo = workerAgent.getWpInfoQueue().poll();
+        WorkpieceStatus wpInfo = workerAgent.getWpInfoQueue().poll();
         if (wpInfo == null) {
             block(1000);
             return;
@@ -58,7 +58,7 @@ public class HandleWorkpiece extends CyclicBehaviour {
         processOn(wpInfo, process);
     }
 
-    private void processOn(WorkpieceInfo wpInfo, String serviceType) {
+    private void processOn(WorkpieceStatus wpInfo, String serviceType) {
         try {
             ACLMessage msg = DfUtils.createCfpMsg(wpInfo);
             if (serviceType.equals(DfServiceType.PRODUCT)) {
@@ -78,7 +78,7 @@ public class HandleWorkpiece extends CyclicBehaviour {
         }
     }
 
-    private void addVisionProcess(WorkpieceInfo wpInfo) {
+    private void addVisionProcess(WorkpieceStatus wpInfo) {
         int random = new Random().nextInt(100);
         if (random < workerAgent.getDetectRatio()) {
             LoggerUtil.agent.info(String.format("Item orderId:%s, wpId:%s add vision detect",

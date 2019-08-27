@@ -21,16 +21,7 @@ import static junit.framework.TestCase.*;
 
 
 public class CommonsTest {
-    @Test
-    public void testINILoader() {
-        IniLoader ini = new IniLoader();
-        assertNotNull(ini);
 
-        Map<String, String> load = ini.load(IniLoader.SECTION_MYSQL);
-
-        String mysql_user = load.get("mysql_user");
-        assertEquals(mysql_user, "root");
-    }
 
     @Test
     public void testLoggerUtil() {

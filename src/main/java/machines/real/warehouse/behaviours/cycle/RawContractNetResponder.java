@@ -1,6 +1,6 @@
 package machines.real.warehouse.behaviours.cycle;
 
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 import commons.tools.DfServiceType;
 import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
@@ -29,12 +29,10 @@ import java.io.IOException;
 
 
 public class RawContractNetResponder extends ContractNetResponder {
-    private WarehouseAgent whagent;
     private DbInterface db;
 
-    public RawContractNetResponder(WarehouseAgent whagent, MessageTemplate mt) {
-        super(whagent, mt);
-        this.whagent = whagent;
+    public RawContractNetResponder(WarehouseAgent warehouseAgent, MessageTemplate mt) {
+        super(warehouseAgent, mt);
         ApplicationContext ac = new FileSystemXmlApplicationContext("./resources/sql.xml");
         db = ac.getBean("db", DbInterface.class);
     }
@@ -54,7 +52,7 @@ public class RawContractNetResponder extends ContractNetResponder {
         // cfp 内容: WorkpieceInfo
         String goodsid = null;
         try {
-            WorkpieceInfo wpInfo = (WorkpieceInfo) cfp.getContentObject();
+            WorkpieceStatus wpInfo = (WorkpieceStatus) cfp.getContentObject();
             goodsid = wpInfo.getGoodsId();
         } catch (UnreadableException e) {
             e.printStackTrace();
@@ -87,20 +85,20 @@ public class RawContractNetResponder extends ContractNetResponder {
 
         try {
             // 对 workpieceInfo 添加 warehousePosition
-            WorkpieceInfo wpInfo = ((WorkpieceInfo) cfp.getContentObject());
+            WorkpieceStatus wpInfo = ((WorkpieceStatus) cfp.getContentObject());
             String goodsid = wpInfo.getGoodsId();
             Integer position = db.getRaw(goodsid);
             wpInfo.setWarehousePosition(position);
             // 更新 wpInfo
-            wpInfo.setProviderId(whagent.getLocalName());
-            wpInfo.setCurOwnerId(whagent.getLocalName());
+            wpInfo.setProviderId(myAgent.getLocalName());
+            wpInfo.setCurOwnerId(myAgent.getLocalName());
             // map location for exporter of warehouse
             wpInfo.setBufferPos(26);
 
             // 发送至Worker 进行下一轮招标
             ACLMessage msg = DfUtils.createRequestMsg(wpInfo);
-            DfUtils.searchDf(whagent, msg, DfServiceType.WORKER);
-            whagent.send(msg);
+            DfUtils.searchDf(myAgent, msg, DfServiceType.WORKER);
+            myAgent.send(msg);
 
             // 完成本次招标动作
             ACLMessage inform = accept.createReply();

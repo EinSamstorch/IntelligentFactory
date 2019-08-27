@@ -1,6 +1,6 @@
 package machines.real.vision.behaviours.cycle;
 
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 import commons.tools.LoggerUtil;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
@@ -54,9 +54,9 @@ public class CheckItemContractNetResponder extends ContractNetResponder {
     @Override
     protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept) throws FailureException {
         LoggerUtil.agent.info("Proposal accepted: " + accept.getSender().getName());
-        WorkpieceInfo wpInfo;
+        WorkpieceStatus wpInfo;
         try {
-            wpInfo = (WorkpieceInfo) cfp.getContentObject();
+            wpInfo = (WorkpieceStatus) cfp.getContentObject();
         } catch (UnreadableException e) {
             e.printStackTrace();
             throw new FailureException("WorkpieceInfo read error.");

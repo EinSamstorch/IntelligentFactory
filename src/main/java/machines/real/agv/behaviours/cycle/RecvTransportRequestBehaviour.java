@@ -6,6 +6,8 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import machines.real.agv.AgvAgent;
 
+import java.util.Queue;
+
 /**
  * 接收运输任务请求.
  *
@@ -15,11 +17,11 @@ import machines.real.agv.AgvAgent;
  */
 
 public class RecvTransportRequestBehaviour extends CyclicBehaviour {
-    private AgvAgent aagent;
+    private Queue<ACLMessage> queue;
 
-    public RecvTransportRequestBehaviour(AgvAgent aagent) {
-        super(aagent);
-        this.aagent = aagent;
+    public RecvTransportRequestBehaviour(AgvAgent agvAgent) {
+        super(agvAgent);
+        queue = agvAgent.getTransportRequestQueue();
     }
 
     @Override
@@ -28,9 +30,9 @@ public class RecvTransportRequestBehaviour extends CyclicBehaviour {
                 MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
                 MessageTemplate.MatchPerformative(ACLMessage.REQUEST)
         );
-        ACLMessage receive = aagent.receive(mt);
+        ACLMessage receive = myAgent.receive(mt);
         if (receive != null) {
-            aagent.getTransportRequestQueue().offer(receive);
+            queue.offer(receive);
         } else {
             block();
         }

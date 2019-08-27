@@ -1,6 +1,6 @@
 package machines.real.commons.hal;
 
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 
 public interface MachineHal {
     /**
@@ -9,7 +9,7 @@ public interface MachineHal {
      * @param wpInfo 工件信息
      * @return 成功true
      */
-    boolean process(WorkpieceInfo wpInfo);
+    boolean process(WorkpieceStatus wpInfo);
 
     /**
      * 预估加工时间
@@ -17,5 +17,5 @@ public interface MachineHal {
      * @param wpInfo 工件信息
      * @return 加工时间 单位秒
      */
-    int evaluate(WorkpieceInfo wpInfo);
+    int evaluate(WorkpieceStatus wpInfo);
 }

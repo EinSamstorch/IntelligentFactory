@@ -1,6 +1,6 @@
 package machines.real.warehouse;
 
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 import commons.tools.LoggerUtil;
 import commons.tools.db.MysqlJdbc;
 
@@ -77,7 +77,7 @@ public class WarehouseMysql extends MysqlJdbc implements DbInterface {
 
 
     @Override
-    public int getProduct(WorkpieceInfo wpInfo) {
+    public int getProduct(WorkpieceStatus wpInfo) {
         int position = 0;
         connect();
         try {

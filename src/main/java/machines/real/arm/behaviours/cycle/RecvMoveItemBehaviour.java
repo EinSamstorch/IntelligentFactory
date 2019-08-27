@@ -1,10 +1,12 @@
-package machines.real.armrobot.behaviours.cycle;
+package machines.real.arm.behaviours.cycle;
 
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import machines.real.armrobot.ArmrobotAgent;
+import machines.real.arm.ArmAgent;
+
+import java.util.Queue;
 
 /**
  * receive transport request.
@@ -15,11 +17,11 @@ import machines.real.armrobot.ArmrobotAgent;
  */
 
 public class RecvMoveItemBehaviour extends CyclicBehaviour {
-    private ArmrobotAgent armagent;
+    private Queue<ACLMessage> queue;
 
-    public RecvMoveItemBehaviour(ArmrobotAgent a) {
-        super(a);
-        this.armagent = a;
+    public RecvMoveItemBehaviour(ArmAgent armAgent) {
+        super(armAgent);
+        this.queue = armAgent.getRequestQueue();
     }
 
     @Override
@@ -28,9 +30,9 @@ public class RecvMoveItemBehaviour extends CyclicBehaviour {
                 MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
                 MessageTemplate.MatchPerformative(ACLMessage.REQUEST)
         );
-        ACLMessage receive = armagent.receive(mt);
+        ACLMessage receive = myAgent.receive(mt);
         if (receive != null) {
-            armagent.getRequestQueue().offer(receive);
+            queue.offer(receive);
         } else {
             block();
         }

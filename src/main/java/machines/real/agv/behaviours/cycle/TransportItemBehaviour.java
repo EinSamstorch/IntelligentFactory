@@ -27,17 +27,17 @@ public class TransportItemBehaviour extends CyclicBehaviour {
     private static final int STATE_CALL_WH = 2;
     private static final int STATE_DO_TASK = 3;
     private static final int STATE_WAIT_WH = 4;
-    private AgvAgent aagent;
+    private AgvAgent agvAgent;
     private AgvHal hal;
     private int state;
     private AgvRequest request;
     private ACLMessage requestMsg;
     private volatile NotifyFinish notifyFinish;
 
-    public TransportItemBehaviour(AgvAgent aagent) {
-        super(aagent);
-        this.aagent = aagent;
-        this.hal = aagent.getHal();
+    public TransportItemBehaviour(AgvAgent agvAgent) {
+        super(agvAgent);
+        this.agvAgent = agvAgent;
+        this.hal = agvAgent.getHal();
         this.state = STATE_READY;
     }
 
@@ -76,7 +76,7 @@ public class TransportItemBehaviour extends CyclicBehaviour {
     }
 
     private void getRequest() {
-        ACLMessage msg = aagent.getTransportRequestQueue().poll();
+        ACLMessage msg = agvAgent.getTransportRequestQueue().poll();
         if (msg != null) {
             this.requestMsg = msg;
             AgvRequest request = null;
@@ -121,12 +121,12 @@ public class TransportItemBehaviour extends CyclicBehaviour {
             inform.addReceiver(receiver);
             inform.setLanguage("BUFFER_INDEX");
             inform.setContent(Integer.toString(from));
-            aagent.send(inform);
+            agvAgent.send(inform);
 
             // 通知到货
             ACLMessage reply = requestMsg.createReply();
             reply.setPerformative(ACLMessage.INFORM);
-            aagent.send(reply);
+            agvAgent.send(reply);
             state = STATE_READY;
         } else {
             LoggerUtil.hal.error(String.format("Failed! Request from %d to %d.", from, to));

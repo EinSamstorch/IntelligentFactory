@@ -49,7 +49,7 @@ public class SocketListener extends Thread {
         while (true) {
             String response = receiveMessage();
             if (checkMsgComplete(response)) {
-                JSONObject message = JsonTool.parseObject(response);
+                JSONObject message = JsonTool.parse(response);
                 int taskNo = message.getIntValue(SocketMessage.FIELD_TASK_NO);
                 String type = parseMsgType(response);
                 switch (type) {
@@ -79,7 +79,7 @@ public class SocketListener extends Thread {
         JSONObject message;
         try {
             // 尝试json解析
-            message = JsonTool.parseObject(response);
+            message = JsonTool.parse(response);
         } catch (IllegalArgumentException e) {
             // 解析失败 则返回 false
             LoggerUtil.agent.error(e.getMessage());
@@ -101,7 +101,7 @@ public class SocketListener extends Thread {
     }
 
     private String parseMsgType(String response) {
-        JSONObject message = JsonTool.parseObject(response);
+        JSONObject message = JsonTool.parse(response);
         if (message.containsKey(SocketMessage.FIELD_CMD_RESULT)) {
             return SocketMessage.FIELD_CMD_RESULT;
         }

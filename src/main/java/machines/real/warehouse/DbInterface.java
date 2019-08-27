@@ -1,6 +1,6 @@
 package machines.real.warehouse;
 
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 
 public interface DbInterface {
     /**
@@ -24,7 +24,7 @@ public interface DbInterface {
      *
      * @return 空位id
      */
-    int getProduct(WorkpieceInfo wpInfo);
+    int getProduct(WorkpieceStatus wpInfo);
 
     /**
      * 查询 product表 空位数量

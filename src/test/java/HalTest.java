@@ -1,5 +1,5 @@
-import machines.real.agv.AgvHal;
-import commons.order.WorkpieceInfo;
+import machines.real.agv.AgvHalImpl;
+import commons.order.WorkpieceStatus;
 import machines.real.lathe.LatheHalImpl;
 import org.junit.Test;
 import machines.real.warehouse.WarehouseHalImpl;
@@ -27,14 +27,14 @@ public class HalTest {
         assertTrue(hal.grabItem());
         assertTrue(hal.releaseItem());
 
-        WorkpieceInfo wpInfo = new WorkpieceInfo("001","001","002","{\"L1\":10}");
+        WorkpieceStatus wpInfo = new WorkpieceStatus("001","001","002","{\"L1\":10}");
         assertEquals(10, hal.evaluate(wpInfo));
         assertTrue(hal.process(wpInfo));
     }
 
     @Test
     public void testAgvHal(){
-        AgvHal hal = new AgvHal();
+        AgvHalImpl hal = new AgvHalImpl();
         assertTrue(hal.move(1, 10));
     }
 }

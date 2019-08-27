@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util" xsi:schemaLocation="
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="
         http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
 
@@ -25,12 +25,12 @@
                 </bean>
                 <!-- 原料应标 -->
                 <bean class="machines.real.warehouse.behaviours.cycle.RawContractNetResponder">
-                    <constructor-arg name="whagent" ref="agent"/>
+                    <constructor-arg name="warehouseAgent" ref="agent"/>
                     <constructor-arg name="mt" ref="rawMessageTemplate"/>
                 </bean>
                 <!-- 成品应标 -->
                 <bean class="machines.real.warehouse.behaviours.cycle.ProductContractNetResponder">
-                    <constructor-arg name="whagent" ref="agent"/>
+                    <constructor-arg name="warehouseAgent" ref="agent"/>
                     <constructor-arg name="mt" ref="productMessageTemplate"/>
                 </bean>
             </list>

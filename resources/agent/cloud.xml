@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="
+        http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!-- 配置Agent -->
+    <bean id="agent" class="machines.virtual.cloud.CloudAgent">
+        <property name="orderQueue">
+            <bean class="java.util.concurrent.LinkedBlockingDeque"/>
+        </property>
+        <property name="posQueue">
+            <bean class="java.util.concurrent.LinkedBlockingDeque"/>
+        </property>
+        <property name="stateQueue">
+            <bean class="java.util.concurrent.LinkedBlockingDeque"/>
+        </property>
+        <property name="website" value="120.26.53.90:8080"/>
+        <property name="serviceType">
+            <util:constant static-field="commons.tools.DfServiceType.CLOUD_UPDATE"/>
+        </property>
+        <!-- agent 行为集-->
+        <property name="behaviours">
+            <list>
+                <bean class="machines.virtual.cloud.behaviours.cycle.GetOrder">
+                    <constructor-arg name="ca" ref="agent"/>
+                    <constructor-arg name="period" value="10000"/>
+                </bean>
+                <bean class="machines.virtual.cloud.behaviours.cycle.HandleOrders">
+                    <constructor-arg name="cagent" ref="agent"/>
+                    <constructor-arg name="period" value="10000"/>
+                </bean>
+                <bean class="machines.virtual.cloud.behaviours.cycle.DetectUpdateMsg">
+                    <constructor-arg name="cagent" ref="agent"/>
+                    <constructor-arg name="period" value="10000"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+</beans>
+

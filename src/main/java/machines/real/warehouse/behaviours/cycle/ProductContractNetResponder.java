@@ -1,6 +1,6 @@
 package machines.real.warehouse.behaviours.cycle;
 
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 import commons.tools.LoggerUtil;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
@@ -28,12 +28,10 @@ import java.io.IOException;
  */
 
 public class ProductContractNetResponder extends ContractNetResponder {
-    private WarehouseAgent whagent;
     private DbInterface db;
 
-    public ProductContractNetResponder(WarehouseAgent whagent, MessageTemplate mt) {
-        super(whagent, mt);
-        this.whagent = whagent;
+    public ProductContractNetResponder(WarehouseAgent warehouseAgent, MessageTemplate mt) {
+        super(warehouseAgent, mt);
         ApplicationContext ac = new FileSystemXmlApplicationContext("./resources/sql.xml");
         db = ac.getBean("db", DbInterface.class);
     }
@@ -61,9 +59,9 @@ public class ProductContractNetResponder extends ContractNetResponder {
     protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept) throws FailureException {
         LoggerUtil.agent.info("Proposal accepted: " + accept.getSender().getName());
         int quantity = Integer.parseInt(accept.getContent());
-        WorkpieceInfo wpInfo = null;
+        WorkpieceStatus wpInfo = null;
         try {
-            wpInfo = (WorkpieceInfo) cfp.getContentObject();
+            wpInfo = (WorkpieceStatus) cfp.getContentObject();
         } catch (UnreadableException e) {
             e.printStackTrace();
         }
@@ -72,13 +70,13 @@ public class ProductContractNetResponder extends ContractNetResponder {
             wpInfo.setWarehousePosition(position);
             int currentLocation = wpInfo.getBufferPos();
             // 更新 wpInfo
-            wpInfo.setCurOwnerId(whagent.getLocalName());
+            wpInfo.setCurOwnerId(myAgent.getLocalName());
             // 入库口
             wpInfo.setBufferPos(25);
 
             // call for agv
             AgvRequest request = new AgvRequest(currentLocation, 25, wpInfo);
-            whagent.addBehaviour(new CallForAgv(whagent, request));
+            myAgent.addBehaviour(new CallForAgv(myAgent, request));
 
             ACLMessage inform = accept.createReply();
             inform.setPerformative(ACLMessage.INFORM);

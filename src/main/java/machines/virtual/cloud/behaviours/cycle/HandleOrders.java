@@ -1,7 +1,7 @@
 package machines.virtual.cloud.behaviours.cycle;
 
 import commons.order.OrderInfo;
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 import commons.tools.DfServiceType;
 import commons.tools.DfUtils;
 import jade.core.behaviours.TickerBehaviour;
@@ -32,7 +32,7 @@ public class HandleOrders extends TickerBehaviour {
             if (oi == null) {
                 break;
             }
-            for (WorkpieceInfo wpInfo : oi.getWpInfoList()) {
+            for (WorkpieceStatus wpInfo : oi.getWpInfoList()) {
                 try {
                     // TODO 未来此处需要做处理，失败的消息需要记录并重试。
                     ACLMessage msg = DfUtils.createRequestMsg(wpInfo);

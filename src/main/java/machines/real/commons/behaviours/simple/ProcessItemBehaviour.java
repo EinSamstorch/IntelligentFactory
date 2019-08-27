@@ -1,6 +1,6 @@
 package machines.real.commons.behaviours.simple;
 
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 import jade.core.behaviours.Behaviour;
 import machines.real.commons.buffer.Buffer;
 import machines.real.commons.hal.MachineHal;
@@ -19,7 +19,7 @@ public class ProcessItemBehaviour {
     public static Behaviour getBehaviour(MachineHal hal, Buffer buffer) {
         Method processMethod = null;
         try {
-            processMethod = hal.getClass().getMethod("process", WorkpieceInfo.class);
+            processMethod = hal.getClass().getMethod("process", WorkpieceStatus.class);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }

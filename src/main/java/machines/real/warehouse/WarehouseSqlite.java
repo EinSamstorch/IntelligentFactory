@@ -1,6 +1,6 @@
 package machines.real.warehouse;
 
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 import commons.tools.LoggerUtil;
 import commons.tools.db.SqliteJdbc;
 
@@ -145,7 +145,7 @@ public class WarehouseSqlite extends SqliteJdbc implements DbInterface {
 
 
     @Override
-    public int getProduct(WorkpieceInfo wpInfo) {
+    public int getProduct(WorkpieceStatus wpInfo) {
         Integer position = productTable.poll();
         if (position != null) {
             updateProductTable(position, wpInfo);
@@ -161,7 +161,7 @@ public class WarehouseSqlite extends SqliteJdbc implements DbInterface {
      * @param position 位置id
      * @param wpInfo   工件信息
      */
-    private void updateProductTable(int position, WorkpieceInfo wpInfo) {
+    private void updateProductTable(int position, WorkpieceStatus wpInfo) {
         connect();
         try {
             String sqlCmd = String.format("UPDATE product SET orderid='%s', workpieceid='%s' WHERE position=%d",

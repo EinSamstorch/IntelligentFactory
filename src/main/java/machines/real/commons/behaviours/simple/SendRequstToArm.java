@@ -40,7 +40,7 @@ public class SendRequstToArm extends OneShotBehaviour {
         ACLMessage msg = null;
         try {
             msg = DfUtils.createRequestMsg(request);
-            DfUtils.searchDf(myAgent, msg, DfServiceType.ARMROBOT, password);
+            DfUtils.searchDf(myAgent, msg, DfServiceType.ARM, password);
 
             msg.setConversationId(conversationId);
             myAgent.send(msg);

@@ -1,4 +1,4 @@
-package machines.real.agv;
+package machines.real.arm;
 
 import commons.BaseAgent;
 import jade.core.behaviours.Behaviour;
@@ -8,31 +8,37 @@ import jade.lang.acl.ACLMessage;
 import java.util.Queue;
 
 /**
- * AGV Agent.
+ * arm robot agent.
  *
  * @author <a href="mailto:junfeng_pan96@qq.com">junfeng</a>
  * @version 1.0.0.0
  * @since 1.8
  */
 
-public class AgvAgent extends BaseAgent {
-    private Queue<ACLMessage> transportRequestQueue;
-    private AgvHal hal;
+public class ArmAgent extends BaseAgent {
+    private ArmHal hal;
     private String serviceType;
+    private Queue<ACLMessage> requestQueue;
+    private String armPwd;
     private Behaviour[] behaviours;
-
-    public void setServiceType(String serviceType) {
-        this.serviceType = serviceType;
-    }
 
     public void setBehaviours(Behaviour[] behaviours) {
         this.behaviours = behaviours;
     }
 
+    public void setArmPwd(String armPwd) {
+        this.armPwd = armPwd;
+    }
+
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+    }
+
     @Override
     protected void setup() {
         super.setup();
-        registerDf(serviceType);
+        registerDf(serviceType, armPwd);
+
 
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
 
@@ -41,19 +47,19 @@ public class AgvAgent extends BaseAgent {
         }
     }
 
-    public Queue<ACLMessage> getTransportRequestQueue() {
-        return transportRequestQueue;
-    }
-
-    public void setTransportRequestQueue(Queue<ACLMessage> transportRequestQueue) {
-        this.transportRequestQueue = transportRequestQueue;
-    }
-
-    public AgvHal getHal() {
+    public ArmHal getHal() {
         return hal;
     }
 
-    public void setHal(AgvHal hal) {
+    public void setHal(ArmHal hal) {
         this.hal = hal;
+    }
+
+    public Queue<ACLMessage> getRequestQueue() {
+        return requestQueue;
+    }
+
+    public void setRequestQueue(Queue<ACLMessage> requestQueue) {
+        this.requestQueue = requestQueue;
     }
 }

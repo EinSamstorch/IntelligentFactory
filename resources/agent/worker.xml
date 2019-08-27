@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="
+        http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!-- 配置Agent -->
+    <bean id="agent" class="machines.virtual.worker.WorkerAgent">
+        <property name="detectRatio" value="0"/>
+        <property name="wpInfoQueue">
+            <bean class="java.util.concurrent.LinkedBlockingDeque"/>
+        </property>
+        <property name="serviceType">
+            <util:constant static-field="commons.tools.DfServiceType.WORKER"/>
+        </property>
+        <!-- agent 行为集-->
+        <property name="behaviours">
+            <list>
+                <bean class="machines.virtual.worker.behaviours.cycle.HandleRequest">
+                    <constructor-arg name="wagent" ref="agent"/>
+                </bean>
+                <bean class="machines.virtual.worker.behaviours.cycle.HandleWorkpiece">
+                    <constructor-arg name="workerAgent" ref="agent"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+</beans>
+
