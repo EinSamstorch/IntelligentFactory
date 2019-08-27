@@ -10,6 +10,8 @@ import commons.tools.OrderTools;
 import jade.core.behaviours.TickerBehaviour;
 import machines.virtual.cloud.CloudAgent;
 
+import java.util.Queue;
+
 /**
  * 从云端获取新订单并储存至本地mysql数据库中.
  *
@@ -19,16 +21,24 @@ import machines.virtual.cloud.CloudAgent;
  */
 
 public class GetOrder extends TickerBehaviour {
-    private CloudAgent cagent;
+    private String website;
+    private Queue<OrderInfo> orderInfoQueue;
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public void setOrderInfoQueue(Queue<OrderInfo> orderInfoQueue) {
+        this.orderInfoQueue = orderInfoQueue;
+    }
 
     public GetOrder(CloudAgent ca, long period) {
         super(ca, period);
-        this.cagent = ca;
     }
 
     @Override
     protected void onTick() {
-        String result = HttpRequest.getOrder(cagent.getWebsite(), 0, 0);
+        String result = HttpRequest.getOrder(website, 0, 0);
 
 
         // 如果无新订单，则return
@@ -57,7 +67,7 @@ public class GetOrder extends TickerBehaviour {
                     JSONObject jo = (JSONObject) o;
                     // 加入到 cloud Agent 待分配 列表中
                     OrderInfo oi = OrderTools.parseOrderInfo(jo);
-                    cagent.getOrderQueue().offer(oi);
+                    orderInfoQueue.offer(oi);
 
                     // 储存订单信息到MYSQL中
                     //mysqlTool.storeOrderInfo(oi);

@@ -10,20 +10,17 @@
         <property name="serviceType">
             <util:constant static-field="commons.tools.DfServiceType.AGV"/>
         </property>
-        <property name="hal" ref="hal"/>
-        <property name="transportRequestQueue">
-            <bean class="java.util.concurrent.LinkedBlockingDeque"/>
-        </property>
         <!-- agent 行为集-->
         <property name="behaviours">
             <list>
                 <!-- 接收搬运请求 -->
                 <bean class="machines.real.agv.behaviours.cycle.RecvTransportRequestBehaviour">
-                    <constructor-arg name="agvAgent" ref="agent"/>
+                    <property name="queue" ref="msgQueue"/>
                 </bean>
                 <!-- 执行搬运请求 -->
                 <bean class="machines.real.agv.behaviours.cycle.TransportItemBehaviour">
-                    <constructor-arg name="agvAgent" ref="agent"/>
+                    <property name="queue" ref="msgQueue"/>
+                    <property name="hal" ref="hal"/>
                 </bean>
             </list>
         </property>
@@ -34,5 +31,6 @@
         <!-- socket server监听端口 -->
         <constructor-arg name="port" value="5656"/>
     </bean>
+    <bean id="msgQueue" class="java.util.concurrent.LinkedBlockingQueue"/>
 </beans>
 

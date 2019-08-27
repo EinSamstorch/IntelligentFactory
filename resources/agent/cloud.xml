@@ -7,16 +7,6 @@
 
     <!-- 配置Agent -->
     <bean id="agent" class="machines.virtual.cloud.CloudAgent">
-        <property name="orderQueue">
-            <bean class="java.util.concurrent.LinkedBlockingDeque"/>
-        </property>
-        <property name="posQueue">
-            <bean class="java.util.concurrent.LinkedBlockingDeque"/>
-        </property>
-        <property name="stateQueue">
-            <bean class="java.util.concurrent.LinkedBlockingDeque"/>
-        </property>
-        <property name="website" value="120.26.53.90:8080"/>
         <property name="serviceType">
             <util:constant static-field="commons.tools.DfServiceType.CLOUD_UPDATE"/>
         </property>
@@ -26,17 +16,24 @@
                 <bean class="machines.virtual.cloud.behaviours.cycle.GetOrder">
                     <constructor-arg name="ca" ref="agent"/>
                     <constructor-arg name="period" value="10000"/>
+                    <property name="website" ref="website"/>
+                    <property name="orderInfoQueue" ref="orderInfoQueue"/>
                 </bean>
                 <bean class="machines.virtual.cloud.behaviours.cycle.HandleOrders">
-                    <constructor-arg name="cagent" ref="agent"/>
+                    <constructor-arg name="cloudAgent" ref="agent"/>
                     <constructor-arg name="period" value="10000"/>
+                    <property name="orderInfoQueue" ref="orderInfoQueue"/>
                 </bean>
-                <bean class="machines.virtual.cloud.behaviours.cycle.DetectUpdateMsg">
-                    <constructor-arg name="cagent" ref="agent"/>
-                    <constructor-arg name="period" value="10000"/>
-                </bean>
+<!--                <bean class="machines.virtual.cloud.behaviours.cycle.DetectUpdateMsg">-->
+<!--                    <constructor-arg name="cagent" ref="agent"/>-->
+<!--                    <constructor-arg name="period" value="10000"/>-->
+<!--                </bean>-->
             </list>
         </property>
     </bean>
+    <bean id="website" class="java.lang.String">
+        <constructor-arg name="original" value="120.26.53.90:8080"/>
+    </bean>
+    <bean id="orderInfoQueue" class="java.util.concurrent.LinkedBlockingQueue"/>
 </beans>
 

@@ -22,10 +22,16 @@ public class MoveItemBehaviour extends CyclicBehaviour {
     private ArmHal hal;
     private Queue<ACLMessage> requestQueue;
 
-    public MoveItemBehaviour(ArmAgent armAgent) {
-        super(armAgent);
-        hal = armAgent.getHal();
-        requestQueue = armAgent.getRequestQueue();
+    public void setHal(ArmHal hal) {
+        this.hal = hal;
+    }
+
+    public void setRequestQueue(Queue<ACLMessage> requestQueue) {
+        this.requestQueue = requestQueue;
+    }
+
+    public MoveItemBehaviour() {
+        super();
     }
 
     @Override

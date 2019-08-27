@@ -10,21 +10,18 @@
         <property name="serviceType">
             <util:constant static-field="commons.tools.DfServiceType.ARM"/>
         </property>
-        <property name="hal" ref="hal"/>
-        <property name="requestQueue">
-            <bean class="java.util.concurrent.LinkedBlockingDeque"/>
-        </property>
-        <property name="armPwd" value="xi"/>
+        <property name="armPwd" ref="armPwd"/>
         <!-- agent 行为集-->
         <property name="behaviours">
             <list>
                 <!-- 接收搬运请求 -->
                 <bean class="machines.real.arm.behaviours.cycle.RecvMoveItemBehaviour">
-                    <constructor-arg name="armAgent" ref="agent"/>
+                    <property name="queue" ref="msgQueue"/>
                 </bean>
                 <!-- 执行搬运请求 -->
                 <bean class="machines.real.arm.behaviours.cycle.MoveItemBehaviour">
-                    <constructor-arg name="armAgent" ref="agent"/>
+                    <property name="requestQueue" ref="msgQueue"/>
+                    <property name="hal" ref="hal"/>
                 </bean>
             </list>
         </property>
@@ -35,5 +32,9 @@
         <!-- socket server监听端口 -->
         <constructor-arg name="port" value="5656"/>
     </bean>
+    <bean id="armPwd" class="java.lang.String">
+        <constructor-arg name="original" value="xi"/>
+    </bean>
+    <bean id="msgQueue" class="java.util.concurrent.LinkedBlockingQueue"/>
 </beans>
 

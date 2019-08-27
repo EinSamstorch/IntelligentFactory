@@ -16,9 +16,7 @@ import java.util.Queue;
  */
 
 public class ArmAgent extends BaseAgent {
-    private ArmHal hal;
     private String serviceType;
-    private Queue<ACLMessage> requestQueue;
     private String armPwd;
     private Behaviour[] behaviours;
 
@@ -45,21 +43,5 @@ public class ArmAgent extends BaseAgent {
         for (Behaviour behaviour : behaviours) {
             addBehaviour(tbf.wrap(behaviour));
         }
-    }
-
-    public ArmHal getHal() {
-        return hal;
-    }
-
-    public void setHal(ArmHal hal) {
-        this.hal = hal;
-    }
-
-    public Queue<ACLMessage> getRequestQueue() {
-        return requestQueue;
-    }
-
-    public void setRequestQueue(Queue<ACLMessage> requestQueue) {
-        this.requestQueue = requestQueue;
     }
 }

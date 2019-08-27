@@ -19,9 +19,12 @@ import java.util.Queue;
 public class RecvMoveItemBehaviour extends CyclicBehaviour {
     private Queue<ACLMessage> queue;
 
-    public RecvMoveItemBehaviour(ArmAgent armAgent) {
-        super(armAgent);
-        this.queue = armAgent.getRequestQueue();
+    public void setQueue(Queue<ACLMessage> queue) {
+        this.queue = queue;
+    }
+
+    public RecvMoveItemBehaviour() {
+        super();
     }
 
     @Override

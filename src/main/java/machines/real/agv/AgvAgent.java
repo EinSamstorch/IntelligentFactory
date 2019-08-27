@@ -16,8 +16,6 @@ import java.util.Queue;
  */
 
 public class AgvAgent extends BaseAgent {
-    private Queue<ACLMessage> transportRequestQueue;
-    private AgvHal hal;
     private String serviceType;
     private Behaviour[] behaviours;
 
@@ -39,21 +37,5 @@ public class AgvAgent extends BaseAgent {
         for (Behaviour behaviour : behaviours) {
             addBehaviour(tbf.wrap(behaviour));
         }
-    }
-
-    public Queue<ACLMessage> getTransportRequestQueue() {
-        return transportRequestQueue;
-    }
-
-    public void setTransportRequestQueue(Queue<ACLMessage> transportRequestQueue) {
-        this.transportRequestQueue = transportRequestQueue;
-    }
-
-    public AgvHal getHal() {
-        return hal;
-    }
-
-    public void setHal(AgvHal hal) {
-        this.hal = hal;
     }
 }

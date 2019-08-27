@@ -19,9 +19,12 @@ import java.util.Queue;
 public class RecvTransportRequestBehaviour extends CyclicBehaviour {
     private Queue<ACLMessage> queue;
 
-    public RecvTransportRequestBehaviour(AgvAgent agvAgent) {
-        super(agvAgent);
-        queue = agvAgent.getTransportRequestQueue();
+    public void setQueue(Queue<ACLMessage> queue) {
+        this.queue = queue;
+    }
+
+    public RecvTransportRequestBehaviour() {
+        super();
     }
 
     @Override
