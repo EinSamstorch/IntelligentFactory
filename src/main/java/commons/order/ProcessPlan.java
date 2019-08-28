@@ -42,6 +42,7 @@ public class ProcessPlan {
             {
                 add(DfServiceType.WAREHOUSE);
                 add(DfServiceType.LATHE);
+                add(DfServiceType.MILL);
             }
         };
         processPlan.put(goodsidList.get(1), axisProcessPlan);

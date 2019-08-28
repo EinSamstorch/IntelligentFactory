@@ -82,7 +82,7 @@
         <constructor-arg name="op2">
             <!-- 匹配 RAW -->
             <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchLanguage">
-                <constructor-arg type="java.lang.String" value="RAW"/>
+                <constructor-arg type="java.lang.String" value="PRODUCT"/>
             </bean>
         </constructor-arg>
     </bean>

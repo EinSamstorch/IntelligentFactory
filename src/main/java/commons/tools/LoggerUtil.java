@@ -22,6 +22,6 @@ public class LoggerUtil {
      * 配置文件默认位置 ：config/log4j.properties
      */
     static {
-        PropertyConfigurator.configure("./resources/config/log4j.properties");
+        PropertyConfigurator.configure("./resources/log4j.properties");
     }
 }
