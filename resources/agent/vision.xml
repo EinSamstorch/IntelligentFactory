@@ -16,7 +16,7 @@
             <list>
                 <!-- buffer管理行为 -->
                 <bean class="machines.real.commons.behaviours.cycle.MaintainBufferBehaviour">
-                    <constructor-arg name="machineAgent" ref="agent"/>
+                    <property name="bufferManger" ref="bufferManager"/>
                 </bean>
                 <!-- 上料行为 -->
                 <bean class="machines.real.commons.behaviours.cycle.LoadItemBehaviour">

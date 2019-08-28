@@ -24,16 +24,16 @@ public class GetOrder extends TickerBehaviour {
     private String website;
     private Queue<OrderInfo> orderInfoQueue;
 
+    public GetOrder(CloudAgent ca, long period) {
+        super(ca, period);
+    }
+
     public void setWebsite(String website) {
         this.website = website;
     }
 
     public void setOrderInfoQueue(Queue<OrderInfo> orderInfoQueue) {
         this.orderInfoQueue = orderInfoQueue;
-    }
-
-    public GetOrder(CloudAgent ca, long period) {
-        super(ca, period);
     }
 
     @Override

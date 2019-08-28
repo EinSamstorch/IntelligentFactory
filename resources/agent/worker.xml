@@ -7,24 +7,20 @@
 
     <!-- 配置Agent -->
     <bean id="agent" class="machines.virtual.worker.WorkerAgent">
-        <property name="detectRatio" value="0"/>
-        <property name="wpInfoQueue">
-            <bean class="java.util.concurrent.LinkedBlockingQueue"/>
-        </property>
         <property name="serviceType">
             <util:constant static-field="commons.tools.DfServiceType.WORKER"/>
         </property>
         <!-- agent 行为集-->
         <property name="behaviours">
             <list>
-                <bean class="machines.virtual.worker.behaviours.cycle.HandleRequest">
-                    <constructor-arg name="wagent" ref="agent"/>
-                </bean>
                 <bean class="machines.virtual.worker.behaviours.cycle.HandleWorkpiece">
-                    <constructor-arg name="workerAgent" ref="agent"/>
+                    <property name="detectRatio" ref="detectRatio"/>
                 </bean>
             </list>
         </property>
+    </bean>
+    <bean id="detectRatio" class="java.lang.Integer">
+        <constructor-arg name="value" value="0"/>
     </bean>
 </beans>
 

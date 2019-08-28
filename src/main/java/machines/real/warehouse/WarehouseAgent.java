@@ -4,10 +4,6 @@ import commons.BaseAgent;
 import commons.tools.DfServiceType;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
-import jade.lang.acl.ACLMessage;
-
-import java.util.Queue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 
 /**
@@ -20,12 +16,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class WarehouseAgent extends BaseAgent {
+    private WarehouseHal hal;
+    private Behaviour[] behaviours;
     private Integer posIn;
     private Integer posOut;
-    private WarehouseHal hal;
-    private Queue<ACLMessage> exportQueue = new LinkedBlockingQueue<>();
-
-    private Behaviour[] behaviours;
 
     public void setBehaviours(Behaviour[] behaviours) {
         this.behaviours = behaviours;
@@ -55,9 +49,6 @@ public class WarehouseAgent extends BaseAgent {
         this.posOut = posOut;
     }
 
-    public Queue<ACLMessage> getExportQueue() {
-        return exportQueue;
-    }
 
     @Override
     protected void setup() {

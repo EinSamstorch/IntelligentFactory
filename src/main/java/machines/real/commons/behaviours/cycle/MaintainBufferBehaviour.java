@@ -4,7 +4,7 @@ import commons.tools.LoggerUtil;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import machines.real.commons.RealMachineAgent;
+import machines.real.commons.buffer.BufferManger;
 
 /**
  * 维护buffer状态
@@ -16,13 +16,15 @@ import machines.real.commons.RealMachineAgent;
  */
 
 public class MaintainBufferBehaviour extends CyclicBehaviour {
-    private RealMachineAgent machineAgent;
+    private BufferManger bufferManger;
 
+    public MaintainBufferBehaviour() {
+        super();
 
-    public MaintainBufferBehaviour(RealMachineAgent machineAgent) {
-        super(machineAgent);
-        this.machineAgent = machineAgent;
+    }
 
+    public void setBufferManger(BufferManger bufferManger) {
+        this.bufferManger = bufferManger;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class MaintainBufferBehaviour extends CyclicBehaviour {
         ACLMessage receive = myAgent.receive(mt);
         if (receive != null) {
             int bufferIndex = new Integer(receive.getContent());
-            if (machineAgent.getBufferManger().resetBufferByIndex(bufferIndex)) {
+            if (bufferManger.resetBufferByIndex(bufferIndex)) {
                 LoggerUtil.agent.info(String.format("Item removed from buffer %d", bufferIndex));
             } else {
                 LoggerUtil.agent.error(String.format("Buffer %d not found!", bufferIndex));

@@ -6,8 +6,10 @@ import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
-import machines.virtual.worker.WorkerAgent;
+import jade.lang.acl.MessageTemplate;
+import jade.lang.acl.UnreadableException;
 import machines.virtual.worker.behaviours.simple.MyContractNetInitiator;
 
 import java.util.List;
@@ -23,21 +25,36 @@ import java.util.Random;
 
 
 public class HandleWorkpiece extends CyclicBehaviour {
-    private WorkerAgent workerAgent;
+    private Integer detectRatio;
 
-    public HandleWorkpiece(WorkerAgent workerAgent) {
-        this.workerAgent = workerAgent;
+    public HandleWorkpiece() {
+        super();
     }
 
+    public void setDetectRatio(Integer detectRatio) {
+        this.detectRatio = detectRatio;
+    }
 
     @Override
     public void action() {
-        WorkpieceStatus wpInfo = workerAgent.getWpInfoQueue().poll();
-        if (wpInfo == null) {
-            block(1000);
+        MessageTemplate mt = MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
+                MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST));
+        ACLMessage msg = myAgent.receive(mt);
+        if (msg == null) {
+            block();
             return;
         }
-        ;
+        WorkpieceStatus wpInfo = null;
+        try {
+            wpInfo = (WorkpieceStatus) msg.getContentObject();
+            LoggerUtil.agent.info("Receive Request From: " + msg.getSender().getName());
+        } catch (UnreadableException e) {
+            e.printStackTrace();
+        }
+        if (wpInfo == null) {
+            block();
+            return;
+        }
         // 重置加工工步
         wpInfo.resetProcessStep();
 
@@ -62,17 +79,17 @@ public class HandleWorkpiece extends CyclicBehaviour {
         try {
             ACLMessage msg = DfUtils.createCfpMsg(wpInfo);
             if (serviceType.equals(DfServiceType.PRODUCT)) {
-                DfUtils.searchDf(workerAgent, msg, DfServiceType.WAREHOUSE);
+                DfUtils.searchDf(myAgent, msg, DfServiceType.WAREHOUSE);
                 msg.setLanguage("PRODUCT");
             } else if (serviceType.equals(DfServiceType.WAREHOUSE)) {
-                DfUtils.searchDf(workerAgent, msg, serviceType);
+                DfUtils.searchDf(myAgent, msg, serviceType);
                 msg.setLanguage("RAW");
             } else {
-                DfUtils.searchDf(workerAgent, msg, serviceType);
+                DfUtils.searchDf(myAgent, msg, serviceType);
             }
 
-            Behaviour b = new MyContractNetInitiator(workerAgent, msg, serviceType);
-            workerAgent.addBehaviour(b);
+            Behaviour b = new MyContractNetInitiator(myAgent, msg, serviceType);
+            myAgent.addBehaviour(b);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,7 +97,7 @@ public class HandleWorkpiece extends CyclicBehaviour {
 
     private void addVisionProcess(WorkpieceStatus wpInfo) {
         int random = new Random().nextInt(100);
-        if (random < workerAgent.getDetectRatio()) {
+        if (random < detectRatio) {
             LoggerUtil.agent.info(String.format("Item orderId:%s, wpId:%s add vision detect",
                     wpInfo.getOrderId(), wpInfo.getWorkpieceId()));
             wpInfo.getProcessPlan().add(DfServiceType.VISION);

@@ -2,13 +2,12 @@ package machines.real.arm.behaviours.cycle;
 
 import commons.tools.LoggerUtil;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import machines.real.arm.ArmAgent;
 import machines.real.arm.ArmHal;
 import machines.real.commons.request.ArmrobotRequest;
-
-import java.util.Queue;
 
 /**
  * executor move item request.
@@ -20,23 +19,21 @@ import java.util.Queue;
 
 public class MoveItemBehaviour extends CyclicBehaviour {
     private ArmHal hal;
-    private Queue<ACLMessage> requestQueue;
-
-    public void setHal(ArmHal hal) {
-        this.hal = hal;
-    }
-
-    public void setRequestQueue(Queue<ACLMessage> requestQueue) {
-        this.requestQueue = requestQueue;
-    }
 
     public MoveItemBehaviour() {
         super();
     }
 
+    public void setHal(ArmHal hal) {
+        this.hal = hal;
+    }
+
     @Override
     public void action() {
-        ACLMessage msg = requestQueue.poll();
+        MessageTemplate mt = MessageTemplate.and(
+                MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
+                MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
+        ACLMessage msg = myAgent.receive(mt);
         if (msg != null) {
             ArmrobotRequest request = null;
             try {

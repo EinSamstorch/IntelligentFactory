@@ -33,7 +33,10 @@ public class ProcessContractNetResponder extends ContractNetResponder {
     public ProcessContractNetResponder(RealMachineAgent machineAgent, MessageTemplate mt) {
         super(machineAgent, mt);
         this.machineAgent = machineAgent;
-        hal = machineAgent.getHal();
+    }
+
+    public void setHal(MachineHal hal) {
+        this.hal = hal;
     }
 
     @Override

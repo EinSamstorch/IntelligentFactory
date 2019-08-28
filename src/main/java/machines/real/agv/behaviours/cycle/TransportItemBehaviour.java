@@ -4,16 +4,15 @@ import commons.NotifyFinish;
 import commons.tools.LoggerUtil;
 import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.util.leap.Iterator;
-import machines.real.agv.AgvAgent;
 import machines.real.agv.AgvHal;
 import machines.real.agv.behaviours.simple.CallForWarehouse;
 import machines.real.commons.request.AgvRequest;
 import machines.real.commons.request.WarehouseRequest;
-
-import java.util.Queue;
 
 /**
  * 执行运输任务.
@@ -33,20 +32,15 @@ public class TransportItemBehaviour extends CyclicBehaviour {
     private int state;
     private AgvRequest request;
     private ACLMessage requestMsg;
-    private Queue<ACLMessage> queue;
     private volatile NotifyFinish notifyFinish;
-
-    public void setHal(AgvHal hal) {
-        this.hal = hal;
-    }
-
-    public void setQueue(Queue<ACLMessage> queue) {
-        this.queue = queue;
-    }
 
     public TransportItemBehaviour() {
         super();
         this.state = STATE_READY;
+    }
+
+    public void setHal(AgvHal hal) {
+        this.hal = hal;
     }
 
     @Override
@@ -84,7 +78,11 @@ public class TransportItemBehaviour extends CyclicBehaviour {
     }
 
     private void getRequest() {
-        ACLMessage msg = queue.poll();
+        MessageTemplate mt = MessageTemplate.and(
+                MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
+                MessageTemplate.MatchPerformative(ACLMessage.REQUEST)
+        );
+        ACLMessage msg = myAgent.receive(mt);
         if (msg != null) {
             this.requestMsg = msg;
             AgvRequest request = null;
@@ -95,12 +93,11 @@ public class TransportItemBehaviour extends CyclicBehaviour {
             }
             if (request != null) {
                 int from = request.getFrom();
+                this.request = request;
                 if (from == WAREHOUSE_EXPORT) {
                     state = STATE_CALL_WH;
-                    this.request = request;
                 } else {
                     state = STATE_DO_TASK;
-                    this.request = request;
                 }
             } else {
                 LoggerUtil.hal.error("Request NPE Error.");

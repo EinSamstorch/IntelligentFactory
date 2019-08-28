@@ -22,12 +22,12 @@ import java.util.Queue;
 public class HandleOrders extends TickerBehaviour {
     private Queue<OrderInfo> orderInfoQueue;
 
-    public void setOrderInfoQueue(Queue<OrderInfo> orderInfoQueue) {
-        this.orderInfoQueue = orderInfoQueue;
-    }
-
     public HandleOrders(CloudAgent cloudAgent, long period) {
         super(cloudAgent, period);
+    }
+
+    public void setOrderInfoQueue(Queue<OrderInfo> orderInfoQueue) {
+        this.orderInfoQueue = orderInfoQueue;
     }
 
     @Override

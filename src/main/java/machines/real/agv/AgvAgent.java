@@ -3,9 +3,6 @@ package machines.real.agv;
 import commons.BaseAgent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
-import jade.lang.acl.ACLMessage;
-
-import java.util.Queue;
 
 /**
  * AGV Agent.
