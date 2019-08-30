@@ -43,6 +43,7 @@ public class SendRequstToArm extends OneShotBehaviour {
             DfUtils.searchDf(myAgent, msg, DfServiceType.ARM, password);
 
             msg.setConversationId(conversationId);
+            msg.setLanguage(request.toString());
             myAgent.send(msg);
         } catch (Exception e) {
             e.printStackTrace();

@@ -19,6 +19,9 @@ import machines.real.commons.request.ArmRequest;
 
 public final class MoveItemBehaviour extends CyclicBehaviour {
     private ArmHal hal;
+    /**
+     * 匹配 FIPA_REQUEST 和 ACLMessage.REQUEST
+     */
     private final MessageTemplate mt = MessageTemplate.and(
             MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
             MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
@@ -50,6 +53,11 @@ public final class MoveItemBehaviour extends CyclicBehaviour {
         }
     }
 
+    /**
+     * free状态
+     * 执行step=0的任务
+     * 或执行step=1的任务 并进入 busy状态
+     */
     private void inStateFree() {
         ACLMessage msg = receiveMsg(mt);
         if (msg == null) {
@@ -71,6 +79,11 @@ public final class MoveItemBehaviour extends CyclicBehaviour {
         doTask(msg, from, to, goodsid, step);
     }
 
+    /**
+     * busy状态
+     * 执行该组搬运动作
+     * 直到该组搬运动作出现endStep，回归free状态
+     */
     private void inStateBusy() {
         MessageTemplate mt1 = MessageTemplate.and(mt,
                 MessageTemplate.MatchLanguage(language));
