@@ -9,7 +9,7 @@ import machines.real.commons.behaviours.simple.ProcessFinishedBehaviour;
 import machines.real.commons.behaviours.simple.ProcessItemBehaviour;
 import machines.real.commons.buffer.Buffer;
 import machines.real.commons.hal.MachineHal;
-import machines.real.commons.request.ArmrobotRequest;
+import machines.real.commons.request.ArmRequest;
 
 /**
  * .
@@ -23,7 +23,7 @@ public class VisionProcessItem implements ProcessItem {
     @Override
     public Behaviour getBehaviour(RealMachineAgent realAgent, Buffer buffer, String armPwd) {
         MachineHal hal = realAgent.getHal();
-        ArmrobotRequest request = new ArmrobotRequest(
+        ArmRequest request = new ArmRequest(
                 String.valueOf(buffer.getIndex()),
                 realAgent.getLocalName(),
                 buffer.getWpInfo().getGoodsId());
@@ -39,7 +39,7 @@ public class VisionProcessItem implements ProcessItem {
         // 检查
         s.addSubBehaviour(ProcessItemBehaviour.getBehaviour(hal, buffer));
         // 下料
-        ArmrobotRequest unloadRequest = ArmrobotRequest.unloadRequest(request);
+        ArmRequest unloadRequest = ArmRequest.unloadRequest(request);
         s.addSubBehaviour(SequentialCallForArm
                 .getBehaviour(realAgent,
                         unloadRequest,

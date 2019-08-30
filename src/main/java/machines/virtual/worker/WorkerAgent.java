@@ -1,11 +1,8 @@
 package machines.virtual.worker;
 
 import commons.BaseAgent;
-import commons.order.WorkpieceStatus;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
-
-import java.util.Queue;
 
 /**
  * 专门负责招投标任务.
@@ -17,18 +14,8 @@ import java.util.Queue;
 
 
 public class WorkerAgent extends BaseAgent {
-    private Integer detectRatio;
     private String serviceType;
-    private Queue<WorkpieceStatus> wpInfoQueue;
     private Behaviour[] behaviours;
-
-    public Queue<WorkpieceStatus> getWpInfoQueue() {
-        return wpInfoQueue;
-    }
-
-    public void setWpInfoQueue(Queue<WorkpieceStatus> wpInfoQueue) {
-        this.wpInfoQueue = wpInfoQueue;
-    }
 
     public void setBehaviours(Behaviour[] behaviours) {
         this.behaviours = behaviours;
@@ -50,11 +37,4 @@ public class WorkerAgent extends BaseAgent {
         }
     }
 
-    public Integer getDetectRatio() {
-        return detectRatio;
-    }
-
-    public void setDetectRatio(Integer detectRatio) {
-        this.detectRatio = detectRatio;
-    }
 }

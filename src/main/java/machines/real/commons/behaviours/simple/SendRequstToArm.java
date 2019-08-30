@@ -6,7 +6,7 @@ import commons.tools.LoggerUtil;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
-import machines.real.commons.request.ArmrobotRequest;
+import machines.real.commons.request.ArmRequest;
 
 /**
  * .
@@ -17,12 +17,12 @@ import machines.real.commons.request.ArmrobotRequest;
  */
 
 public class SendRequstToArm extends OneShotBehaviour {
-    private ArmrobotRequest request;
+    private ArmRequest request;
     private String password;
     private String conversationId;
     private String infoString;
 
-    public SendRequstToArm(Agent a, ArmrobotRequest request, String password, String conversationId, String infoString) {
+    public SendRequstToArm(Agent a, ArmRequest request, String password, String conversationId, String infoString) {
         super(a);
         this.request = request;
         this.password = password;
@@ -30,7 +30,7 @@ public class SendRequstToArm extends OneShotBehaviour {
         this.infoString = infoString;
     }
 
-    public SendRequstToArm(Agent a, ArmrobotRequest request, String password, String conversationId) {
+    public SendRequstToArm(Agent a, ArmRequest request, String password, String conversationId) {
         this(a, request, password, conversationId, "");
     }
 

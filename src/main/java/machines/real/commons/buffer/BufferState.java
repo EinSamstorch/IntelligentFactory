@@ -10,9 +10,10 @@ package machines.real.commons.buffer;
 
 public class BufferState {
     public static final int STATE_EMPTY = 1;
-    public static final int STATE_WAITING = 2;
-    public static final int STATE_PROCESSING = 3;
-    public static final int STATE_PROCESSED = 4;
+    public static final int STATE_ARRIVING = 2;
+    public static final int STATE_WAITING = 3;
+    public static final int STATE_PROCESSING = 4;
+    public static final int STATE_PROCESSED = 5;
 
     private Integer state = STATE_EMPTY;
 

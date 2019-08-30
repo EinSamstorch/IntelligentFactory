@@ -13,6 +13,7 @@ import machines.real.commons.ContractNetContent;
 import machines.real.commons.RealMachineAgent;
 import machines.real.commons.behaviours.simple.CallForAgv;
 import machines.real.commons.buffer.Buffer;
+import machines.real.commons.buffer.BufferState;
 import machines.real.commons.hal.MachineHal;
 import machines.real.commons.request.AgvRequest;
 
@@ -95,6 +96,7 @@ public class ProcessContractNetResponder extends ContractNetResponder {
         wpInfo.setBufferPos(to);
         // 放入机床buffer中
         buffer.setWpInfo(wpInfo);
+        buffer.getBufferState().setState(BufferState.STATE_ARRIVING);
         buffer.setEvaluateTime(hal.evaluate(wpInfo));
         // call for agv
         AgvRequest request = new AgvRequest(from, to, wpInfo);

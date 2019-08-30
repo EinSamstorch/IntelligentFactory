@@ -27,11 +27,11 @@ public class CloudAgent extends BaseAgent {
     /**
      * 新状态推送列表.
      */
-    Queue<String> stateQueue;
+    private Queue<String> stateQueue;
     /**
      * 新位置推送列表.
      */
-    Queue<String> posQueue;
+    private Queue<String> posQueue;
     /**
      * 云端地址.
      */
@@ -48,6 +48,9 @@ public class CloudAgent extends BaseAgent {
     private Queue<OrderInfo> orderQueue;
     private String serviceType;
 
+    public CloudAgent() {
+    }
+
     public void setServiceType(String serviceType) {
         this.serviceType = serviceType;
     }
@@ -60,37 +63,6 @@ public class CloudAgent extends BaseAgent {
         return website;
     }
 
-    public void setWebsite(String website) {
-        this.website = website;
-    }
-
-    public Map<String, String> getMysqlSetting() {
-        return mysqlSetting;
-    }
-
-    public Queue<OrderInfo> getOrderQueue() {
-        return orderQueue;
-    }
-
-    public void setOrderQueue(Queue<OrderInfo> orderQueue) {
-        this.orderQueue = orderQueue;
-    }
-
-    public Queue<String> getStateQueue() {
-        return stateQueue;
-    }
-
-    public void setStateQueue(Queue<String> stateQueue) {
-        this.stateQueue = stateQueue;
-    }
-
-    public Queue<String> getPosQueue() {
-        return posQueue;
-    }
-
-    public void setPosQueue(Queue<String> posQueue) {
-        this.posQueue = posQueue;
-    }
 
     @Override
     protected void setup() {

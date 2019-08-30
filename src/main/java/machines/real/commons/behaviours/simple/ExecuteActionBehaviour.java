@@ -4,6 +4,7 @@ import commons.order.WorkpieceStatus;
 import commons.tools.LoggerUtil;
 import jade.core.behaviours.SimpleBehaviour;
 import machines.real.commons.buffer.Buffer;
+import machines.real.commons.buffer.BufferState;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -39,6 +40,8 @@ public class ExecuteActionBehaviour extends SimpleBehaviour {
         WorkpieceStatus wpInfo = null;
         if (buffer != null) {
             wpInfo = buffer.getWpInfo();
+            buffer.getBufferState().setState(BufferState.STATE_PROCESSING);
+            buffer.setProcessTimestamp(System.currentTimeMillis());
         }
         if (wpInfo != null) {
             try {

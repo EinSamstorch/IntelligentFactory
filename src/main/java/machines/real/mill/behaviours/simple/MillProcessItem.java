@@ -8,7 +8,7 @@ import machines.real.commons.behaviours.sequantial.SequentialCallForArm;
 import machines.real.commons.behaviours.simple.ProcessFinishedBehaviour;
 import machines.real.commons.behaviours.simple.ProcessItemBehaviour;
 import machines.real.commons.buffer.Buffer;
-import machines.real.commons.request.ArmrobotRequest;
+import machines.real.commons.request.ArmRequest;
 import machines.real.mill.MillHalImpl;
 
 /**
@@ -24,7 +24,7 @@ public class MillProcessItem implements ProcessItem {
     public Behaviour getBehaviour(RealMachineAgent realAgent, Buffer buffer, String armPwd) {
 
         MillHalImpl hal = (MillHalImpl) realAgent.getHal();
-        ArmrobotRequest request = new ArmrobotRequest(
+        ArmRequest request = new ArmRequest(
                 String.valueOf(buffer.getIndex()),
                 realAgent.getLocalName(),
                 buffer.getWpInfo().getGoodsId());
@@ -39,7 +39,7 @@ public class MillProcessItem implements ProcessItem {
         // 加工
         s.addSubBehaviour(ProcessItemBehaviour.getBehaviour(hal, buffer));
         // 下料
-        ArmrobotRequest unloadRequest = ArmrobotRequest.unloadRequest(request);
+        ArmRequest unloadRequest = ArmRequest.unloadRequest(request);
         s.addSubBehaviour(SequentialCallForArm
                 .getBehaviour(realAgent,
                         unloadRequest,
