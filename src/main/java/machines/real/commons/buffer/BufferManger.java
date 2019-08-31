@@ -62,6 +62,9 @@ public class BufferManger {
     public Integer getAllWaitingTime() {
         int totalTime = 0;
         for (Buffer buffer : buffers) {
+            if(buffer.getBufferState().getState() == BufferState.STATE_ARRIVING) {
+                totalTime += buffer.getEvaluateTime();
+            }
             if (buffer.getBufferState().getState() == BufferState.STATE_WAITING) {
                 // 待加工 返回 预估时间
                 totalTime += buffer.getEvaluateTime();

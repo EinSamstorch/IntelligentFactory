@@ -63,7 +63,7 @@ public class HttpRequest {
     /**
      * 从云端获取新订单
      *
-     * @param host      云端地址
+     * @param host     云端地址
      * @param numTodo  待处理订单数量
      * @param numDoing 正在处理的订单数量
      * @return 网页返回的字符串

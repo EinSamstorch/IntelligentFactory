@@ -1,6 +1,6 @@
 package machines.real.warehouse.behaviours.cycle;
 
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 import commons.tools.LoggerUtil;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
@@ -11,9 +11,11 @@ import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetResponder;
 import machines.real.commons.ContractNetContent;
 import machines.real.commons.request.AgvRequest;
+import machines.real.warehouse.DbInterface;
 import machines.real.warehouse.WarehouseAgent;
-import machines.real.warehouse.WarehouseSqlite;
 import machines.real.warehouse.behaviours.simple.CallForAgv;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import java.io.IOException;
 
@@ -26,19 +28,18 @@ import java.io.IOException;
  */
 
 public class ProductContractNetResponder extends ContractNetResponder {
-    private WarehouseAgent whagent;
-    private WarehouseSqlite sqlite;
+    private DbInterface db;
 
-    public ProductContractNetResponder(WarehouseAgent whagent, MessageTemplate mt) {
-        super(whagent, mt);
-        this.whagent = whagent;
-        sqlite = whagent.getSqlite();
+    public ProductContractNetResponder(WarehouseAgent warehouseAgent, MessageTemplate mt) {
+        super(warehouseAgent, mt);
+        ApplicationContext ac = new FileSystemXmlApplicationContext("./resources/sql.xml");
+        db = ac.getBean("db", DbInterface.class);
     }
 
     @Override
     protected ACLMessage handleCfp(ACLMessage cfp) throws RefuseException, FailureException, NotUnderstoodException {
         LoggerUtil.agent.debug(String.format("CFP received from: %s.", cfp.getSender().getName()));
-        int quantity = sqlite.getProductQuantity();
+        int quantity = db.getProductQuantity();
         if (quantity > 0) {
             ACLMessage propose = cfp.createReply();
             propose.setPerformative(ACLMessage.PROPOSE);
@@ -58,24 +59,24 @@ public class ProductContractNetResponder extends ContractNetResponder {
     protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept) throws FailureException {
         LoggerUtil.agent.info("Proposal accepted: " + accept.getSender().getName());
         int quantity = Integer.parseInt(accept.getContent());
-        WorkpieceInfo wpInfo = null;
+        WorkpieceStatus wpInfo = null;
         try {
-            wpInfo = (WorkpieceInfo) cfp.getContentObject();
+            wpInfo = (WorkpieceStatus) cfp.getContentObject();
         } catch (UnreadableException e) {
             e.printStackTrace();
         }
         if (wpInfo != null) {
-            int position = sqlite.getProduct(wpInfo);
+            int position = db.getProduct(wpInfo);
             wpInfo.setWarehousePosition(position);
             int currentLocation = wpInfo.getBufferPos();
             // 更新 wpInfo
-            wpInfo.setCurOwnerId(whagent.getLocalName());
+            wpInfo.setCurOwnerId(myAgent.getLocalName());
             // 入库口
             wpInfo.setBufferPos(25);
 
             // call for agv
             AgvRequest request = new AgvRequest(currentLocation, 25, wpInfo);
-            whagent.addBehaviour(new CallForAgv(whagent, request));
+            myAgent.addBehaviour(new CallForAgv(myAgent, request));
 
             ACLMessage inform = accept.createReply();
             inform.setPerformative(ACLMessage.INFORM);

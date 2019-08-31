@@ -36,15 +36,16 @@ public class ProcessPlan {
                 add(DfServiceType.MILL);
             }
         };
-        processPlan.put("001", flangeProcessPlan);
+        processPlan.put(goodsidList.get(0), flangeProcessPlan);
 
         List<String> axisProcessPlan = new ArrayList<String>() {
             {
                 add(DfServiceType.WAREHOUSE);
                 add(DfServiceType.LATHE);
+                add(DfServiceType.MILL);
             }
         };
-        processPlan.put("002", axisProcessPlan);
+        processPlan.put(goodsidList.get(1), axisProcessPlan);
 
         List<String> plainProcessPlan = new ArrayList<String>() {
             {
@@ -52,7 +53,7 @@ public class ProcessPlan {
                 add(DfServiceType.MILL);
             }
         };
-        processPlan.put("003", plainProcessPlan);
+        processPlan.put(goodsidList.get(2), plainProcessPlan);
     }
 
     public static List<String> getProcessPlan(String goodsid) {

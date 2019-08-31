@@ -10,46 +10,49 @@ import java.io.Serializable;
  * @since 1.8
  */
 
-public class ArmrobotRequest implements Serializable {
+public class ArmRequest implements Serializable {
     private final String from;
     private final String to;
     private final String goodsid;
     private final Integer step;
 
-    public ArmrobotRequest(String from, String to, String goodsid, Integer step) {
+    public ArmRequest(String from, String to, String goodsid, Integer step) {
         this.from = from;
         this.to = to;
         this.goodsid = goodsid;
         this.step = step;
     }
 
-    public ArmrobotRequest(ArmrobotRequest request) {
+    public ArmRequest(ArmRequest request) {
         this.from = request.from;
         this.to = request.to;
         this.goodsid = request.goodsid;
         this.step = request.step;
     }
 
-    public ArmrobotRequest(String from, String to, String goodsid) {
+    public ArmRequest(String from, String to, String goodsid) {
         this(from, to, goodsid, 0);
     }
 
-    public static ArmrobotRequest unloadRequest(ArmrobotRequest request) {
-        return new ArmrobotRequest(request.to,
+    public static ArmRequest unloadRequest(ArmRequest request) {
+        return new ArmRequest(
+                request.to,
                 request.from,
                 request.goodsid,
                 0);
     }
 
-    public static ArmrobotRequest reverseRequest(ArmrobotRequest request) {
-        return new ArmrobotRequest(request.to,
+    public static ArmRequest reverseRequest(ArmRequest request) {
+        return new ArmRequest(
+                request.to,
                 request.to,
                 request.goodsid,
                 0);
     }
 
-    public static ArmrobotRequest nextStep(ArmrobotRequest request) {
-        return new ArmrobotRequest(request.from,
+    public static ArmRequest nextStep(ArmRequest request) {
+        return new ArmRequest(
+                request.from,
                 request.to,
                 request.goodsid,
                 request.step + 1);
@@ -71,4 +74,17 @@ public class ArmrobotRequest implements Serializable {
         return step;
     }
 
+    public static ArmRequest endStep(ArmRequest request) {
+        return new ArmRequest(
+                request.from,
+                request.to,
+                request.goodsid,
+                -1
+        );
+    }
+
+    @Override
+    public String toString() {
+        return String.format("FROM:%s;TO:%s", from, to);
+    }
 }

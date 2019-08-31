@@ -1,6 +1,5 @@
 package commons.tools;
 
-import commons.exceptions.MsgCreateFailedException;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
@@ -116,5 +115,12 @@ public class DfUtils {
             LoggerUtil.commonTools.fatal(e.getMessage());
             throw new MsgCreateFailedException(e.getMessage());
         }
+    }
+}
+
+class MsgCreateFailedException extends Exception {
+
+    MsgCreateFailedException(String message) {
+        super(message);
     }
 }

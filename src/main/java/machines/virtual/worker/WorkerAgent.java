@@ -1,17 +1,8 @@
 package machines.virtual.worker;
 
 import commons.BaseAgent;
-import commons.order.WorkpieceInfo;
-import commons.tools.DfServiceType;
-import commons.tools.IniLoader;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
-import machines.virtual.worker.behaviours.cycle.HandleRequest;
-import machines.virtual.worker.behaviours.cycle.HandleWorkpiece;
-
-import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * 专门负责招投标任务.
@@ -23,35 +14,27 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class WorkerAgent extends BaseAgent {
-    private Integer detectRatio;
-    private Queue<WorkpieceInfo> wpInfoQueue = new LinkedBlockingQueue<>();
+    private String serviceType;
+    private Behaviour[] behaviours;
 
-    public Queue<WorkpieceInfo> getWpInfoQueue() {
-        return wpInfoQueue;
+    public void setBehaviours(Behaviour[] behaviours) {
+        this.behaviours = behaviours;
     }
 
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+    }
 
     @Override
     protected void setup() {
         super.setup();
-        registerDf(DfServiceType.WORKER);
+        registerDf(serviceType);
 
-        detectRatio = loadDetectRatio();
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
 
-        Behaviour b = new HandleRequest(this);
-        addBehaviour(tbf.wrap(b));
-
-        b = new HandleWorkpiece(this);
-        addBehaviour(tbf.wrap(b));
+        for (Behaviour behaviour : behaviours) {
+            addBehaviour(tbf.wrap(behaviour));
+        }
     }
 
-    private int loadDetectRatio() {
-        Map<String, String> setting = IniLoader.load(getLocalName());
-        return Integer.parseInt(setting.get("detect_ratio"));
-    }
-
-    public Integer getDetectRatio() {
-        return detectRatio;
-    }
 }

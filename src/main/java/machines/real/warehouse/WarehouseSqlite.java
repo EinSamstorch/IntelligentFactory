@@ -1,6 +1,6 @@
 package machines.real.warehouse;
 
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 import commons.tools.LoggerUtil;
 import commons.tools.db.SqliteJdbc;
 
@@ -22,7 +22,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 
 
-public class WarehouseSqlite extends SqliteJdbc {
+public class WarehouseSqlite extends SqliteJdbc implements DbInterface {
     private Map<Integer, String> rawTable;
     private Queue<Integer> productTable;
     private String nullStr = "000";
@@ -91,12 +91,8 @@ public class WarehouseSqlite extends SqliteJdbc {
 
     }
 
-    /**
-     * 查询raw table, 对应 goodsid的原料剩余数量
-     *
-     * @param goodsid 代查询种类
-     * @return 剩余原料数量, 不存在的原料 返回数量0
-     */
+
+    @Override
     public int getRawQuantityByGoodsId(String goodsid) {
         int quantity = 0;
         for (Map.Entry<Integer, String> entry : rawTable.entrySet()) {
@@ -105,35 +101,16 @@ public class WarehouseSqlite extends SqliteJdbc {
             }
         }
         return quantity;
-//        String cmd = String.format("SELECT COUNT(*) FROM raw WHERE goodsid='%s'", goodsid);
-//        int quantity = 0;
-//        try {
-//            Statement stmt = con.createStatement();
-//            ResultSet rs = stmt.executeQuery(cmd);
-//            while (rs.next()) {
-//                quantity = rs.getInt(1);
-//            }
-//        } catch (SQLException e) {
-//            LoggerUtil.db.error(e.getMessage());
-//        }
-//        return quantity;
     }
 
-    /**
-     * 查询 product表 空位数量
-     *
-     * @return
-     */
+
+    @Override
     public int getProductQuantity() {
         return productTable.size();
     }
 
-    /**
-     * 获得一个原料, 同时从raw table中删去库存
-     *
-     * @param goodsid 原料种类
-     * @return int positon,  0表示失败
-     */
+
+    @Override
     public int getRaw(String goodsid) {
         for (Map.Entry<Integer, String> entry : rawTable.entrySet()) {
             if (Objects.equals(entry.getValue(), goodsid)) {
@@ -146,24 +123,6 @@ public class WarehouseSqlite extends SqliteJdbc {
             }
         }
         return 0;
-//        String cmd = String.format("SELECT position FROM raw WHERE goodsid='%s' limit 1", goodsid);
-//        String position = null;
-//        try {
-//            Statement stmt = con.createStatement();
-//            ResultSet rs = stmt.executeQuery(cmd);
-//            while (rs.next()) {
-//                position = rs.getString(1);
-//            }
-//            cmd = String.format("UPDATE raw SET goodsid=null WHERE position='%s'", position);
-//            int rst = stmt.executeUpdate(cmd);
-//            if (rst != 1) {
-//                LoggerUtil.db.error(cmd);
-//                position = null;
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return position;
     }
 
     private void removeRawTable(int position) {
@@ -184,12 +143,9 @@ public class WarehouseSqlite extends SqliteJdbc {
 
     }
 
-    /**
-     * 获得一个空位 同时将数据信息更新到表里
-     *
-     * @return 空位id
-     */
-    public int getProduct(WorkpieceInfo wpInfo) {
+
+    @Override
+    public int getProduct(WorkpieceStatus wpInfo) {
         Integer position = productTable.poll();
         if (position != null) {
             updateProductTable(position, wpInfo);
@@ -205,7 +161,7 @@ public class WarehouseSqlite extends SqliteJdbc {
      * @param position 位置id
      * @param wpInfo   工件信息
      */
-    private void updateProductTable(int position, WorkpieceInfo wpInfo) {
+    private void updateProductTable(int position, WorkpieceStatus wpInfo) {
         connect();
         try {
             String sqlCmd = String.format("UPDATE product SET orderid='%s', workpieceid='%s' WHERE position=%d",

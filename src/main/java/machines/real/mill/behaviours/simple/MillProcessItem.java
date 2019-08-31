@@ -2,14 +2,14 @@ package machines.real.mill.behaviours.simple;
 
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.SequentialBehaviour;
-import machines.real.commons.ProcessItemInterface;
+import machines.real.commons.ProcessItem;
+import machines.real.commons.RealMachineAgent;
 import machines.real.commons.behaviours.sequantial.SequentialCallForArm;
 import machines.real.commons.behaviours.simple.ProcessFinishedBehaviour;
 import machines.real.commons.behaviours.simple.ProcessItemBehaviour;
 import machines.real.commons.buffer.Buffer;
-import machines.real.commons.request.ArmrobotRequest;
-import machines.real.mill.MillAgent;
-import machines.real.mill.MillHal;
+import machines.real.commons.request.ArmRequest;
+import machines.real.mill.MillHalImpl;
 
 /**
  * 铣床加工工件行为.
@@ -19,46 +19,34 @@ import machines.real.mill.MillHal;
  * @since 1.8
  */
 
-public class MillProcessItem implements ProcessItemInterface {
-    private MillAgent millAgent;
-    private MillHal hal;
-    private ArmrobotRequest request;
-    private Buffer buffer;
-    private String password;
-
-    public MillProcessItem(MillAgent millAgent, Buffer buffer, String password) {
-        this.millAgent = millAgent;
-        this.buffer = buffer;
-        this.password = password;
-
-        this.hal = (MillHal) millAgent.getHal();
-        this.request = new ArmrobotRequest(
-                String.valueOf(buffer.getIndex()),
-                millAgent.getLocalName(),
-                buffer.getWpInfo().getGoodsId());
-    }
-
+public class MillProcessItem implements ProcessItem {
     @Override
-    public Behaviour getBehaviour() {
+    public Behaviour getBehaviour(RealMachineAgent realAgent, Buffer buffer, String armPwd) {
+
+        MillHalImpl hal = (MillHalImpl) realAgent.getHal();
+        ArmRequest request = new ArmRequest(
+                String.valueOf(buffer.getIndex()),
+                realAgent.getLocalName(),
+                buffer.getWpInfo().getGoodsId());
         SequentialBehaviour s = new SequentialBehaviour();
 
         // 上料
         s.addSubBehaviour(SequentialCallForArm
-                .getBehaviour(millAgent,
+                .getBehaviour(realAgent,
                         request,
-                        password,
+                        armPwd,
                         String.format("Load item from buffer %d.", buffer.getIndex())));
         // 加工
         s.addSubBehaviour(ProcessItemBehaviour.getBehaviour(hal, buffer));
         // 下料
-        ArmrobotRequest unloadRequest = ArmrobotRequest.unloadRequest(request);
+        ArmRequest unloadRequest = ArmRequest.unloadRequest(request);
         s.addSubBehaviour(SequentialCallForArm
-                .getBehaviour(millAgent,
+                .getBehaviour(realAgent,
                         unloadRequest,
-                        password,
+                        armPwd,
                         String.format("Unload item from buffer %d.", buffer.getIndex())));
         // 下一步工序招标 更新机器和工位台状态
-        s.addSubBehaviour(new ProcessFinishedBehaviour(millAgent, buffer));
+        s.addSubBehaviour(new ProcessFinishedBehaviour(realAgent, buffer));
         return s;
     }
 }

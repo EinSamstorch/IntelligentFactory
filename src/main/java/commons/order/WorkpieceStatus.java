@@ -14,7 +14,7 @@ import java.util.List;
  */
 
 
-public class WorkpieceInfo implements Serializable {
+public class WorkpieceStatus implements Serializable {
     private String orderId;
     private String workpieceId;
     private String goodsId;
@@ -32,7 +32,7 @@ public class WorkpieceInfo implements Serializable {
      */
     private Integer processStep;
 
-    public WorkpieceInfo(String orderId, String workpieceId, String goodsId, String detailSize) {
+    public WorkpieceStatus(String orderId, String workpieceId, String goodsId, String detailSize) {
         this.orderId = orderId;
         this.workpieceId = workpieceId;
         this.goodsId = goodsId;
@@ -44,7 +44,7 @@ public class WorkpieceInfo implements Serializable {
     }
 
     public static void main(String[] args) {
-        WorkpieceInfo wpInfo = new WorkpieceInfo("001", "001", "003", "");
+        WorkpieceStatus wpInfo = new WorkpieceStatus("001", "001", "003", "");
         JSONObject json = new JSONObject();
         json.put("extra", wpInfo);
         System.out.println(json.toJSONString());

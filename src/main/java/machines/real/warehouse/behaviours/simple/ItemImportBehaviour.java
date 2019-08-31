@@ -22,7 +22,7 @@ public class ItemImportBehaviour extends OneShotBehaviour {
     public ItemImportBehaviour(WarehouseAgent whagent, WarehouseRequest request) {
         super(whagent);
         hal = whagent.getHal();
-        posIn = whagent.getPosIn();
+        this.posIn = whagent.getPosIn();
         this.request = request;
     }
 

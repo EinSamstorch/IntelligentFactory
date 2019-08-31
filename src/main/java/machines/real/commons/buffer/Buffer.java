@@ -1,6 +1,6 @@
 package machines.real.commons.buffer;
 
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 import commons.tools.LoggerUtil;
 
 /**
@@ -19,7 +19,7 @@ public class Buffer {
     /**
      * Buffer上 工件信息
      */
-    private WorkpieceInfo wpInfo;
+    private WorkpieceStatus wpInfo;
     /**
      * Buffer状态信息
      */
@@ -41,10 +41,12 @@ public class Buffer {
     /**
      * 返回还有多长时间加工完成
      *
+     * 对于车床加工而言，该函数有问题，第二段加工时 会更新 processTimestamp，导致预估时间不正确
      * @return 单位 秒
      */
     public Integer getRemainProcessTime() {
-        return evaluateTime - (int) (System.currentTimeMillis() - processTimestamp) / 1000;
+        int remainTime = evaluateTime - (int) (System.currentTimeMillis() - processTimestamp) / 1000;
+        return remainTime > 0 ? remainTime : 0;
     }
 
     public void setProcessTimestamp(Long processTimestamp) {
@@ -63,11 +65,11 @@ public class Buffer {
         return index;
     }
 
-    public WorkpieceInfo getWpInfo() {
+    public WorkpieceStatus getWpInfo() {
         return wpInfo;
     }
 
-    public void setWpInfo(WorkpieceInfo wpInfo) {
+    public void setWpInfo(WorkpieceStatus wpInfo) {
         this.wpInfo = wpInfo;
     }
 

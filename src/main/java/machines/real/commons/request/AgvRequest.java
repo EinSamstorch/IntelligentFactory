@@ -1,6 +1,6 @@
 package machines.real.commons.request;
 
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 
 import java.io.Serializable;
 
@@ -18,9 +18,9 @@ public class AgvRequest implements Serializable {
      */
     private Integer from;
     private Integer to;
-    private WorkpieceInfo wpInfo;
+    private WorkpieceStatus wpInfo;
 
-    public AgvRequest(Integer from, Integer to, WorkpieceInfo wpInfo) {
+    public AgvRequest(Integer from, Integer to, WorkpieceStatus wpInfo) {
         this.from = from;
         this.to = to;
         this.wpInfo = wpInfo;
@@ -34,7 +34,7 @@ public class AgvRequest implements Serializable {
         return to;
     }
 
-    public WorkpieceInfo getWpInfo() {
+    public WorkpieceStatus getWpInfo() {
         return wpInfo;
     }
 }

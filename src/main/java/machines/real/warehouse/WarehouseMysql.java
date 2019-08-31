@@ -1,6 +1,6 @@
 package machines.real.warehouse;
 
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 import commons.tools.LoggerUtil;
 import commons.tools.db.MysqlJdbc;
 
@@ -18,7 +18,7 @@ import java.util.Map;
  * @since 1.8
  */
 
-public class WarehouseMysql extends MysqlJdbc {
+public class WarehouseMysql extends MysqlJdbc implements DbInterface {
     /**
      * 构造器 .
      *
@@ -28,12 +28,8 @@ public class WarehouseMysql extends MysqlJdbc {
         super(mysqlInfo);
     }
 
-    /**
-     * 获得一个原料, 同时从raw table中删去库存
-     *
-     * @param goodsid 原料种类
-     * @return int positon,  0表示失败
-     */
+
+    @Override
     public int getRaw(String goodsid) {
         String cmd = String.format("SELECT position FROM raw WHERE goodsid='%s' limit 1", goodsid);
         int position = 0;
@@ -61,12 +57,8 @@ public class WarehouseMysql extends MysqlJdbc {
         return position;
     }
 
-    /**
-     * 查询raw table, 对应 goodsid的原料剩余数量
-     *
-     * @param goodsid 代查询种类
-     * @return 剩余原料数量, 不存在的原料 返回数量0
-     */
+
+    @Override
     public int getRawQuantityByGoodsId(String goodsid) {
         String cmd = String.format("SELECT COUNT(*) FROM raw WHERE goodsid='%s'", goodsid);
         int quantity = 0;
@@ -83,18 +75,15 @@ public class WarehouseMysql extends MysqlJdbc {
         return quantity;
     }
 
-    /**
-     * 获得一个空位 同时将数据信息更新到表里
-     *
-     * @return 空位id
-     */
-    public int getProduct(WorkpieceInfo wpInfo) {
+
+    @Override
+    public int getProduct(WorkpieceStatus wpInfo) {
         int position = 0;
         connect();
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT position FROM product WHERE orderid IS NULL and workpieceid IS NULL");
-            while(rs.next()){
+            while (rs.next()) {
                 position = rs.getInt(1);
             }
 
@@ -105,10 +94,10 @@ public class WarehouseMysql extends MysqlJdbc {
             PreparedStatement pstmt = con.prepareStatement("UPDATE product SET orderid = ?, workpieceid = ? WHERE position = ?");
             pstmt.setString(1, wpInfo.getOrderId());
             pstmt.setString(2, wpInfo.getWorkpieceId());
-            pstmt.setInt(3,position);
+            pstmt.setInt(3, position);
 
             int result = pstmt.executeUpdate();
-            if(result != 1) {
+            if (result != 1) {
                 LoggerUtil.db.error(String.format("Failed to update product table on position: %d", position));
             }
         } catch (SQLException e) {
@@ -120,23 +109,20 @@ public class WarehouseMysql extends MysqlJdbc {
         return position;
     }
 
-    /**
-     * 查询 product表 空位数量
-     *
-     * @return
-     */
+
+    @Override
     public int getProductQuantity() {
         int quantity = 0;
         connect();
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM product WHERE orderid IS NULL and workpieceid IS NULL");
-            while(rs.next()) {
+            while (rs.next()) {
                 quantity = rs.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally{
+        } finally {
             close();
         }
         return quantity;

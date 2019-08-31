@@ -13,15 +13,15 @@ import org.apache.log4j.PropertyConfigurator;
  */
 
 public class LoggerUtil {
-    public static Logger db = Logger.getLogger("db");
-    public static Logger agent = Logger.getLogger("agent");
-    public static Logger commonTools = Logger.getLogger("commontools");
-    public static Logger hal = Logger.getLogger("hal");
+    public final static Logger db = Logger.getLogger("db");
+    public final static Logger agent = Logger.getLogger("agent");
+    public final static Logger commonTools = Logger.getLogger("commontools");
+    public final static Logger hal = Logger.getLogger("hal");
 
     /**
      * 配置文件默认位置 ：config/log4j.properties
      */
     static {
-        PropertyConfigurator.configure("./resources/config/log4j.properties");
+        PropertyConfigurator.configure("./resources/log4j.properties");
     }
 }

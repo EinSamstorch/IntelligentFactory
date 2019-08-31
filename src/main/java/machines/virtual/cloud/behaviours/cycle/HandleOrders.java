@@ -1,12 +1,14 @@
 package machines.virtual.cloud.behaviours.cycle;
 
 import commons.order.OrderInfo;
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 import commons.tools.DfServiceType;
 import commons.tools.DfUtils;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import machines.virtual.cloud.CloudAgent;
+
+import java.util.Queue;
 
 /**
  * 处理新订单.
@@ -18,26 +20,29 @@ import machines.virtual.cloud.CloudAgent;
 
 
 public class HandleOrders extends TickerBehaviour {
-    private CloudAgent cagent;
+    private Queue<OrderInfo> orderInfoQueue;
 
-    public HandleOrders(CloudAgent cagent, long period) {
-        super(cagent, period);
-        this.cagent = cagent;
+    public HandleOrders(CloudAgent cloudAgent, long period) {
+        super(cloudAgent, period);
+    }
+
+    public void setOrderInfoQueue(Queue<OrderInfo> orderInfoQueue) {
+        this.orderInfoQueue = orderInfoQueue;
     }
 
     @Override
     protected void onTick() {
         while (true) {
-            OrderInfo oi = cagent.getOrderQueue().poll();
+            OrderInfo oi = orderInfoQueue.poll();
             if (oi == null) {
                 break;
             }
-            for (WorkpieceInfo wpInfo : oi.getWpInfoList()) {
+            for (WorkpieceStatus wpInfo : oi.getWpInfoList()) {
                 try {
                     // TODO 未来此处需要做处理，失败的消息需要记录并重试。
                     ACLMessage msg = DfUtils.createRequestMsg(wpInfo);
-                    DfUtils.searchDf(cagent, msg, DfServiceType.WORKER);
-                    cagent.send(msg);
+                    DfUtils.searchDf(myAgent, msg, DfServiceType.WORKER);
+                    myAgent.send(msg);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

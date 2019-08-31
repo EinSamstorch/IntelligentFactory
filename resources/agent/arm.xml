@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="
+        http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!-- 配置Agent -->
+    <bean id="agent" class="machines.real.arm.ArmAgent">
+        <property name="serviceType">
+            <util:constant static-field="commons.tools.DfServiceType.ARM"/>
+        </property>
+        <property name="armPwd" ref="armPwd"/>
+        <!-- agent 行为集-->
+        <property name="behaviours">
+            <list>
+                <!-- 执行搬运请求 -->
+                <bean class="machines.real.arm.behaviours.cycle.MoveItemBehaviour">
+                    <property name="hal" ref="hal"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 配置 hal -->
+    <bean id="hal" class="machines.real.arm.ArmHalImpl">
+        <!-- socket server监听端口 -->
+        <constructor-arg name="port" value="5656"/>
+    </bean>
+    <bean id="armPwd" class="java.lang.String">
+        <constructor-arg name="original" value="xi"/>
+    </bean>
+</beans>
+

@@ -4,10 +4,11 @@ import commons.NotifyFinish;
 import commons.tools.LoggerUtil;
 import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.util.leap.Iterator;
-import machines.real.agv.AgvAgent;
 import machines.real.agv.AgvHal;
 import machines.real.agv.behaviours.simple.CallForWarehouse;
 import machines.real.commons.request.AgvRequest;
@@ -27,18 +28,19 @@ public class TransportItemBehaviour extends CyclicBehaviour {
     private static final int STATE_CALL_WH = 2;
     private static final int STATE_DO_TASK = 3;
     private static final int STATE_WAIT_WH = 4;
-    private AgvAgent aagent;
     private AgvHal hal;
     private int state;
     private AgvRequest request;
     private ACLMessage requestMsg;
     private volatile NotifyFinish notifyFinish;
 
-    public TransportItemBehaviour(AgvAgent aagent) {
-        super(aagent);
-        this.aagent = aagent;
-        this.hal = aagent.getHal();
+    public TransportItemBehaviour() {
+        super();
         this.state = STATE_READY;
+    }
+
+    public void setHal(AgvHal hal) {
+        this.hal = hal;
     }
 
     @Override
@@ -76,7 +78,11 @@ public class TransportItemBehaviour extends CyclicBehaviour {
     }
 
     private void getRequest() {
-        ACLMessage msg = aagent.getTransportRequestQueue().poll();
+        MessageTemplate mt = MessageTemplate.and(
+                MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
+                MessageTemplate.MatchPerformative(ACLMessage.REQUEST)
+        );
+        ACLMessage msg = myAgent.receive(mt);
         if (msg != null) {
             this.requestMsg = msg;
             AgvRequest request = null;
@@ -87,13 +93,11 @@ public class TransportItemBehaviour extends CyclicBehaviour {
             }
             if (request != null) {
                 int from = request.getFrom();
-                int to = request.getTo();
+                this.request = request;
                 if (from == WAREHOUSE_EXPORT) {
                     state = STATE_CALL_WH;
-                    this.request = request;
                 } else {
                     state = STATE_DO_TASK;
-                    this.request = request;
                 }
             } else {
                 LoggerUtil.hal.error("Request NPE Error.");
@@ -121,12 +125,12 @@ public class TransportItemBehaviour extends CyclicBehaviour {
             inform.addReceiver(receiver);
             inform.setLanguage("BUFFER_INDEX");
             inform.setContent(Integer.toString(from));
-            aagent.send(inform);
+            myAgent.send(inform);
 
             // 通知到货
             ACLMessage reply = requestMsg.createReply();
             reply.setPerformative(ACLMessage.INFORM);
-            aagent.send(reply);
+            myAgent.send(reply);
             state = STATE_READY;
         } else {
             LoggerUtil.hal.error(String.format("Failed! Request from %d to %d.", from, to));

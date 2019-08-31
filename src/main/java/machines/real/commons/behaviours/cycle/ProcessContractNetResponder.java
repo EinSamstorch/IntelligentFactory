@@ -1,6 +1,6 @@
 package machines.real.commons.behaviours.cycle;
 
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 import commons.tools.LoggerUtil;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
@@ -13,6 +13,7 @@ import machines.real.commons.ContractNetContent;
 import machines.real.commons.RealMachineAgent;
 import machines.real.commons.behaviours.simple.CallForAgv;
 import machines.real.commons.buffer.Buffer;
+import machines.real.commons.buffer.BufferState;
 import machines.real.commons.hal.MachineHal;
 import machines.real.commons.request.AgvRequest;
 
@@ -33,7 +34,10 @@ public class ProcessContractNetResponder extends ContractNetResponder {
     public ProcessContractNetResponder(RealMachineAgent machineAgent, MessageTemplate mt) {
         super(machineAgent, mt);
         this.machineAgent = machineAgent;
-        hal = machineAgent.getHal();
+    }
+
+    public void setHal(MachineHal hal) {
+        this.hal = hal;
     }
 
     @Override
@@ -42,9 +46,9 @@ public class ProcessContractNetResponder extends ContractNetResponder {
         if (machineAgent.getBufferManger().isBufferFull()) {
             throw new RefuseException("Buffer Full!");
         }
-        WorkpieceInfo wpInfo;
+        WorkpieceStatus wpInfo;
         try {
-            wpInfo = (WorkpieceInfo) cfp.getContentObject();
+            wpInfo = (WorkpieceStatus) cfp.getContentObject();
         } catch (UnreadableException e) {
             e.printStackTrace();
             throw new FailureException("WorkpieceInfo read error.");
@@ -68,9 +72,9 @@ public class ProcessContractNetResponder extends ContractNetResponder {
     @Override
     protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept) throws FailureException {
         LoggerUtil.agent.info("Proposal accepted: " + accept.getSender().getName());
-        WorkpieceInfo wpInfo;
+        WorkpieceStatus wpInfo;
         try {
-            wpInfo = (WorkpieceInfo) cfp.getContentObject();
+            wpInfo = (WorkpieceStatus) cfp.getContentObject();
         } catch (UnreadableException e) {
             e.printStackTrace();
             throw new FailureException("WorkpieceInfo read error.");
@@ -92,6 +96,7 @@ public class ProcessContractNetResponder extends ContractNetResponder {
         wpInfo.setBufferPos(to);
         // 放入机床buffer中
         buffer.setWpInfo(wpInfo);
+        buffer.getBufferState().setState(BufferState.STATE_ARRIVING);
         buffer.setEvaluateTime(hal.evaluate(wpInfo));
         // call for agv
         AgvRequest request = new AgvRequest(from, to, wpInfo);

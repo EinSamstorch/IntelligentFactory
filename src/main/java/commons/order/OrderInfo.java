@@ -52,27 +52,27 @@ public class OrderInfo {
     /**
      * 订单生成时间
      */
-    private String orderDate;
+    private final String orderDate;
     /**
      * 订单截止时间
      */
-    private String orderDtime;
+    private final String orderDtime;
     /**
      * 订单id
      */
-    private String orderId;
+    private final String orderId;
     /**
      * 订单优先级
      */
-    private String orderPrior;
+    private final String orderPrior;
     /**
      * 订单具体内容
      */
-    private String orderDetails;
+    private final String orderDetails;
     /**
      * 根据订单具体内容拆分出来的工件列表
      */
-    private Vector<WorkpieceInfo> wpInfoList = new Vector<>();
+    private final Vector<WorkpieceStatus> wpInfoList = new Vector<>();
 
 
     /**
@@ -113,7 +113,7 @@ public class OrderInfo {
         return orderDetails;
     }
 
-    public Vector<WorkpieceInfo> getWpInfoList() {
+    public Vector<WorkpieceStatus> getWpInfoList() {
         return wpInfoList;
     }
 
@@ -149,11 +149,10 @@ public class OrderInfo {
                 // 获取零件数量
                 int nums = jo.getIntValue("jobNum");
                 for (int i = 0; i < nums; i++) {
-                    WorkpieceInfo wpInfo = new WorkpieceInfo(orderId, String.format("%3d", ++wpCnt),
+                    WorkpieceStatus wpInfo = new WorkpieceStatus(orderId, String.format("%3d", ++wpCnt),
                             jo.getString("goodsId"), jo.getString("jobDes"));
                     wpInfoList.add(wpInfo);
                 }
-
             }
         }
     }

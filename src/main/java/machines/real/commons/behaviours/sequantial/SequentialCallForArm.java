@@ -4,7 +4,7 @@ import jade.core.Agent;
 import jade.core.behaviours.SequentialBehaviour;
 import machines.real.commons.behaviours.simple.SendRequstToArm;
 import machines.real.commons.behaviours.simple.WaitForArmInform;
-import machines.real.commons.request.ArmrobotRequest;
+import machines.real.commons.request.ArmRequest;
 
 import java.util.Random;
 
@@ -21,7 +21,7 @@ public class SequentialCallForArm {
     }
 
     public static SequentialBehaviour getBehaviour(
-            Agent agent, ArmrobotRequest request, String password, String infoStr) {
+            Agent agent, ArmRequest request, String password, String infoStr) {
         SequentialBehaviour s = new SequentialBehaviour();
 
         String conversationId = String.format("CALL_FOR_ARM_%d", new Random().nextInt());

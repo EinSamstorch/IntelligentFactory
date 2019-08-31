@@ -7,8 +7,8 @@ import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import machines.real.commons.request.WarehouseRequest;
 import machines.real.commons.request.AgvRequest;
+import machines.real.commons.request.WarehouseRequest;
 import machines.real.warehouse.WarehouseAgent;
 
 import java.util.Random;

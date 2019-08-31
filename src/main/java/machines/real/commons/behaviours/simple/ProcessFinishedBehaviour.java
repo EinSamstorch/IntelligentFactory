@@ -1,6 +1,6 @@
 package machines.real.commons.behaviours.simple;
 
-import commons.order.WorkpieceInfo;
+import commons.order.WorkpieceStatus;
 import commons.tools.DfServiceType;
 import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
@@ -39,7 +39,7 @@ public class ProcessFinishedBehaviour extends OneShotBehaviour {
     }
 
 
-    private void sendToWorker(WorkpieceInfo wpInfo) {
+    private void sendToWorker(WorkpieceStatus wpInfo) {
         try {
             ACLMessage msg = DfUtils.createRequestMsg(wpInfo);
             DfUtils.searchDf(myAgent, msg, DfServiceType.WORKER);

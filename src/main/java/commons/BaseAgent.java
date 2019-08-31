@@ -25,8 +25,6 @@ import jade.domain.FIPAException;
 
 
 public abstract class BaseAgent extends Agent {
-    protected Integer halPort;
-
     @Override
     protected void setup() {
         super.setup();
@@ -53,6 +51,7 @@ public abstract class BaseAgent extends Agent {
         } catch (FIPAException e) {
             e.printStackTrace();
             LoggerUtil.agent.fatal(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 

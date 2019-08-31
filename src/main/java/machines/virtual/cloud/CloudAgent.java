@@ -3,21 +3,15 @@ package machines.virtual.cloud;
 
 import commons.BaseAgent;
 import commons.order.OrderInfo;
-import commons.tools.DfServiceType;
-import commons.tools.IniLoader;
 import commons.tools.LoggerUtil;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
-import machines.virtual.cloud.behaviours.cycle.DetectUpdateMsg;
-import machines.virtual.cloud.behaviours.cycle.GetOrder;
-import machines.virtual.cloud.behaviours.cycle.HandleOrders;
 
 import java.util.Map;
 import java.util.Queue;
 import java.util.Vector;
-import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * cloud，负责与云端交互.
@@ -31,17 +25,13 @@ import java.util.concurrent.LinkedBlockingDeque;
  */
 public class CloudAgent extends BaseAgent {
     /**
-     * TICKER周期，单位ms
-     */
-    private static final int TICKER_TIME = 10000;
-    /**
      * 新状态推送列表.
      */
-    Queue<String> stateQueue = new LinkedBlockingDeque<>();
+    private Queue<String> stateQueue;
     /**
      * 新位置推送列表.
      */
-    Queue<String> posQueue = new LinkedBlockingDeque<>();
+    private Queue<String> posQueue;
     /**
      * 云端地址.
      */
@@ -53,27 +43,26 @@ public class CloudAgent extends BaseAgent {
     /**
      * 新订单列表.
      */
-    private Queue<OrderInfo> orderQueue = new LinkedBlockingDeque<>();
+    private Behaviour[] behaviours;
+
+    private Queue<OrderInfo> orderQueue;
+    private String serviceType;
+
+    public CloudAgent() {
+    }
+
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+    }
+
+    public void setBehaviours(Behaviour[] behaviours) {
+        this.behaviours = behaviours;
+    }
 
     public String getWebsite() {
         return website;
     }
 
-    public Map<String, String> getMysqlSetting() {
-        return mysqlSetting;
-    }
-
-    public Queue<OrderInfo> getOrderQueue() {
-        return orderQueue;
-    }
-
-    public Queue<String> getStateQueue() {
-        return stateQueue;
-    }
-
-    public Queue<String> getPosQueue() {
-        return posQueue;
-    }
 
     @Override
     protected void setup() {
@@ -81,39 +70,14 @@ public class CloudAgent extends BaseAgent {
         // 载入未完成订单
         //loadOrders();
         // 注册DF服务 订单状态更新服务
-        loadIni();
-        registerDf(DfServiceType.CLOUD_UPDATE);
-
+        registerDf(serviceType);
 
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
-        //独立线程 定时从云端 获取新订单
-        Behaviour b = new GetOrder(this, TICKER_TIME);
-        addBehaviour(tbf.wrap(b));
-
-        // 独立线程 定时检查新推送消息
-        b = new DetectUpdateMsg(this, TICKER_TIME);
-        addBehaviour(tbf.wrap(b));
-
-        // 独立线程 处理获得的订单
-        b = new HandleOrders(this, TICKER_TIME);
-        addBehaviour(tbf.wrap(b));
-
-
-    }
-
-    /**
-     * 载入INI文件 并读取对应配置
-     */
-    protected void loadIni() {
-        Map<String, String> setting = IniLoader.load(getLocalName());
-        mysqlSetting = IniLoader.load(IniLoader.SECTION_MYSQL);
-        website = setting.get("website");
-
-        if (website == null) {
-            LoggerUtil.agent.error("Load website info error. Null pointer");
-            System.exit(2);
+        for (Behaviour behaviour : behaviours) {
+            addBehaviour(tbf.wrap(behaviour));
         }
     }
+
 
     /**
      * 从mysql数据库中载入未完成订单
