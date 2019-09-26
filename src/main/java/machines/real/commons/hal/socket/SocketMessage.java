@@ -8,7 +8,7 @@ package machines.real.commons.hal.socket;
  * @since 1.8
  */
 
-public class SocketMessage {
+public final class SocketMessage {
     public static final String HOST = "127.0.0.1";
     public static final String FIELD_TO = "to";
     public static final String FIELD_MESSAGE = "message";
@@ -26,4 +26,14 @@ public class SocketMessage {
     public static final String FIELD_ACTION_RESULT = "action_result";
 
     public static final String RESULT_SUCCESS = "success";
+    public static final String RESULT_FAILED = "failed";
+
+    public static final String FIELD_ACTION = "action";
+    public static final String FIELD_VALUE = "value";
+
+    public static final String FIELD_RESULT = "result";
+    public static final String FIELD_INFO = "info";
+
+    public static final String ACTION_REGISTER = "register";
+    public static final String ACTION_CHECK = "check";
 }
