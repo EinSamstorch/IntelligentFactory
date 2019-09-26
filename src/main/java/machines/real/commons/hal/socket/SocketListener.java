@@ -48,7 +48,15 @@ public class SocketListener extends Thread {
         this.init();
         while (true) {
             String response = receiveMessage();
-            if (checkMsgComplete(response)) {
+            if(isActionResponse(response)) {
+                JSONObject message = JsonTool.parse(response);
+                String result = message.getString(SocketMessage.FIELD_RESULT);
+                String info = message.getString(SocketMessage.FIELD_INFO);
+                if(!SocketMessage.RESULT_SUCCESS.equals(result)) {
+                    LoggerUtil.hal.error(info);
+                }
+            }
+            else if (checkMsgComplete(response)) {
                 JSONObject message = JsonTool.parse(response);
                 int taskNo = message.getIntValue(SocketMessage.FIELD_TASK_NO);
                 String type = parseMsgType(response);
@@ -63,6 +71,31 @@ public class SocketListener extends Thread {
                 }
             }
         }
+    }
+
+    /**
+     * 检查输入的字符串是否是 动作语句的回复
+     * @param msg 待检查字符串
+     * @return 包含 result和 info字段的json语句，返回true, 否则 false
+     */
+    private boolean isActionResponse(String msg) {
+        if (msg == null) {
+            return false;
+        }
+
+        JSONObject message;
+        try {
+            // 尝试json解析
+            message = JsonTool.parse(msg);
+        } catch (IllegalArgumentException e) {
+            // 解析失败 则返回 false
+            LoggerUtil.agent.error(e.getMessage());
+            return false;
+        }
+
+        return message.containsKey(SocketMessage.FIELD_RESULT)
+                && message.containsKey(SocketMessage.FIELD_INFO);
+
     }
 
     /**
@@ -131,12 +164,13 @@ public class SocketListener extends Thread {
     }
 
     /**
-     * 注册设备类型 type:agent
+     * 注册设备类型 action:register, value: agent
      */
     private void registerType() {
-        JSONObject type = new JSONObject();
-        type.put(SocketMessage.FIELD_TYPE, SocketMessage.TYPE_AGENT);
-        send(type.toJSONString());
+        JSONObject msg = new JSONObject();
+        msg.put(SocketMessage.FIELD_ACTION, SocketMessage.ACTION_REGISTER);
+        msg.put(SocketMessage.FIELD_VALUE, SocketMessage.TYPE_AGENT);
+        send(msg.toJSONString());
     }
 
     /**
