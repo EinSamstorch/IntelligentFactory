@@ -3,7 +3,9 @@ package machines.real.commons.hal.socket;
 import com.alibaba.fastjson.JSONObject;
 import commons.tools.LoggerUtil;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
@@ -61,5 +63,29 @@ public class SocketSender {
         msgStruct.put(SocketMessage.FIELD_TO, to);
         msgStruct.put(SocketMessage.FIELD_MESSAGE, msg);
         send(msgStruct.toJSONString());
+    }
+
+    public synchronized String sendCmdToServer(JSONObject msg) {
+        send(msg.toJSONString());
+        return receiveMessage();
+    }
+
+    /**
+     * 接收socketserver返回的字符串
+     *
+     * @return 接收到的字符串
+     */
+    private String receiveMessage() {
+        String line = null;
+        try {
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(
+                            socket.getInputStream(),
+                            StandardCharsets.UTF_8));
+            line = br.readLine();
+        } catch (IOException e) {
+            LoggerUtil.agent.error(e.getMessage(), e);
+        }
+        return line;
     }
 }

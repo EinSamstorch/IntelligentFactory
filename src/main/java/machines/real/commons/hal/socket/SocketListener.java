@@ -27,7 +27,14 @@ public class SocketListener extends Thread {
 
     private Map<Integer, JSONObject> cmdResponseMap = new HashMap<>();
     private Map<Integer, JSONObject> actionResponseMap = new HashMap<>();
+    private boolean halOnline = false;
 
+    private static final String HAL_ONLINE = "online";
+    private static final String HAL_OFFLINE = "offline";
+
+    public boolean isHalOnline() {
+        return halOnline;
+    }
 
     public SocketListener(int port) {
         this.port = port;
@@ -69,8 +76,38 @@ public class SocketListener extends Thread {
                         break;
                     default:
                 }
+            } else if(checkActionCmdResponse(response)) {
+                JSONObject message = JsonTool.parse(response);
+                String result = message.getString(SocketMessage.FIELD_RESULT);
+                String info = message.getString(SocketMessage.FIELD_INFO);
+                if( SocketMessage.RESULT_SUCCESS.equals(result)) {
+                    if(HAL_ONLINE.equals(info)) {
+                        halOnline = true;
+                    } else if(HAL_OFFLINE.equals(info)) {
+                        halOnline = false;
+                    }
+                }
             }
         }
+    }
+
+    /**
+     * 检查是否属于 action: xxx, value:xxx 系列命令的回复。
+     * @return true, 内容包含 result: success/failed, info: xxx. 否则false
+     */
+    private boolean checkActionCmdResponse(String msg) {
+        if(msg == null) {
+            return false;
+        }
+        JSONObject message;
+        try{
+            message = JsonTool.parse(msg);
+        } catch (IllegalArgumentException e) {
+            LoggerUtil.agent.error(e.getMessage());
+            return false;
+        }
+        return message.containsKey(SocketMessage.FIELD_RESULT)
+                && message.containsKey(SocketMessage.FIELD_INFO);
     }
 
     /**

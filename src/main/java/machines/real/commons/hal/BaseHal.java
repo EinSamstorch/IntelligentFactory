@@ -1,6 +1,7 @@
 package machines.real.commons.hal;
 
 import com.alibaba.fastjson.JSONObject;
+import commons.tools.JsonTool;
 import machines.real.commons.hal.socket.SocketListener;
 import machines.real.commons.hal.socket.SocketMessage;
 import machines.real.commons.hal.socket.SocketSender;
@@ -23,6 +24,8 @@ public class BaseHal {
     private SocketSender sender;
     private SocketListener listener;
     private Object extraInfo;
+
+    public static final String HAL_ONLINE = "online";
 
     public BaseHal() {
         sender = new SocketSender();
@@ -87,11 +90,15 @@ public class BaseHal {
             if (response != null) {
                 return response;
             }
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            sleep(500);
+        }
+    }
+
+    private void sleep(long mills) {
+        try {
+            Thread.sleep(mills);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -114,6 +121,19 @@ public class BaseHal {
         extraInfo = actionResponse.get(SocketMessage.FIELD_EXTRA);
 
         return true;
+    }
+
+    public boolean checkHalOnline() {
+        JSONObject msg = new JSONObject();
+        msg.put(SocketMessage.FIELD_ACTION, SocketMessage.ACTION_CHECK);
+        msg.put(SocketMessage.FIELD_VALUE, SocketMessage.TYPE_MACHINE);
+        String response = sender.sendCmdToServer(msg);
+        JSONObject json = JsonTool.parse(response);
+        // 包含 result:success, info: online 返回true
+        return json.containsKey(SocketMessage.FIELD_RESULT)
+                && json.containsKey(SocketMessage.FIELD_INFO)
+                && HAL_ONLINE.equals(json.getString(SocketMessage.FIELD_INFO))
+                && SocketMessage.RESULT_SUCCESS.equals(json.getString(SocketMessage.FIELD_RESULT));
     }
 
     public Object getExtraInfo() {

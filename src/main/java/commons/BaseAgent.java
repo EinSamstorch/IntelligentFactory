@@ -59,6 +59,14 @@ public abstract class BaseAgent extends Agent {
         registerDf(serviceType, null);
     }
 
+    protected void deregisterDf() {
+        try {
+            DFService.deregister(this);
+        } catch (FIPAException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Put agent clean-up operations here
      */
