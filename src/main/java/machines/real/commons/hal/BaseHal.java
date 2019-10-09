@@ -18,14 +18,11 @@ import java.util.Objects;
  */
 
 public class BaseHal {
+    public static final String HAL_ONLINE = "online";
     private static int taskNo = 0;
-
-
     private SocketSender sender;
     private SocketListener listener;
     private Object extraInfo;
-
-    public static final String HAL_ONLINE = "online";
 
     public BaseHal() {
         sender = new SocketSender();

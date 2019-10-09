@@ -40,8 +40,9 @@ public class Buffer {
 
     /**
      * 返回还有多长时间加工完成
-     *
+     * <p>
      * 对于车床加工而言，该函数有问题，第二段加工时 会更新 processTimestamp，导致预估时间不正确
+     *
      * @return 单位 秒
      */
     public Integer getRemainProcessTime() {

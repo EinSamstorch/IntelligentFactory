@@ -1,10 +1,7 @@
 package machines.virtual.cloud.behaviours.cycle;
 
-import jade.core.behaviours.Behaviour;
-import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.core.behaviours.TickerBehaviour;
 import machines.virtual.cloud.CloudAgent;
-import machines.virtual.cloud.behaviours.simple.Push2CloudBehaviour;
 
 
 /**

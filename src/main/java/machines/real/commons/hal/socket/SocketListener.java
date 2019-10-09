@@ -21,20 +21,13 @@ import java.util.Map;
  */
 
 public class SocketListener extends Thread {
+    private static final String HAL_ONLINE = "online";
+    private static final String HAL_OFFLINE = "offline";
     private Socket socket;
     private int port;
-
-
     private Map<Integer, JSONObject> cmdResponseMap = new HashMap<>();
     private Map<Integer, JSONObject> actionResponseMap = new HashMap<>();
     private boolean halOnline = false;
-
-    private static final String HAL_ONLINE = "online";
-    private static final String HAL_OFFLINE = "offline";
-
-    public boolean isHalOnline() {
-        return halOnline;
-    }
 
     public SocketListener(int port) {
         this.port = port;
@@ -42,6 +35,10 @@ public class SocketListener extends Thread {
 
     public SocketListener() {
         this(5656);
+    }
+
+    public boolean isHalOnline() {
+        return halOnline;
     }
 
     /**
@@ -55,15 +52,14 @@ public class SocketListener extends Thread {
         this.init();
         while (true) {
             String response = receiveMessage();
-            if(isActionResponse(response)) {
+            if (isActionResponse(response)) {
                 JSONObject message = JsonTool.parse(response);
                 String result = message.getString(SocketMessage.FIELD_RESULT);
                 String info = message.getString(SocketMessage.FIELD_INFO);
-                if(!SocketMessage.RESULT_SUCCESS.equals(result)) {
+                if (!SocketMessage.RESULT_SUCCESS.equals(result)) {
                     LoggerUtil.hal.error(info);
                 }
-            }
-            else if (checkMsgComplete(response)) {
+            } else if (checkMsgComplete(response)) {
                 JSONObject message = JsonTool.parse(response);
                 int taskNo = message.getIntValue(SocketMessage.FIELD_TASK_NO);
                 String type = parseMsgType(response);
@@ -76,14 +72,14 @@ public class SocketListener extends Thread {
                         break;
                     default:
                 }
-            } else if(checkActionCmdResponse(response)) {
+            } else if (checkActionCmdResponse(response)) {
                 JSONObject message = JsonTool.parse(response);
                 String result = message.getString(SocketMessage.FIELD_RESULT);
                 String info = message.getString(SocketMessage.FIELD_INFO);
-                if( SocketMessage.RESULT_SUCCESS.equals(result)) {
-                    if(HAL_ONLINE.equals(info)) {
+                if (SocketMessage.RESULT_SUCCESS.equals(result)) {
+                    if (HAL_ONLINE.equals(info)) {
                         halOnline = true;
-                    } else if(HAL_OFFLINE.equals(info)) {
+                    } else if (HAL_OFFLINE.equals(info)) {
                         halOnline = false;
                     }
                 }
@@ -93,14 +89,15 @@ public class SocketListener extends Thread {
 
     /**
      * 检查是否属于 action: xxx, value:xxx 系列命令的回复。
+     *
      * @return true, 内容包含 result: success/failed, info: xxx. 否则false
      */
     private boolean checkActionCmdResponse(String msg) {
-        if(msg == null) {
+        if (msg == null) {
             return false;
         }
         JSONObject message;
-        try{
+        try {
             message = JsonTool.parse(msg);
         } catch (IllegalArgumentException e) {
             LoggerUtil.agent.error(e.getMessage());
@@ -112,6 +109,7 @@ public class SocketListener extends Thread {
 
     /**
      * 检查输入的字符串是否是 动作语句的回复
+     *
      * @param msg 待检查字符串
      * @return 包含 result和 info字段的json语句，返回true, 否则 false
      */

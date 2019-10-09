@@ -15,6 +15,7 @@ import machines.real.commons.hal.BaseHal;
 public class CheckHalState<T extends RealMachineAgent, H extends BaseHal> extends TickerBehaviour {
     private T tAgent;
     private H hal;
+
     /**
      * Construct a <code>TickerBehaviour</code> that call its
      * <code>onTick()</code> method every <code>period</code> ms.
@@ -30,7 +31,7 @@ public class CheckHalState<T extends RealMachineAgent, H extends BaseHal> extend
 
     @Override
     protected void onTick() {
-        if(hal.checkHalOnline()) {
+        if (hal.checkHalOnline()) {
             tAgent.setAgentOnline(true);
         } else {
             tAgent.setAgentOnline(false);

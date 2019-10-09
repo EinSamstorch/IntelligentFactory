@@ -43,7 +43,7 @@ public class ProcessContractNetResponder extends ContractNetResponder {
     @Override
     protected ACLMessage handleCfp(ACLMessage cfp) throws RefuseException, FailureException, NotUnderstoodException {
         LoggerUtil.agent.debug(String.format("CFP received from: %s.", cfp.getSender().getName()));
-        if(!machineAgent.isAgentOnline()) {
+        if (!machineAgent.isAgentOnline()) {
             throw new RefuseException("Refuse CFP, due to agent is offline.");
         }
         if (machineAgent.getBufferManger().isBufferFull()) {
