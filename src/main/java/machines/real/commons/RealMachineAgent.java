@@ -15,26 +15,14 @@ import machines.real.commons.hal.MachineHal;
  */
 
 public class RealMachineAgent extends BaseAgent {
-
     private MachineHal hal;
     private String armPwd;
     private BufferManger bufferManger;
     private MachineState machineState;
-    private Behaviour[] behaviours;
-    private String serviceType;
-
-    public void setBehaviours(Behaviour[] behaviours) {
-        this.behaviours = behaviours;
-    }
-
-    public void setServiceType(String serviceType) {
-        this.serviceType = serviceType;
-    }
 
     @Override
     protected void setup() {
         super.setup();
-        registerDf(serviceType);
 
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
         for (Behaviour behaviour : behaviours) {

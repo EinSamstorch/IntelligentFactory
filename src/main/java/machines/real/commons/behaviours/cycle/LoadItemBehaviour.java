@@ -26,8 +26,8 @@ public class LoadItemBehaviour extends CyclicBehaviour {
 
     @Override
     public void action() {
-        // 机床空闲
-        if (!machineAgent.getMachineState().isBusy()) {
+        // 机床空闲 且 agent在线
+        if (machineAgent.isAgentOnline() && !machineAgent.getMachineState().isBusy()) {
             // 获取等待加工的buffer
             Buffer buffer = machineAgent.getBufferManger().getWaitingBuffer();
             if (buffer != null) {

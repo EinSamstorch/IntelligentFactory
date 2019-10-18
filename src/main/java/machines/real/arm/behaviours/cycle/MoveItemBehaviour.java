@@ -18,15 +18,15 @@ import machines.real.commons.request.ArmRequest;
  */
 
 public final class MoveItemBehaviour extends CyclicBehaviour {
-    private ArmHal hal;
+    private static final int STATE_FREE = 0;
+    private static final int STATE_BUSY = 1;
     /**
      * 匹配 FIPA_REQUEST 和 ACLMessage.REQUEST
      */
     private final MessageTemplate mt = MessageTemplate.and(
             MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
             MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
-    private static final int STATE_FREE = 0;
-    private static final int STATE_BUSY = 1;
+    private ArmHal hal;
     private int state = STATE_FREE;
     private String language = "";
     private int oldStep = 0;
@@ -116,11 +116,12 @@ public final class MoveItemBehaviour extends CyclicBehaviour {
 
     /**
      * 执行搬运请求
-     * @param msg 搬运请求的消息
-     * @param from 起始地
-     * @param to 目的地
+     *
+     * @param msg     搬运请求的消息
+     * @param from    起始地
+     * @param to      目的地
      * @param goodsid 种类
-     * @param step 步骤
+     * @param step    步骤
      */
     private void doTask(ACLMessage msg, String from, String to, String goodsid, int step) {
         if (hal.moveItem(from, to, goodsid, step)) {

@@ -140,6 +140,7 @@ public class LatheProcessItem implements ProcessItem {
 
         return s;
     }
+
     private void notifyArmEndStep(SequentialBehaviour s, ArmRequest request) {
         // 通知机械手动作组完成
         ArmRequest endRequest = ArmRequest.endStep(request);

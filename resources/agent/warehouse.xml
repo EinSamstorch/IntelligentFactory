@@ -12,9 +12,18 @@
         <!-- 出库口 -->
         <property name="posOut" ref="posOut"/>
         <property name="hal" ref="hal"/>
+        <property name="serviceType">
+            <util:constant static-field="commons.tools.DfServiceType.WAREHOUSE"/>
+        </property>
         <!-- 仓库agent 行为集-->
         <property name="behaviours">
             <list>
+                <!-- agent状态管理 -->
+                <bean class="machines.real.commons.behaviours.cycle.CheckHalState">
+                    <constructor-arg name="a" ref="agent"/>
+                    <constructor-arg name="period" value="5000"/>
+                    <constructor-arg name="hal" ref="hal"/>
+                </bean>
                 <!-- 入库动作 -->
                 <bean class="machines.real.warehouse.behaviours.cycle.ItemExportBehaviour">
                     <property name="hal" ref="hal"/>

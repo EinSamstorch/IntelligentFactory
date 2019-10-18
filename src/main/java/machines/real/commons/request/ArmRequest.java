@@ -58,6 +58,15 @@ public class ArmRequest implements Serializable {
                 request.step + 1);
     }
 
+    public static ArmRequest endStep(ArmRequest request) {
+        return new ArmRequest(
+                request.from,
+                request.to,
+                request.goodsid,
+                -1
+        );
+    }
+
     public String getFrom() {
         return from;
     }
@@ -72,15 +81,6 @@ public class ArmRequest implements Serializable {
 
     public Integer getStep() {
         return step;
-    }
-
-    public static ArmRequest endStep(ArmRequest request) {
-        return new ArmRequest(
-                request.from,
-                request.to,
-                request.goodsid,
-                -1
-        );
     }
 
     @Override
