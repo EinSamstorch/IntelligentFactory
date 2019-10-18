@@ -14,24 +14,12 @@ import jade.core.behaviours.ThreadedBehaviourFactory;
 
 
 public class WorkerAgent extends BaseAgent {
-    private String serviceType;
-    private Behaviour[] behaviours;
-
-    public void setBehaviours(Behaviour[] behaviours) {
-        this.behaviours = behaviours;
-    }
-
-    public void setServiceType(String serviceType) {
-        this.serviceType = serviceType;
-    }
-
     @Override
     protected void setup() {
         super.setup();
         registerDf(serviceType);
 
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
-
         for (Behaviour behaviour : behaviours) {
             addBehaviour(tbf.wrap(behaviour));
         }

@@ -1,7 +1,6 @@
 package machines.real.warehouse;
 
 import commons.BaseAgent;
-import commons.tools.DfServiceType;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 
@@ -17,13 +16,9 @@ import jade.core.behaviours.ThreadedBehaviourFactory;
 
 public class WarehouseAgent extends BaseAgent {
     private WarehouseHal hal;
-    private Behaviour[] behaviours;
     private Integer posIn;
     private Integer posOut;
 
-    public void setBehaviours(Behaviour[] behaviours) {
-        this.behaviours = behaviours;
-    }
 
     public WarehouseHal getHal() {
         return hal;
@@ -53,7 +48,6 @@ public class WarehouseAgent extends BaseAgent {
     @Override
     protected void setup() {
         super.setup();
-        registerDf(DfServiceType.WAREHOUSE);
 
         ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
         for (Behaviour behaviour : behaviours) {

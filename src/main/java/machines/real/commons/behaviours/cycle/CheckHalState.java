@@ -1,5 +1,6 @@
 package machines.real.commons.behaviours.cycle;
 
+import commons.BaseAgent;
 import jade.core.behaviours.TickerBehaviour;
 import machines.real.commons.RealMachineAgent;
 import machines.real.commons.hal.BaseHal;
@@ -12,7 +13,7 @@ import machines.real.commons.hal.BaseHal;
  * @since 1.8
  */
 
-public class CheckHalState<T extends RealMachineAgent, H extends BaseHal> extends TickerBehaviour {
+public class CheckHalState<T extends BaseAgent, H extends BaseHal> extends TickerBehaviour {
     private T tAgent;
     private H hal;
 

@@ -14,6 +14,12 @@
         <!-- agent 行为集-->
         <property name="behaviours">
             <list>
+                <!-- agent状态管理 -->
+                <bean class="machines.real.commons.behaviours.cycle.CheckHalState">
+                    <constructor-arg name="a" ref="agent"/>
+                    <constructor-arg name="period" value="5000"/>
+                    <constructor-arg name="hal" ref="hal"/>
+                </bean>
                 <!-- 执行搬运请求 -->
                 <bean class="machines.real.arm.behaviours.cycle.MoveItemBehaviour">
                     <property name="hal" ref="hal"/>

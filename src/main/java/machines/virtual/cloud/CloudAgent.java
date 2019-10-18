@@ -3,11 +3,8 @@ package machines.virtual.cloud;
 
 import commons.BaseAgent;
 import commons.order.OrderInfo;
-import commons.tools.LoggerUtil;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
-import jade.domain.DFService;
-import jade.domain.FIPAException;
 
 import java.util.Map;
 import java.util.Queue;
@@ -40,29 +37,12 @@ public class CloudAgent extends BaseAgent {
      * mysql配置信息
      */
     private Map<String, String> mysqlSetting;
-    /**
-     * 新订单列表.
-     */
-    private Behaviour[] behaviours;
 
     private Queue<OrderInfo> orderQueue;
-    private String serviceType;
-
-    public CloudAgent() {
-    }
-
-    public void setServiceType(String serviceType) {
-        this.serviceType = serviceType;
-    }
-
-    public void setBehaviours(Behaviour[] behaviours) {
-        this.behaviours = behaviours;
-    }
 
     public String getWebsite() {
         return website;
     }
-
 
     @Override
     protected void setup() {
@@ -89,13 +69,4 @@ public class CloudAgent extends BaseAgent {
         }
     }
 
-    @Override
-    protected void takeDown() {
-        try {
-            DFService.deregister(this);
-        } catch (FIPAException fe) {
-            fe.printStackTrace();
-            LoggerUtil.agent.error("Deregister DF service error!" + fe.getMessage());
-        }
-    }
 }
