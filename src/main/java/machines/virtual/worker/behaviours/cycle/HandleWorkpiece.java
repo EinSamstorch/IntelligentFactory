@@ -4,6 +4,7 @@ import commons.order.WorkpieceStatus;
 import commons.tools.DfServiceType;
 import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
+import jade.core.NotFoundException;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.FIPANames;
@@ -13,7 +14,9 @@ import jade.lang.acl.UnreadableException;
 import machines.virtual.worker.behaviours.simple.MyContractNetInitiator;
 
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * 处理工件招投标.
@@ -26,6 +29,7 @@ import java.util.Random;
 
 public class HandleWorkpiece extends CyclicBehaviour {
     private Integer detectRatio;
+    private Queue<RetryMessage> retryQueue = new LinkedBlockingQueue<>();
 
     public HandleWorkpiece() {
         super();
@@ -41,7 +45,11 @@ public class HandleWorkpiece extends CyclicBehaviour {
                 MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST));
         ACLMessage msg = myAgent.receive(mt);
         if (msg == null) {
-            block();
+            if(retryQueue.isEmpty()) {
+                block();
+            } else {
+                processRetry();
+            }
             return;
         }
         WorkpieceStatus wpInfo = null;
@@ -75,24 +83,44 @@ public class HandleWorkpiece extends CyclicBehaviour {
         processOn(wpInfo, process);
     }
 
+    /**
+     * 处理招投标
+     * @param wpInfo 工件状态信息
+     * @param serviceType 需求服务类型
+     */
     private void processOn(WorkpieceStatus wpInfo, String serviceType) {
         try {
             ACLMessage msg = DfUtils.createCfpMsg(wpInfo);
-            if (serviceType.equals(DfServiceType.PRODUCT)) {
+            if (DfServiceType.PRODUCT.equals(serviceType)) {
                 DfUtils.searchDf(myAgent, msg, DfServiceType.WAREHOUSE);
                 msg.setLanguage("PRODUCT");
-            } else if (serviceType.equals(DfServiceType.WAREHOUSE)) {
+            } else if (DfServiceType.WAREHOUSE.equals(serviceType)) {
                 DfUtils.searchDf(myAgent, msg, serviceType);
                 msg.setLanguage("RAW");
             } else {
                 DfUtils.searchDf(myAgent, msg, serviceType);
             }
 
-            Behaviour b = new MyContractNetInitiator(myAgent, msg, serviceType);
+            Behaviour b = new MyContractNetInitiator(myAgent, msg, serviceType, retryQueue);
             myAgent.addBehaviour(b);
+        } catch (NotFoundException e) {
+            LoggerUtil.agent.warn(e.getMessage());
+            // 放入重试队列
+            retryQueue.offer(new RetryMessage(wpInfo, serviceType));
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 对失败招投标进行重试
+     */
+    private void processRetry() {
+        RetryMessage retryMsg = retryQueue.poll();
+        if(retryMsg == null) {
+            return;
+        }
+        processOn(retryMsg.wpInfo, retryMsg.serviceType);
     }
 
     private void addVisionProcess(WorkpieceStatus wpInfo) {

@@ -2,6 +2,7 @@ package commons.tools;
 
 import jade.core.AID;
 import jade.core.Agent;
+import jade.core.NotFoundException;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.Property;
@@ -60,7 +61,7 @@ public class DfUtils {
                     }
                 }
             } else {
-                throw new Exception("Service: " + type + ". Not found!");
+                throw new NotFoundException("Service: " + type + ". Not found!");
             }
         } catch (FIPAException e) {
             LoggerUtil.agent.error(e.getMessage());

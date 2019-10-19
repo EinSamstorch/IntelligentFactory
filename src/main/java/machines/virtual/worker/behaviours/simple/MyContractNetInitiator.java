@@ -1,5 +1,6 @@
 package machines.virtual.worker.behaviours.simple;
 
+import commons.order.WorkpieceStatus;
 import commons.tools.DfServiceType;
 import commons.tools.LoggerUtil;
 import jade.core.Agent;
@@ -10,9 +11,11 @@ import jade.util.leap.Iterator;
 import machines.real.commons.ContractNetContent;
 import machines.virtual.worker.algorithm.AlgorithmFactory;
 import machines.virtual.worker.algorithm.BestPrice;
+import machines.virtual.worker.behaviours.cycle.RetryMessage;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Queue;
 import java.util.Vector;
 
 /**
@@ -26,21 +29,22 @@ import java.util.Vector;
 public class MyContractNetInitiator extends ContractNetInitiator {
 
     private final String serviceType;
-    private int nResponders = 0;
+    private final int nResponders;
+    private final Queue<RetryMessage> retryQueue;
+    private final ACLMessage cfp;
 
-    public MyContractNetInitiator(Agent a, ACLMessage cfp, String serviceType) {
+    public MyContractNetInitiator(Agent a, ACLMessage cfp, String serviceType, Queue<RetryMessage> retryQueue) {
         super(a, cfp);
         this.serviceType = serviceType;
+        this.cfp = cfp;
+        this.retryQueue = retryQueue;
+        int numResponder = 0;
         Iterator it = cfp.getAllReceiver();
         while (it.hasNext()) {
-            nResponders++;
+            numResponder++;
             it.next();
         }
-        if (nResponders == 0) {
-            // future todo
-            // 没有投标商，移除招标行为
-            LoggerUtil.agent.error("Responder Not Found");
-        }
+        nResponders = numResponder;
     }
 
     /**
@@ -64,7 +68,7 @@ public class MyContractNetInitiator extends ContractNetInitiator {
                 msgArray.add(msg);
             }
         }
-        int strategy = 0;
+        int strategy;
         if (serviceType.equals(DfServiceType.WAREHOUSE) || serviceType.equals(DfServiceType.PRODUCT)) {
             strategy = BestPrice.HIGHEST;
         } else {
@@ -73,7 +77,7 @@ public class MyContractNetInitiator extends ContractNetInitiator {
         ACLMessage bestOffer = AlgorithmFactory.decision(msgArray, strategy);
 
         if (bestOffer != null) {
-            ACLMessage accept = null;
+            ACLMessage accept;
             for (ACLMessage msg : msgArray) {
                 ACLMessage reply = msg.createReply();
                 reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
@@ -94,7 +98,12 @@ public class MyContractNetInitiator extends ContractNetInitiator {
 
         } else {
             LoggerUtil.agent.error(String.format("No %s service is available.", serviceType));
-            // 后续处理
+            // 放入重试队列
+            try {
+                retryQueue.offer(new RetryMessage((WorkpieceStatus) cfp.getContentObject(), serviceType));
+            } catch (UnreadableException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 }
