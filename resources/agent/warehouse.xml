@@ -57,7 +57,7 @@
     <!-- 配置 hal -->
     <bean id="hal" class="machines.real.warehouse.WarehouseHalImpl">
         <!-- socket server监听端口 -->
-        <constructor-arg name="port" value="${hal.password}"/>
+        <constructor-arg name="port" value="${hal.port}"/>
     </bean>
 
     <bean id="matchProtocol" class="jade.lang.acl.MessageTemplate" factory-method="and">

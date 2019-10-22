@@ -15,7 +15,7 @@ import org.apache.log4j.PropertyConfigurator;
 public class LoggerUtil {
     public final static Logger db = Logger.getLogger("db");
     public final static Logger agent = Logger.getLogger("agent");
-    public final static Logger commonTools = Logger.getLogger("commontools");
+    public final static Logger commonTools = Logger.getLogger("tools");
     public final static Logger hal = Logger.getLogger("hal");
 
     /**

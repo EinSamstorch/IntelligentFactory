@@ -46,7 +46,7 @@ public class HandleWorkpiece extends CyclicBehaviour {
         ACLMessage msg = myAgent.receive(mt);
         if (msg == null) {
             if (retryQueue.isEmpty()) {
-                block();
+                block(500);
             } else {
                 processRetry();
             }
@@ -60,7 +60,7 @@ public class HandleWorkpiece extends CyclicBehaviour {
             e.printStackTrace();
         }
         if (wpInfo == null) {
-            block();
+            block(500);
             return;
         }
         // 重置加工工步
