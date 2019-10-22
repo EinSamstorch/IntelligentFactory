@@ -1,6 +1,8 @@
 package machines.real.commons.buffer;
 
 
+import java.util.Arrays;
+
 /**
  * 工位台管理者.
  *
@@ -17,6 +19,14 @@ public class BufferManger {
         for (int i = 0; i < indexes.length; i++) {
             buffers[i] = new Buffer(indexes[i]);
         }
+    }
+
+    public BufferManger(String indexesStr) {
+        this(Arrays.stream(indexesStr
+                .split(","))
+                .map(String::trim)
+                .mapToInt(Integer::valueOf)
+                .toArray());
     }
 
     /**

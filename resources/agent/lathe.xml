@@ -2,9 +2,15 @@
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util" xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!-- 获取配置文件 -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="./resources/settings.properties"/>
+    </bean>
+
     <!-- 配置Agent -->
     <bean id="agent" class="machines.real.commons.RealMachineAgent">
-        <property name="armPwd" value="che"/>
+        <property name="armPwd" value="${arm.password}"/>
         <property name="hal" ref="hal"/>
         <property name="bufferManger" ref="bufferManager"/>
         <property name="machineState" ref="machineState"/>
@@ -40,19 +46,15 @@
             </list>
         </property>
     </bean>
+
     <bean id="hal" class="machines.real.lathe.LatheHalImpl">
-        <constructor-arg name="port" value="5656"/>
+        <constructor-arg name="port" value="${hal.port}"/>
     </bean>
+
     <bean id="bufferManager" class="machines.real.commons.buffer.BufferManger">
-        <constructor-arg name="indexes">
-            <list>
-                <value>13</value>
-                <value>14</value>
-                <value>15</value>
-                <value>16</value>
-            </list>
-        </constructor-arg>
+        <constructor-arg name="indexesStr" value="${machine.buffers}"/>
     </bean>
+
     <bean id="machineState" class="machines.real.commons.MachineState"/>
 
     <bean id="matchProtocol" class="jade.lang.acl.MessageTemplate" factory-method="and">

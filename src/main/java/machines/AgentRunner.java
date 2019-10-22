@@ -9,7 +9,11 @@ import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Random;
 
@@ -23,28 +27,31 @@ import java.util.Random;
 
 public class AgentRunner {
     public static void main(String[] args) {
-        startAgent();
+        try {
+            startAgent();
+        } catch (IOException | StaleProxyException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 
-    private static void startAgent() {
-        Runtime rt = Runtime.instance();
-        ApplicationContext jadeContext = new FileSystemXmlApplicationContext("resources/jade.xml");
-        Properties jadeProps = jadeContext.getBean("jadeConfig", Properties.class);
-        String ip = jadeProps.getProperty("setting.ip", null);
-        int port = Integer.parseInt(jadeProps.getProperty("setting.port", "-1"));
-        String agentName = jadeProps.getProperty("setting.name", String.format("Agent%d", new Random().nextInt()));
-        String xmlPath = jadeProps.getProperty("setting.xml");
+    private static void startAgent() throws IOException, StaleProxyException {
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream("./resources/settings.properties"));
+        Properties jadeProps = new Properties();
+        jadeProps.load(bufferedInputStream);
 
+        String ip = jadeProps.getProperty("jade.platform.ip", null);
+        int port = Integer.parseInt(jadeProps.getProperty("setting.port", "-1"));
+        String agentName = jadeProps.getProperty("jade.agent.name", String.format("Agent%d", new Random().nextInt()));
+        String xmlPath = jadeProps.getProperty("agent.xml");
+
+        Runtime rt = Runtime.instance();
         Profile p = new ProfileImpl(ip, port, null, false);
         ContainerController cc = rt.createAgentContainer(p);
 
-        try {
-            ApplicationContext context = new FileSystemXmlApplicationContext(xmlPath);
-            Agent agent = context.getBean("agent", Agent.class);
-            AgentController ac = cc.acceptNewAgent(agentName, agent);
-            ac.start();
-        } catch (StaleProxyException e) {
-            throw new RuntimeException(e);
-        }
+        ApplicationContext context = new FileSystemXmlApplicationContext(xmlPath);
+        Agent agent = context.getBean("agent", Agent.class);
+        AgentController ac = cc.acceptNewAgent(agentName, agent);
+        ac.start();
     }
 }

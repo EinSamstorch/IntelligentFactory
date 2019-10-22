@@ -5,6 +5,11 @@
         http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
 
+    <!-- 获取配置文件 -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="./resources/settings.properties"/>
+    </bean>
+
     <!-- 配置Agent -->
     <bean id="agent" class="machines.virtual.worker.WorkerAgent">
         <property name="serviceType">
@@ -20,7 +25,7 @@
         </property>
     </bean>
     <bean id="detectRatio" class="java.lang.Integer">
-        <constructor-arg name="value" value="0"/>
+        <constructor-arg name="value" value="${worker.ratio}"/>
     </bean>
 </beans>
 

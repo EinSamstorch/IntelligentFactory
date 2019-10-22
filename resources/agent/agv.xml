@@ -27,10 +27,15 @@
         </property>
     </bean>
 
+    <!-- 获取配置文件 -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="./resources/settings.properties"/>
+    </bean>
+
     <!-- 配置 hal -->
     <bean id="hal" class="machines.real.agv.AgvHalImpl">
         <!-- socket server监听端口 -->
-        <constructor-arg name="port" value="5656"/>
+        <constructor-arg name="port" value="${hal.port}"/>
     </bean>
 </beans>
 

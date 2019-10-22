@@ -2,7 +2,6 @@ package machines.real.commons.behaviours.cycle;
 
 import commons.BaseAgent;
 import jade.core.behaviours.TickerBehaviour;
-import machines.real.commons.RealMachineAgent;
 import machines.real.commons.hal.BaseHal;
 
 /**

@@ -5,6 +5,11 @@
         http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
 
+    <!-- 获取配置文件 -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="./resources/settings.properties"/>
+    </bean>
+
     <!-- 配置仓库Agent -->
     <bean id="agent" class="machines.real.warehouse.WarehouseAgent">
         <!-- 入库口 -->
@@ -43,16 +48,16 @@
         </property>
     </bean>
     <bean id="posIn" class="java.lang.Integer">
-        <constructor-arg name="value" value="1"/>
+        <constructor-arg name="value" value="${warehouse.pos.in}"/>
     </bean>
     <bean id="posOut" class="java.lang.Integer">
-        <constructor-arg name="value" value="15"/>
+        <constructor-arg name="value" value="${warehouse.pos.out}"/>
     </bean>
 
     <!-- 配置 hal -->
     <bean id="hal" class="machines.real.warehouse.WarehouseHalImpl">
         <!-- socket server监听端口 -->
-        <constructor-arg name="port" value="5656"/>
+        <constructor-arg name="port" value="${hal.password}"/>
     </bean>
 
     <bean id="matchProtocol" class="jade.lang.acl.MessageTemplate" factory-method="and">
