@@ -13,6 +13,7 @@ import machines.real.commons.IMachineOnline;
 import machines.real.commons.IOfferService;
 
 import java.lang.reflect.Field;
+import java.util.Properties;
 
 /**
  * Agent模板，添加一些必须实现的函数.
@@ -47,21 +48,17 @@ public class BaseAgent extends Agent implements IMachineOnline, IOfferService {
         super.setup();
     }
 
-    /**
-     * 注册服务
-     *
-     * @param serviceType 自身提供的服务类型，{@link DfServiceType}
-     * @param password    额外属性 使用该服务时 需要配对密码
-     */
     @Override
-    public void registerDf(String serviceType, String password) {
+    public void registerDf(String serviceType, Properties props) {
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();
         sd.setName(getLocalName());
         sd.setType(serviceType);
-        if (password != null) {
-            sd.addProperties(new Property("password", password));
+        if (props != null) {
+            for (String key : props.stringPropertyNames()) {
+                sd.addProperties(new Property(key, props.getProperty(key)));
+            }
         }
         dfd.addServices(sd);
         try {
@@ -74,8 +71,15 @@ public class BaseAgent extends Agent implements IMachineOnline, IOfferService {
     }
 
     @Override
+    public void registerDf(String serviceType, String password) {
+        Properties props = new Properties();
+        props.setProperty("password", password);
+        registerDf(serviceType, props);
+    }
+
+    @Override
     public void registerDf(String serviceType) {
-        registerDf(serviceType, null);
+        registerDf(serviceType, (Properties) null);
     }
 
     @Override
