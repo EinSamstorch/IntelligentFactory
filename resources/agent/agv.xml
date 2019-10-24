@@ -4,7 +4,11 @@
        xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="
         http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
-
+    <import resource="../redis.xml"/>
+    <!-- 获取配置文件 -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="./resources/settings.properties"/>
+    </bean>
     <!-- 配置Agent -->
     <bean id="agent" class="machines.real.agv.AgvAgent">
         <property name="serviceType">
@@ -18,6 +22,8 @@
                     <constructor-arg name="a" ref="agent"/>
                     <constructor-arg name="period" value="5000"/>
                     <constructor-arg name="hal" ref="hal"/>
+                    <property name="redisEnable" value="${redis.enable}"/>
+                    <property name="pool" ref="jedisPool"/>
                 </bean>
                 <!-- 执行搬运请求 -->
                 <bean class="machines.real.agv.behaviours.cycle.TransportItemBehaviour">
@@ -25,11 +31,6 @@
                 </bean>
             </list>
         </property>
-    </bean>
-
-    <!-- 获取配置文件 -->
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="./resources/settings.properties"/>
     </bean>
 
     <!-- 配置 hal -->

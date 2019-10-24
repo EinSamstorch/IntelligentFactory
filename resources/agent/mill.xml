@@ -2,6 +2,7 @@
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util" xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+    <import resource="../redis.xml"/>
     <!-- 获取配置文件 -->
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location" value="./resources/settings.properties"/>
@@ -24,6 +25,8 @@
                     <constructor-arg name="a" ref="agent"/>
                     <constructor-arg name="period" value="5000"/>
                     <constructor-arg name="hal" ref="hal"/>
+                    <property name="redisEnable" value="${redis.enable}"/>
+                    <property name="pool" ref="jedisPool"/>
                 </bean>
                 <!-- buffer管理行为 -->
                 <bean class="machines.real.commons.behaviours.cycle.MaintainBufferBehaviour">

@@ -3,6 +3,8 @@ package machines.real.commons.behaviours.cycle;
 import commons.BaseAgent;
 import jade.core.behaviours.TickerBehaviour;
 import machines.real.commons.hal.BaseHal;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 /**
  * 检查HAL是否在线，修改agent在线状态.
@@ -15,6 +17,16 @@ import machines.real.commons.hal.BaseHal;
 public class CheckHalState<T extends BaseAgent, H extends BaseHal> extends TickerBehaviour {
     private T tAgent;
     private H hal;
+    private boolean redisEnable = false;
+    private JedisPool pool;
+
+    public void setRedisEnable(boolean redisEnable) {
+        this.redisEnable = redisEnable;
+    }
+
+    public void setPool(JedisPool pool) {
+        this.pool = pool;
+    }
 
     /**
      * Construct a <code>TickerBehaviour</code> that call its
@@ -31,10 +43,15 @@ public class CheckHalState<T extends BaseAgent, H extends BaseHal> extends Ticke
 
     @Override
     protected void onTick() {
+        boolean online = false;
         if (hal.checkHalOnline()) {
-            tAgent.setAgentOnline(true);
-        } else {
-            tAgent.setAgentOnline(false);
+            online = true;
+        }
+        tAgent.setAgentOnline(online);
+        if(redisEnable) {
+            Jedis jedis = pool.getResource();
+            jedis.set(tAgent.getLocalName(), online? "online":"offline");
+            jedis.close();
         }
     }
 }
