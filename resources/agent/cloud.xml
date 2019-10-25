@@ -6,7 +6,7 @@
         http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
 
     <!-- 配置Agent -->
-    <bean id="agent" class="machines.virtual.cloud.CloudAgent">
+    <bean id="agent" class="machines.virtual.VirtualAgent">
         <property name="serviceType">
             <util:constant static-field="commons.tools.DfServiceType.CLOUD_UPDATE"/>
         </property>

@@ -11,7 +11,7 @@
     </bean>
 
     <!-- 配置Agent -->
-    <bean id="agent" class="machines.virtual.worker.WorkerAgent">
+    <bean id="agent" class="machines.virtual.VirtualAgent">
         <property name="serviceType">
             <util:constant static-field="commons.tools.DfServiceType.WORKER"/>
         </property>

@@ -9,11 +9,10 @@ import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Properties;
 import java.util.Random;
 
