@@ -20,14 +20,6 @@ public class CheckHalState<T extends BaseAgent, H extends BaseHal> extends Ticke
     private boolean redisEnable = false;
     private JedisPool pool;
 
-    public void setRedisEnable(boolean redisEnable) {
-        this.redisEnable = redisEnable;
-    }
-
-    public void setPool(JedisPool pool) {
-        this.pool = pool;
-    }
-
     /**
      * Construct a <code>TickerBehaviour</code> that call its
      * <code>onTick()</code> method every <code>period</code> ms.
@@ -41,6 +33,14 @@ public class CheckHalState<T extends BaseAgent, H extends BaseHal> extends Ticke
         this.hal = hal;
     }
 
+    public void setRedisEnable(boolean redisEnable) {
+        this.redisEnable = redisEnable;
+    }
+
+    public void setPool(JedisPool pool) {
+        this.pool = pool;
+    }
+
     @Override
     protected void onTick() {
         boolean online = false;
@@ -48,9 +48,9 @@ public class CheckHalState<T extends BaseAgent, H extends BaseHal> extends Ticke
             online = true;
         }
         tAgent.setAgentOnline(online);
-        if(redisEnable) {
+        if (redisEnable) {
             Jedis jedis = pool.getResource();
-            jedis.set(tAgent.getLocalName(), online? "online":"offline");
+            jedis.set(tAgent.getLocalName(), online ? "online" : "offline");
             jedis.close();
         }
     }

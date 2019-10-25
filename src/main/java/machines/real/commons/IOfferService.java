@@ -12,10 +12,12 @@ import java.util.Properties;
 public interface IOfferService {
     /**
      * 注册服务
+     *
      * @param serviceType 服务类型
      * @param props       额外属性
      */
     void registerDf(String serviceType, Properties props);
+
     /**
      * 注册服务
      *

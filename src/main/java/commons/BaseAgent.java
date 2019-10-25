@@ -1,6 +1,5 @@
 package commons;
 
-import commons.tools.DfServiceType;
 import commons.tools.LoggerUtil;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
@@ -72,6 +71,9 @@ public class BaseAgent extends Agent implements IMachineOnline, IOfferService {
 
     @Override
     public void registerDf(String serviceType, String password) {
+        if (password == null) {
+            registerDf(serviceType);
+        }
         Properties props = new Properties();
         props.setProperty("password", password);
         registerDf(serviceType, props);
