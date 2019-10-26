@@ -8,6 +8,7 @@ import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import java.io.BufferedInputStream;
@@ -28,17 +29,15 @@ public class AgentRunner {
     public static void main(String[] args) {
         try {
             startAgent();
-        } catch (IOException | StaleProxyException e) {
+        } catch ( StaleProxyException e) {
             e.printStackTrace();
             System.exit(1);
         }
     }
 
-    private static void startAgent() throws IOException, StaleProxyException {
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream("./resources/settings.properties"));
-        Properties jadeProps = new Properties();
-        jadeProps.load(bufferedInputStream);
-
+    private static void startAgent() throws StaleProxyException {
+        ApplicationContext settingContext = new FileSystemXmlApplicationContext("resources/settings.xml");
+        Properties jadeProps = settingContext.getBean("settings", Properties.class);
         String ip = jadeProps.getProperty("jade.platform.ip", null);
         int port = Integer.parseInt(jadeProps.getProperty("setting.port", "-1"));
         String agentName = jadeProps.getProperty("jade.agent.name", String.format("Agent%d", new Random().nextInt()));
