@@ -3,21 +3,15 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
           http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="./resources/settings.properties"/>
-    </bean>
-
+    <import resource="settings.xml"/>
     <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
         <constructor-arg name="poolConfig" ref="jedisPoolConfig"/>
         <constructor-arg name="host" value="${redis.host}"/>
         <constructor-arg name="port" value="${redis.port}"/>
         <constructor-arg name="timeout" value="2000"/>
-        <constructor-arg name="password" value="${redis.password}"/>
+<!--        <constructor-arg name="password" value="${redis.password}"/>-->
     </bean>
-    <context:property-placeholder location="./resources/settings.properties"/>
     <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
         <property name="minIdle" value="1"/>
     </bean>
-
-
 </beans>

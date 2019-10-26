@@ -73,6 +73,7 @@ public class BaseAgent extends Agent implements IMachineOnline, IOfferService {
     public void registerDf(String serviceType, String password) {
         if (password == null) {
             registerDf(serviceType);
+            return;
         }
         Properties props = new Properties();
         props.setProperty("password", password);
