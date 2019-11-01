@@ -4,9 +4,9 @@ import commons.order.OrderInfo;
 import commons.order.WorkpieceStatus;
 import commons.tools.DfServiceType;
 import commons.tools.DfUtils;
+import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
-import machines.virtual.cloud.CloudAgent;
 
 import java.util.Queue;
 
@@ -22,8 +22,8 @@ import java.util.Queue;
 public class HandleOrders extends TickerBehaviour {
     private Queue<OrderInfo> orderInfoQueue;
 
-    public HandleOrders(CloudAgent cloudAgent, long period) {
-        super(cloudAgent, period);
+    public HandleOrders(Agent agent, long period) {
+        super(agent, period);
     }
 
     public void setOrderInfoQueue(Queue<OrderInfo> orderInfoQueue) {

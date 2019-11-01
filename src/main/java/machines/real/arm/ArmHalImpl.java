@@ -15,7 +15,7 @@ public class ArmHalImpl extends BaseHal implements ArmHal {
     private static final String CMD_MOVE_ITEM = "move_item";
     private static final String FIELD_FROM = "from";
     private static final String FIELD_TO = "to";
-    private static final String FIELD_GOODSID = "goodsid";
+    private static final String FIELD_GOODSID = "goodsId";
     private static final String FIELD_STEP = "step";
 
     public ArmHalImpl() {

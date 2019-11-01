@@ -7,8 +7,8 @@ import commons.order.OrderInfo;
 import commons.tools.HttpRequest;
 import commons.tools.LoggerUtil;
 import commons.tools.OrderTools;
+import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
-import machines.virtual.cloud.CloudAgent;
 
 import java.util.Queue;
 
@@ -24,8 +24,8 @@ public class GetOrder extends TickerBehaviour {
     private String website;
     private Queue<OrderInfo> orderInfoQueue;
 
-    public GetOrder(CloudAgent ca, long period) {
-        super(ca, period);
+    public GetOrder(Agent agent, long period) {
+        super(agent, period);
     }
 
     public void setWebsite(String website) {

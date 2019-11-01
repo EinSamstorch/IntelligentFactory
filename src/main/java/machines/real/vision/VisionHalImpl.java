@@ -29,7 +29,7 @@ public class VisionHalImpl extends MachineHalImpl {
     public boolean process(WorkpieceStatus wpInfo) {
         String goodsId = wpInfo.getGoodsId();
         JSONObject extra = new JSONObject();
-        extra.put("goodsid", goodsId);
+        extra.put("goodsId", goodsId);
         if (executeCmd(CMD_CHECK, extra)) {
             checkValue = ((JSONObject) getExtraInfo()).toJSONString();
             LoggerUtil.hal.info(String.format("OrderId: %s, WorkpieceId: %s, GoodsId: %s. Values: %s",

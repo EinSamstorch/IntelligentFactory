@@ -14,13 +14,13 @@
         <property name="behaviours">
             <list>
                 <bean class="machines.virtual.cloud.behaviours.cycle.GetOrder">
-                    <constructor-arg name="ca" ref="agent"/>
+                    <constructor-arg name="agent" ref="agent"/>
                     <constructor-arg name="period" value="10000"/>
                     <property name="website" ref="website"/>
                     <property name="orderInfoQueue" ref="orderInfoQueue"/>
                 </bean>
                 <bean class="machines.virtual.cloud.behaviours.cycle.HandleOrders">
-                    <constructor-arg name="cloudAgent" ref="agent"/>
+                    <constructor-arg name="agent" ref="agent"/>
                     <constructor-arg name="period" value="10000"/>
                     <property name="orderInfoQueue" ref="orderInfoQueue"/>
                 </bean>

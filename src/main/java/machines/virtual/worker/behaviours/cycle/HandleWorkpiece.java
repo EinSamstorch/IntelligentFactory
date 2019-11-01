@@ -49,6 +49,7 @@ public class HandleWorkpiece extends CyclicBehaviour {
                 block(500);
             } else {
                 processRetry();
+                block(100);
             }
             return;
         }
