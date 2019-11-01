@@ -8,12 +8,8 @@ import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Properties;
 import java.util.Random;
 
@@ -29,7 +25,7 @@ public class AgentRunner {
     public static void main(String[] args) {
         try {
             startAgent();
-        } catch ( StaleProxyException e) {
+        } catch (StaleProxyException e) {
             e.printStackTrace();
             System.exit(1);
         }

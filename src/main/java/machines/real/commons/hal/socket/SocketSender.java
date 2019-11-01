@@ -42,9 +42,9 @@ public class SocketSender {
 
     private void send(String words) {
         try {
-            // 消息末端增加 \n，以表示 一条消息结束
-            words += "\n";
-            socket.getOutputStream().write(words.getBytes(StandardCharsets.UTF_8));
+            // 消息末端增加 \n，以表示 一条消息结束 且字符均为小写
+            String format = words.toLowerCase() + "\n";
+            socket.getOutputStream().write(format.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             LoggerUtil.agent.error(e.getMessage());
         }

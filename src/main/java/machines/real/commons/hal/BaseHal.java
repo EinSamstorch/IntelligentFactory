@@ -55,33 +55,8 @@ public class BaseHal {
         return taskNo;
     }
 
-    /**
-     * 获取命令解析结果
-     *
-     * @param taskNo 任务号
-     * @return 结果
-     */
-    protected JSONObject getCmdResponse(int taskNo) {
-        return getResponse(SocketMessage.FIELD_CMD_RESULT, taskNo);
-    }
-
-    protected JSONObject getActionResponse(int taskNo) {
-        return getResponse(SocketMessage.FIELD_ACTION_RESULT, taskNo);
-    }
-
-    private JSONObject getResponse(String responseType, int taskNo) {
-        Map<Integer, JSONObject> m = null;
-        switch (responseType) {
-            case SocketMessage.FIELD_CMD_RESULT:
-                m = listener.getCmdResponseMap();
-                break;
-            case SocketMessage.FIELD_ACTION_RESULT:
-                m = listener.getActionResponseMap();
-                break;
-
-            default:
-                throw new IllegalArgumentException("UNKOWN RESPONSE TYPE");
-        }
+    protected JSONObject getResponse(int taskNo) {
+        Map<Integer, JSONObject> m = listener.getResponseMap();
         while (true) {
             JSONObject response = m.get(taskNo);
             if (response != null) {
@@ -103,19 +78,12 @@ public class BaseHal {
     protected boolean executeCmd(String cmd, Object extra) {
         int taskNo = sendMessageToMachine(cmd, extra);
 
-        JSONObject cmdResponse = getCmdResponse(taskNo);
+        JSONObject response = getResponse(taskNo);
         if (!Objects.equals(SocketMessage.RESULT_SUCCESS,
-                cmdResponse.getString(SocketMessage.FIELD_CMD_RESULT))) {
+                response.getString(SocketMessage.FIELD_RESULT))) {
             return false;
         }
-        extraInfo = cmdResponse.get(SocketMessage.FIELD_EXTRA);
-
-        JSONObject actionResponse = getActionResponse(taskNo);
-        if (!Objects.equals(SocketMessage.RESULT_SUCCESS,
-                actionResponse.getString(SocketMessage.FIELD_ACTION_RESULT))) {
-            return false;
-        }
-        extraInfo = actionResponse.get(SocketMessage.FIELD_EXTRA);
+        extraInfo = response.get(SocketMessage.FIELD_EXTRA);
 
         return true;
     }

@@ -23,8 +23,7 @@ import java.util.Map;
 public class SocketListener extends Thread {
     private Socket socket;
     private int port;
-    private Map<Integer, JSONObject> cmdResponseMap = new HashMap<>();
-    private Map<Integer, JSONObject> actionResponseMap = new HashMap<>();
+    private Map<Integer, JSONObject> responseMap = new HashMap<>();
 
     public SocketListener(int port) {
         this.port = port;
@@ -32,6 +31,10 @@ public class SocketListener extends Thread {
 
     public SocketListener() {
         this(5656);
+    }
+
+    public Map<Integer, JSONObject> getResponseMap() {
+        return responseMap;
     }
 
     /**
@@ -55,16 +58,7 @@ public class SocketListener extends Thread {
             } else if (checkMsgComplete(response)) {
                 JSONObject message = JsonTool.parse(response);
                 int taskNo = message.getIntValue(SocketMessage.FIELD_TASK_NO);
-                String type = parseMsgType(response);
-                switch (type) {
-                    case SocketMessage.FIELD_CMD_RESULT:
-                        cmdResponseMap.put(taskNo, message);
-                        break;
-                    case SocketMessage.FIELD_ACTION_RESULT:
-                        actionResponseMap.put(taskNo, message);
-                        break;
-                    default:
-                }
+                responseMap.put(taskNo, message);
             }
         }
     }
@@ -120,8 +114,7 @@ public class SocketListener extends Thread {
         // 验证消息结构完整性
         boolean msgComplete = message.containsKey(SocketMessage.FIELD_TASK_NO)
                 && message.containsKey(SocketMessage.FIELD_EXTRA)
-                && (message.containsKey(SocketMessage.FIELD_CMD_RESULT)
-                || message.containsKey(SocketMessage.FIELD_ACTION_RESULT));
+                && message.containsKey(SocketMessage.FIELD_RESULT);
         if (!msgComplete) {
             // 消息结构缺失则返回false
             LoggerUtil.agent.warn("Message incomplete");
@@ -131,16 +124,6 @@ public class SocketListener extends Thread {
         return true;
     }
 
-    private String parseMsgType(String response) {
-        JSONObject message = JsonTool.parse(response);
-        if (message.containsKey(SocketMessage.FIELD_CMD_RESULT)) {
-            return SocketMessage.FIELD_CMD_RESULT;
-        }
-        if (message.containsKey(SocketMessage.FIELD_ACTION_RESULT)) {
-            return SocketMessage.FIELD_ACTION_RESULT;
-        }
-        return "UNKNOWN";
-    }
 
     /**
      * 连接SocketServer 并注册 type:agent
@@ -178,9 +161,9 @@ public class SocketListener extends Thread {
      */
     private void send(String words) {
         try {
-            // 消息末端增加 \n，以表示 一条消息结束
-            words += "\n";
-            socket.getOutputStream().write(words.getBytes(StandardCharsets.UTF_8));
+            // 消息末端增加 \n，以表示 一条消息结束 且所有字符为小写
+            String format = words.toLowerCase() + "\n";
+            socket.getOutputStream().write(format.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             LoggerUtil.agent.error(e.getMessage());
         }
@@ -203,13 +186,5 @@ public class SocketListener extends Thread {
             LoggerUtil.agent.error(e.getMessage(), e);
         }
         return line;
-    }
-
-    public Map<Integer, JSONObject> getCmdResponseMap() {
-        return cmdResponseMap;
-    }
-
-    public Map<Integer, JSONObject> getActionResponseMap() {
-        return actionResponseMap;
     }
 }
