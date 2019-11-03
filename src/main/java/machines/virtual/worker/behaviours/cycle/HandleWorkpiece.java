@@ -11,12 +11,11 @@ import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import machines.virtual.worker.behaviours.simple.MyContractNetInitiator;
-
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
+import machines.virtual.worker.behaviours.simple.MyContractNetInitiator;
 
 /**
  * 处理工件招投标.
@@ -28,109 +27,120 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class HandleWorkpiece extends CyclicBehaviour {
-    private Integer detectRatio;
-    private Queue<RetryMessage> retryQueue = new LinkedBlockingQueue<>();
 
-    public HandleWorkpiece() {
-        super();
-    }
+  private Integer detectRatio;
+  private Queue<RetryMessage> retryQueue = new LinkedBlockingQueue<>();
+  private boolean retrying = false;
 
-    public void setDetectRatio(Integer detectRatio) {
-        this.detectRatio = detectRatio;
-    }
+  public HandleWorkpiece() {
+    super();
+  }
 
-    @Override
-    public void action() {
-        MessageTemplate mt = MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
-                MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST));
-        ACLMessage msg = myAgent.receive(mt);
-        if (msg == null) {
-            if (retryQueue.isEmpty()) {
-                block(500);
-            } else {
-                processRetry();
+  public void setDetectRatio(Integer detectRatio) {
+    this.detectRatio = detectRatio;
+  }
+
+  @Override
+  public void action() {
+    MessageTemplate mt = MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
+        MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST));
+    ACLMessage msg = myAgent.receive(mt);
+    if (msg == null) {
+      if(retrying) {
+        // 当前进行重试中, 休眠5000ms
+        retrying = false;
         block(5000);
-            }
-            return;
+      } else {
+        // 当前没有进行重试, 查询是否有重试任务
+        if(!retryQueue.isEmpty()) {
+          // 有重试任务, 执行它
+          retrying = true;
+          processRetry();
+        } else {
+          // 无重试任务, 休眠1000ms
+          block(1000);
         }
-        WorkpieceStatus wpInfo = null;
-        try {
-            wpInfo = (WorkpieceStatus) msg.getContentObject();
-            LoggerUtil.agent.info("Receive Request From: " + msg.getSender().getName());
-        } catch (UnreadableException e) {
-            e.printStackTrace();
-        }
-        if (wpInfo == null) {
-            block(500);
-            return;
-        }
-        // 重置加工工步
-        wpInfo.resetProcessStep();
+      }
+      return;
+    }
+    WorkpieceStatus wpInfo = null;
+    try {
+      wpInfo = (WorkpieceStatus) msg.getContentObject();
+      LoggerUtil.agent.info("Receive Request From: " + msg.getSender().getName());
+    } catch (UnreadableException e) {
+      e.printStackTrace();
+    }
+    if (wpInfo == null) {
+      block(500);
+      return;
+    }
+    // 重置加工工步
+    wpInfo.resetProcessStep();
 
-        List<String> processPlan = wpInfo.getProcessPlan();
-        int processIndex = wpInfo.nextProcessIndex();
-        if (processIndex >= processPlan.size()) {
-            // 所有工艺完成，回成品库
-            LoggerUtil.agent.info(String.format("OrderId: %s, wpId: %s done.",
-                    wpInfo.getOrderId(), wpInfo.getWorkpieceId()));
-            processOn(wpInfo, DfServiceType.PRODUCT);
-            return;
-        }
-
-        String process = processPlan.get(processIndex);
-        if (process.equals(DfServiceType.WAREHOUSE)) {
-            addVisionProcess(wpInfo);
-        }
-        processOn(wpInfo, process);
+    List<String> processPlan = wpInfo.getProcessPlan();
+    int processIndex = wpInfo.nextProcessIndex();
+    if (processIndex >= processPlan.size()) {
+      // 所有工艺完成，回成品库
+      LoggerUtil.agent.info(String.format("OrderId: %s, wpId: %s done.",
+          wpInfo.getOrderId(), wpInfo.getWorkpieceId()));
+      processOn(wpInfo, DfServiceType.PRODUCT);
+      return;
     }
 
-    /**
-     * 处理招投标
-     *
-     * @param wpInfo      工件状态信息
-     * @param serviceType 需求服务类型
-     */
-    private void processOn(WorkpieceStatus wpInfo, String serviceType) {
-        try {
-            ACLMessage msg = DfUtils.createCfpMsg(wpInfo);
-            if (DfServiceType.PRODUCT.equals(serviceType)) {
-                DfUtils.searchDf(myAgent, msg, DfServiceType.WAREHOUSE);
-                msg.setLanguage("PRODUCT");
-            } else if (DfServiceType.WAREHOUSE.equals(serviceType)) {
-                DfUtils.searchDf(myAgent, msg, serviceType);
-                msg.setLanguage("RAW");
-            } else {
-                DfUtils.searchDf(myAgent, msg, serviceType);
-            }
-
-            Behaviour b = new MyContractNetInitiator(myAgent, msg, serviceType, retryQueue);
-            myAgent.addBehaviour(b);
-        } catch (NotFoundException e) {
-            LoggerUtil.agent.warn(e.getMessage());
-            // 放入重试队列
-            retryQueue.offer(new RetryMessage(wpInfo, serviceType));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    String process = processPlan.get(processIndex);
+    if (process.equals(DfServiceType.WAREHOUSE)) {
+      addVisionProcess(wpInfo);
     }
+    processOn(wpInfo, process);
+  }
 
-    /**
-     * 对失败招投标进行重试
-     */
-    private void processRetry() {
-        RetryMessage retryMsg = retryQueue.poll();
-        if (retryMsg == null) {
-            return;
-        }
-        processOn(retryMsg.wpInfo, retryMsg.serviceType);
-    }
+  /**
+   * 处理招投标.
+   *
+   * @param wpInfo 工件状态信息
+   * @param serviceType 需求服务类型
+   */
+  private void processOn(WorkpieceStatus wpInfo, String serviceType) {
+    try {
+      ACLMessage msg = DfUtils.createCfpMsg(wpInfo);
+      if (DfServiceType.PRODUCT.equals(serviceType)) {
+        DfUtils.searchDf(myAgent, msg, DfServiceType.WAREHOUSE);
+        msg.setLanguage("PRODUCT");
+      } else if (DfServiceType.WAREHOUSE.equals(serviceType)) {
+        DfUtils.searchDf(myAgent, msg, serviceType);
+        msg.setLanguage("RAW");
+      } else {
+        DfUtils.searchDf(myAgent, msg, serviceType);
+      }
 
-    private void addVisionProcess(WorkpieceStatus wpInfo) {
-        int random = new Random().nextInt(100);
-        if (random < detectRatio) {
-            LoggerUtil.agent.info(String.format("Item orderId:%s, wpId:%s add vision detect",
-                    wpInfo.getOrderId(), wpInfo.getWorkpieceId()));
-            wpInfo.getProcessPlan().add(DfServiceType.VISION);
-        }
+      Behaviour b = new MyContractNetInitiator(myAgent, msg, serviceType, retryQueue);
+      myAgent.addBehaviour(b);
+    } catch (NotFoundException e) {
+      LoggerUtil.agent.warn(e.getMessage());
+      // 放入重试队列
+      retryQueue.offer(new RetryMessage(wpInfo, serviceType));
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+  }
+
+  /**
+   * 对失败招投标进行重试.
+   */
+  private void processRetry() {
+    RetryMessage retryMsg = retryQueue.poll();
+    if (retryMsg == null) {
+      return;
+    }
+    processOn(retryMsg.wpInfo, retryMsg.serviceType);
+  }
+
+  private void addVisionProcess(WorkpieceStatus wpInfo) {
+    int random = new Random().nextInt(100);
+    if (random < detectRatio) {
+      LoggerUtil.agent.info(String.format("Item orderId:%s, wpId:%s add vision detect",
+          wpInfo.getOrderId(), wpInfo.getWorkpieceId()));
+      wpInfo.getProcessPlan().add(DfServiceType.VISION);
+    }
+  }
 }
