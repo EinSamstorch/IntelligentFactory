@@ -153,7 +153,6 @@
             <version>1.7.28</version>
         </dependency>
 
-
         <!-- junit -->
         <dependency>
             <groupId>junit</groupId>
@@ -166,13 +165,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>5.1.9.RELEASE</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-checkstyle-plugin -->
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>3.1.0</version>
         </dependency>
 
     </dependencies>
