@@ -7,11 +7,10 @@ import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import java.util.Random;
 import machines.real.commons.request.AgvRequest;
 import machines.real.commons.request.WarehouseRequest;
 import machines.real.warehouse.WarehouseAgent;
-
-import java.util.Random;
 
 /**
  * .
@@ -22,55 +21,62 @@ import java.util.Random;
  */
 
 public class CallForAgv extends SimpleBehaviour {
-    private AgvRequest request;
-    private boolean init = true;
-    private boolean done = false;
-    private String conversationId;
 
-    public CallForAgv(Agent a, AgvRequest request) {
-        super(a);
-        this.request = request;
-        conversationId = String.format("CALL_FOR_AGV_%d", new Random().nextInt());
-    }
+  private AgvRequest request;
+  private boolean init = true;
+  private boolean done = false;
+  private String conversationId;
 
-    @Override
-    public void action() {
-        if (init) {
-            // 发送运输请求
-            ACLMessage msg = null;
-            try {
-                msg = DfUtils.createRequestMsg(request);
-                DfUtils.searchDf(myAgent, msg, DfServiceType.AGV);
-                msg.setConversationId(conversationId);
-                myAgent.send(msg);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            init = false;
-            LoggerUtil.agent.debug("Call for agv.");
+  /**
+   * 请求agv.
+   * @param a  请求方agent
+   * @param request agv搬运请求
+   */
+  public CallForAgv(Agent a, AgvRequest request) {
+    super(a);
+    this.request = request;
+    conversationId = String.format("CALL_FOR_AGV_%d", new Random().nextInt());
+  }
+
+  @Override
+  public void action() {
+    if (init) {
+      // 发送运输请求
+      ACLMessage msg = null;
+      try {
+        msg = DfUtils.createRequestMsg(request);
+        DfUtils.searchDf(myAgent, msg, DfServiceType.AGV);
+        msg.setConversationId(conversationId);
+        myAgent.send(msg);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      init = false;
+      LoggerUtil.agent.debug("Call for agv.");
+    } else {
+      MessageTemplate mt = MessageTemplate.MatchConversationId(conversationId);
+      ACLMessage receive = myAgent.receive(mt);
+      if (receive != null) {
+        if (receive.getPerformative() == ACLMessage.INFORM) {
+          // 已到达
+          done = true;
+          // 发送搬运请求
+          WarehouseRequest request = new WarehouseRequest(
+              this.request.getWpInfo().getWarehousePosition());
+          myAgent.addBehaviour(new ItemImportBehaviour((WarehouseAgent) myAgent, request));
+
+          LoggerUtil.agent.info("Workpiece arrived at import location");
         } else {
-            MessageTemplate mt = MessageTemplate.MatchConversationId(conversationId);
-            ACLMessage receive = myAgent.receive(mt);
-            if (receive != null) {
-                if (receive.getPerformative() == ACLMessage.INFORM) {
-                    // 已到达
-                    done = true;
-                    // 发送搬运请求
-                    WarehouseRequest request = new WarehouseRequest(this.request.getWpInfo().getWarehousePosition());
-                    myAgent.addBehaviour(new ItemImportBehaviour((WarehouseAgent) myAgent, request));
-
-                    LoggerUtil.agent.info("Workpiece arrived at import location");
-                } else {
-                    LoggerUtil.agent.error("Performative error.");
-                }
-            } else {
-                block();
-            }
+          LoggerUtil.agent.error("Performative error.");
         }
+      } else {
+        block();
+      }
     }
+  }
 
-    @Override
-    public boolean done() {
-        return done;
-    }
+  @Override
+  public boolean done() {
+    return done;
+  }
 }

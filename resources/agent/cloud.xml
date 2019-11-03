@@ -24,10 +24,6 @@
                     <constructor-arg name="period" value="10000"/>
                     <property name="orderInfoQueue" ref="orderInfoQueue"/>
                 </bean>
-                <!--                <bean class="machines.virtual.cloud.behaviours.cycle.DetectUpdateMsg">-->
-                <!--                    <constructor-arg name="cagent" ref="agent"/>-->
-                <!--                    <constructor-arg name="period" value="10000"/>-->
-                <!--                </bean>-->
             </list>
         </property>
     </bean>

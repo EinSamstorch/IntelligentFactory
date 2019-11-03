@@ -15,50 +15,51 @@ import machines.real.commons.hal.MachineHal;
  */
 
 public class RealMachineAgent extends BaseAgent {
-    private MachineHal hal;
-    private String armPwd;
-    private BufferManger bufferManger;
-    private MachineState machineState;
 
-    @Override
-    protected void setup() {
-        super.setup();
+  private MachineHal hal;
+  private String armPwd;
+  private BufferManger bufferManger;
+  private MachineState machineState;
 
-        ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
-        for (Behaviour behaviour : behaviours) {
-            addBehaviour(tbf.wrap(behaviour));
-        }
+  @Override
+  protected void setup() {
+    super.setup();
+
+    ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
+    for (Behaviour behaviour : behaviours) {
+      addBehaviour(tbf.wrap(behaviour));
     }
+  }
 
-    public BufferManger getBufferManger() {
-        return bufferManger;
-    }
+  public BufferManger getBufferManger() {
+    return bufferManger;
+  }
 
-    public void setBufferManger(BufferManger bufferManger) {
-        this.bufferManger = bufferManger;
-    }
+  public void setBufferManger(BufferManger bufferManger) {
+    this.bufferManger = bufferManger;
+  }
 
-    public String getArmPwd() {
-        return armPwd;
-    }
+  public String getArmPwd() {
+    return armPwd;
+  }
 
-    public void setArmPwd(String armPwd) {
-        this.armPwd = armPwd;
-    }
+  public void setArmPwd(String armPwd) {
+    this.armPwd = armPwd;
+  }
 
-    public MachineState getMachineState() {
-        return machineState;
-    }
+  public MachineState getMachineState() {
+    return machineState;
+  }
 
-    public void setMachineState(MachineState machineState) {
-        this.machineState = machineState;
-    }
+  public void setMachineState(MachineState machineState) {
+    this.machineState = machineState;
+  }
 
-    public MachineHal getHal() {
-        return hal;
-    }
+  public MachineHal getHal() {
+    return hal;
+  }
 
-    public void setHal(MachineHal hal) {
-        this.hal = hal;
-    }
+  public void setHal(MachineHal hal) {
+    this.hal = hal;
+  }
 }

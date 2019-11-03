@@ -9,7 +9,6 @@ import commons.tools.LoggerUtil;
 import commons.tools.OrderTools;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
-
 import java.util.Queue;
 
 /**
@@ -21,62 +20,62 @@ import java.util.Queue;
  */
 
 public class GetOrder extends TickerBehaviour {
-    private String website;
-    private Queue<OrderInfo> orderInfoQueue;
 
-    public GetOrder(Agent agent, long period) {
-        super(agent, period);
+  private String website;
+  private Queue<OrderInfo> orderInfoQueue;
+
+  public GetOrder(Agent agent, long period) {
+    super(agent, period);
+  }
+
+  public void setWebsite(String website) {
+    this.website = website;
+  }
+
+  public void setOrderInfoQueue(Queue<OrderInfo> orderInfoQueue) {
+    this.orderInfoQueue = orderInfoQueue;
+  }
+
+  @Override
+  protected void onTick() {
+    String result = HttpRequest.getOrder(website, 0, 0);
+
+    // 如果无新订单，则return
+    if ("[]".equals(result)) {
+      return;
+    }
+    if ("{\"message\": \"The resultSet is empty！\"}".equals(result)) {
+      return;
+    }
+    if ("{\"flag\":\"failure\",\"message\":\"The resultSet is empty！\"}".equals(result)) {
+      return;
+    }
+    LoggerUtil.agent.info(result);
+
+    /*
+      解析订单 JSONArray
+      [{订单1},{订单2},{订单3}]
+     */
+    JSONObject resultJson = (JSONObject) JSONObject.parse(result);
+    if ("success".equals(resultJson.getString("flag"))) {
+      String orderListStr = resultJson.getString("orderList");
+
+      try {
+        JSONArray jsonArray = JSONArray.parseArray(orderListStr);
+        for (Object o : jsonArray) {
+          JSONObject jo = (JSONObject) o;
+          // 加入到 cloud Agent 待分配 列表中
+          OrderInfo oi = OrderTools.parseOrderInfo(jo);
+          orderInfoQueue.offer(oi);
+
+          // 储存订单信息到MYSQL中
+          //mysqlTool.storeOrderInfo(oi);
+        }
+      } catch (JSONException e) {
+        LoggerUtil.agent.error(e.getMessage());
+      }
     }
 
-    public void setWebsite(String website) {
-        this.website = website;
-    }
 
-    public void setOrderInfoQueue(Queue<OrderInfo> orderInfoQueue) {
-        this.orderInfoQueue = orderInfoQueue;
-    }
-
-    @Override
-    protected void onTick() {
-        String result = HttpRequest.getOrder(website, 0, 0);
-
-
-        // 如果无新订单，则return
-        if ("[]".equals(result)) {
-            return;
-        }
-        if ("{\"message\": \"The resultSet is empty！\"}".equals(result)) {
-            return;
-        }
-        if ("{\"flag\":\"failure\",\"message\":\"The resultSet is empty！\"}".equals(result)) {
-            return;
-        }
-        LoggerUtil.agent.info(result);
-
-        /*
-          解析订单 JSONArray
-          [{订单1},{订单2},{订单3}]
-         */
-        JSONObject resultJson = (JSONObject) JSONObject.parse(result);
-        if ("success".equals(resultJson.getString("flag"))) {
-            String orderListStr = resultJson.getString("orderList");
-
-            try {
-                JSONArray jsonArray = JSONArray.parseArray(orderListStr);
-                for (Object o : jsonArray) {
-                    JSONObject jo = (JSONObject) o;
-                    // 加入到 cloud Agent 待分配 列表中
-                    OrderInfo oi = OrderTools.parseOrderInfo(jo);
-                    orderInfoQueue.offer(oi);
-
-                    // 储存订单信息到MYSQL中
-                    //mysqlTool.storeOrderInfo(oi);
-                }
-            } catch (JSONException e) {
-                LoggerUtil.agent.error(e.getMessage());
-            }
-        }
-
-
-    }
+  }
 }

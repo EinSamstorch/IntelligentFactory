@@ -15,13 +15,13 @@ import jade.core.behaviours.ThreadedBehaviourFactory;
 public class AgvAgent extends BaseAgent {
 
 
-    @Override
-    protected void setup() {
-        super.setup();
+  @Override
+  protected void setup() {
+    super.setup();
 
-        ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
-        for (Behaviour behaviour : behaviours) {
-            addBehaviour(tbf.wrap(behaviour));
-        }
+    ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
+    for (Behaviour behaviour : behaviours) {
+      addBehaviour(tbf.wrap(behaviour));
     }
+  }
 }

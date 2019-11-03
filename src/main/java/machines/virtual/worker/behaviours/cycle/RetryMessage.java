@@ -11,11 +11,12 @@ import commons.order.WorkpieceStatus;
  */
 
 public final class RetryMessage {
-    final WorkpieceStatus wpInfo;
-    final String serviceType;
 
-    public RetryMessage(WorkpieceStatus wpInfo, String serviceType) {
-        this.wpInfo = wpInfo;
-        this.serviceType = serviceType;
-    }
+  final WorkpieceStatus wpInfo;
+  final String serviceType;
+
+  public RetryMessage(WorkpieceStatus wpInfo, String serviceType) {
+    this.wpInfo = wpInfo;
+    this.serviceType = serviceType;
+  }
 }

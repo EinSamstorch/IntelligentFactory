@@ -9,13 +9,14 @@ package commons;
  */
 
 public class NotifyFinish {
-    private volatile Boolean done = false;
 
-    public Boolean getDone() {
-        return done;
-    }
+  private volatile Boolean done = false;
 
-    public void setDone(Boolean done) {
-        this.done = done;
-    }
+  public Boolean getDone() {
+    return done;
+  }
+
+  public void setDone(Boolean done) {
+    this.done = done;
+  }
 }

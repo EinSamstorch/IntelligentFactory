@@ -9,20 +9,21 @@ package machines.real.commons;
  */
 
 public class MachineState {
-    public static int STATE_STAND_BY = 1;
-    public static int STATE_BUSY = 2;
 
-    private Integer state = STATE_STAND_BY;
+  public static int STATE_STAND_BY = 1;
+  public static int STATE_BUSY = 2;
 
-    public Boolean isBusy() {
-        return state == STATE_BUSY;
-    }
+  private Integer state = STATE_STAND_BY;
 
-    public void resetBusy() {
-        state = STATE_STAND_BY;
-    }
+  public Boolean isBusy() {
+    return state == STATE_BUSY;
+  }
 
-    public void setBusy() {
-        state = STATE_BUSY;
-    }
+  public void resetBusy() {
+    state = STATE_STAND_BY;
+  }
+
+  public void setBusy() {
+    state = STATE_BUSY;
+  }
 }

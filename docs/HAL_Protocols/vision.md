@@ -15,11 +15,11 @@ Agent:
   "task_no": 3,  
   "cmd": "check",      
   "extra": {
-    "goodsid": goodsid,
+    "goodsId": goodsId,
   }
 }
 ```
-- goodsid : type of goods. see it [here](./definition.md/#goodsid)
+- goodsId : type of goods. see it [here](./definition.md/#goodsId)
 - size_name : waiting for check. see it [here](./definition.md/#detail-size)
 - size : design size compared with real size.
                    

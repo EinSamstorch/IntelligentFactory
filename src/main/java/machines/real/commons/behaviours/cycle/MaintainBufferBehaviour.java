@@ -7,8 +7,7 @@ import jade.lang.acl.MessageTemplate;
 import machines.real.commons.buffer.BufferManger;
 
 /**
- * 维护buffer状态
- * 取走工件后, 清空buffer
+ * 维护buffer状态 取走工件后, 清空buffer.
  *
  * @author <a href="mailto:junfeng_pan96@qq.com">junfeng</a>
  * @version 1.0.0.0
@@ -16,34 +15,35 @@ import machines.real.commons.buffer.BufferManger;
  */
 
 public class MaintainBufferBehaviour extends CyclicBehaviour {
-    private BufferManger bufferManger;
 
-    public MaintainBufferBehaviour() {
-        super();
+  private BufferManger bufferManger;
 
+  public MaintainBufferBehaviour() {
+    super();
+
+  }
+
+  public void setBufferManger(BufferManger bufferManger) {
+    this.bufferManger = bufferManger;
+  }
+
+  @Override
+  public void action() {
+    final String msgLanguage = "BUFFER_INDEX";
+    MessageTemplate mt = MessageTemplate.and(
+        MessageTemplate.MatchPerformative(ACLMessage.INFORM),
+        MessageTemplate.MatchLanguage(msgLanguage)
+    );
+    ACLMessage receive = myAgent.receive(mt);
+    if (receive != null) {
+      int bufferIndex = new Integer(receive.getContent());
+      if (bufferManger.resetBufferByIndex(bufferIndex)) {
+        LoggerUtil.agent.info(String.format("Item removed from buffer %d", bufferIndex));
+      } else {
+        LoggerUtil.agent.error(String.format("Buffer %d not found!", bufferIndex));
+      }
+    } else {
+      block();
     }
-
-    public void setBufferManger(BufferManger bufferManger) {
-        this.bufferManger = bufferManger;
-    }
-
-    @Override
-    public void action() {
-        final String msgLanguage = "BUFFER_INDEX";
-        MessageTemplate mt = MessageTemplate.and(
-                MessageTemplate.MatchPerformative(ACLMessage.INFORM),
-                MessageTemplate.MatchLanguage(msgLanguage)
-        );
-        ACLMessage receive = myAgent.receive(mt);
-        if (receive != null) {
-            int bufferIndex = new Integer(receive.getContent());
-            if (bufferManger.resetBufferByIndex(bufferIndex)) {
-                LoggerUtil.agent.info(String.format("Item removed from buffer %d", bufferIndex));
-            } else {
-                LoggerUtil.agent.error(String.format("Buffer %d not found!", bufferIndex));
-            }
-        } else {
-            block();
-        }
-    }
+  }
 }

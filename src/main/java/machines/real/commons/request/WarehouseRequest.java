@@ -11,13 +11,14 @@ import java.io.Serializable;
  */
 
 public class WarehouseRequest implements Serializable {
-    private Integer itemPosition;
 
-    public WarehouseRequest(Integer itemPosition) {
-        this.itemPosition = itemPosition;
-    }
+  private Integer itemPosition;
 
-    public Integer getItemPosition() {
-        return itemPosition;
-    }
+  public WarehouseRequest(Integer itemPosition) {
+    this.itemPosition = itemPosition;
+  }
+
+  public Integer getItemPosition() {
+    return itemPosition;
+  }
 }

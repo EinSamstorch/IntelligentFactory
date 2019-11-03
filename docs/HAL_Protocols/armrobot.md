@@ -12,7 +12,7 @@ Agent:
 	"extra": {
 		"from": from,
 		"to": to,
-		"goodsid": goodsid
+		"goodsId": goodsId
 		"step" : step
 	}
 }
@@ -22,6 +22,6 @@ Agent:
 > For buffers, they would be a string number, such as "01", "12".
 > For machines, they would be the machine id, such as "c1", "x1".
 
-- goodsid : String : see it [here](./definition.md/#goodsid)
+- goodsId : String : see it [here](./definition.md/#goodsId)
 - step : Integer : **lathe Only** : the step of cooperation with lathe.
  

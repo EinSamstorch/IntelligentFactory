@@ -1,7 +1,6 @@
 package machines.real.commons.request;
 
 import commons.order.WorkpieceStatus;
-
 import java.io.Serializable;
 
 /**
@@ -13,28 +12,35 @@ import java.io.Serializable;
  */
 
 public class AgvRequest implements Serializable {
-    /**
-     * 从from地点取货 放置到 to 地点
-     */
-    private Integer from;
-    private Integer to;
-    private WorkpieceStatus wpInfo;
 
-    public AgvRequest(Integer from, Integer to, WorkpieceStatus wpInfo) {
-        this.from = from;
-        this.to = to;
-        this.wpInfo = wpInfo;
-    }
+  /**
+   * 从from地点取货 放置到 to 地点.
+   */
+  private Integer from;
+  private Integer to;
+  private WorkpieceStatus wpInfo;
 
-    public Integer getFrom() {
-        return from;
-    }
+  /**
+   * AGV搬运请求.
+   * @param from 工件搬运起始位置
+   * @param to 工件搬运终点位置
+   * @param wpInfo 工件具体信息
+   */
+  public AgvRequest(Integer from, Integer to, WorkpieceStatus wpInfo) {
+    this.from = from;
+    this.to = to;
+    this.wpInfo = wpInfo;
+  }
 
-    public Integer getTo() {
-        return to;
-    }
+  public Integer getFrom() {
+    return from;
+  }
 
-    public WorkpieceStatus getWpInfo() {
-        return wpInfo;
-    }
+  public Integer getTo() {
+    return to;
+  }
+
+  public WorkpieceStatus getWpInfo() {
+    return wpInfo;
+  }
 }

@@ -7,7 +7,7 @@
 | :-----------: | :---------: | :------------: | :------------------------: |
 | orderId       |   String    |      001       |      id of orders          |
 | workpieceId   |   String    |      001       |      id of workpiece       |
-|   goodsid     |   String    |      001       |  see [Definition](#goodsid)|
+|   goodsId     |   String    |      001       |  see [Definition](#goodsId)|
 |  detailSize  | JSON String | Depend on type |        see it [here]()     |
 | providerId |   AID    |            |      who offered raw material      |
 | preOwnerId |   AID    |            |      who processed it      |
@@ -24,7 +24,7 @@
 |     to_pos     |   Integer   |                 1                 | Defined in Factory Machine Map |
 
 ## GoodsID
-| goodsid | description | extra |
+| goodsId | description | extra |
 |:--------|:------------|:------|
 | 001     | flange      |       |
 | 002     | axis        |       |

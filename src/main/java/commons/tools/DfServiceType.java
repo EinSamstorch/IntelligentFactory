@@ -10,13 +10,14 @@ package commons.tools;
 
 
 public class DfServiceType {
-    public static final String CLOUD_UPDATE = "cloud_update";
-    public static final String WAREHOUSE = "warehouse";
-    public static final String LATHE = "lathe";
-    public static final String WORKER = "worker";
-    public static final String MILL = "mill";
-    public static final String VISION = "vision";
-    public static final String AGV = "agv";
-    public static final String ARM = "arm";
-    public static final String PRODUCT = "product";
+
+  public static final String CLOUD_UPDATE = "cloud_update";
+  public static final String WAREHOUSE = "warehouse";
+  public static final String LATHE = "lathe";
+  public static final String WORKER = "worker";
+  public static final String MILL = "mill";
+  public static final String VISION = "vision";
+  public static final String AGV = "agv";
+  public static final String ARM = "arm";
+  public static final String PRODUCT = "product";
 }

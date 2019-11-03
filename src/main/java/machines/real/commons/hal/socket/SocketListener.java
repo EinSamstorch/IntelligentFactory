@@ -3,7 +3,6 @@ package machines.real.commons.hal.socket;
 import com.alibaba.fastjson.JSONObject;
 import commons.tools.JsonTool;
 import commons.tools.LoggerUtil;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,170 +20,168 @@ import java.util.Map;
  */
 
 public class SocketListener extends Thread {
-    private Socket socket;
-    private int port;
-    private Map<Integer, JSONObject> responseMap = new HashMap<>();
 
-    public SocketListener(int port) {
-        this.port = port;
-    }
+  private Socket socket;
+  private int port;
+  private Map<Integer, JSONObject> responseMap = new HashMap<>();
 
-    public SocketListener() {
-        this(5656);
-    }
+  public SocketListener(int port) {
+    this.port = port;
+  }
 
-    public Map<Integer, JSONObject> getResponseMap() {
-        return responseMap;
-    }
+  public SocketListener() {
+    this(5656);
+  }
 
-    /**
-     * 1. 初始化
-     * 2. 循环监听socket server返回内容
-     * 3. 解析内容
-     * 4. 根据内容类型和taskNo放入Map
-     */
-    @Override
-    public void run() {
-        this.init();
-        while (true) {
-            String response = receiveMessage();
-            if (isActionResponse(response)) {
-                JSONObject message = JsonTool.parse(response);
-                String result = message.getString(SocketMessage.FIELD_RESULT);
-                String info = message.getString(SocketMessage.FIELD_INFO);
-                if (!SocketMessage.RESULT_SUCCESS.equals(result)) {
-                    LoggerUtil.hal.error(info);
-                }
-            } else if (checkMsgComplete(response)) {
-                JSONObject message = JsonTool.parse(response);
-                int taskNo = message.getIntValue(SocketMessage.FIELD_TASK_NO);
-                responseMap.put(taskNo, message);
-            }
+  public Map<Integer, JSONObject> getResponseMap() {
+    return responseMap;
+  }
+
+  /**
+   * 1. 初始化 2. 循环监听socket server返回内容 3. 解析内容 4. 根据内容类型和taskNo放入Map
+   */
+  @Override
+  public void run() {
+    this.init();
+    while (true) {
+      String response = receiveMessage();
+      if (isActionResponse(response)) {
+        JSONObject message = JsonTool.parse(response);
+        String result = message.getString(SocketMessage.FIELD_RESULT);
+        String info = message.getString(SocketMessage.FIELD_INFO);
+        if (!SocketMessage.RESULT_SUCCESS.equals(result)) {
+          LoggerUtil.hal.error(info);
         }
+      } else if (checkMsgComplete(response)) {
+        JSONObject message = JsonTool.parse(response);
+        int taskNo = message.getIntValue(SocketMessage.FIELD_TASK_NO);
+        responseMap.put(taskNo, message);
+      }
+    }
+  }
+
+
+  /**
+   * 检查输入的字符串是否是 动作语句的回复
+   *
+   * @param msg 待检查字符串
+   * @return 包含 result和 info字段的json语句，返回true, 否则 false
+   */
+  private boolean isActionResponse(String msg) {
+    if (msg == null) {
+      return false;
     }
 
-
-    /**
-     * 检查输入的字符串是否是 动作语句的回复
-     *
-     * @param msg 待检查字符串
-     * @return 包含 result和 info字段的json语句，返回true, 否则 false
-     */
-    private boolean isActionResponse(String msg) {
-        if (msg == null) {
-            return false;
-        }
-
-        JSONObject message;
-        try {
-            // 尝试json解析
-            message = JsonTool.parse(msg);
-        } catch (IllegalArgumentException e) {
-            // 解析失败 则返回 false
-            LoggerUtil.agent.error(e.getMessage());
-            return false;
-        }
-
-        return message.containsKey(SocketMessage.FIELD_RESULT)
-                && message.containsKey(SocketMessage.FIELD_INFO);
-
+    JSONObject message;
+    try {
+      // 尝试json解析
+      message = JsonTool.parse(msg);
+    } catch (IllegalArgumentException e) {
+      // 解析失败 则返回 false
+      LoggerUtil.agent.error(e.getMessage());
+      return false;
     }
 
-    /**
-     * 检查消息完整性
-     *
-     * @param response socket server返回的消息
-     * @return 是否完整
-     */
-    private boolean checkMsgComplete(String response) {
-        if (response == null) {
-            return false;
-        }
+    return message.containsKey(SocketMessage.FIELD_RESULT)
+        && message.containsKey(SocketMessage.FIELD_INFO);
 
-        JSONObject message;
-        try {
-            // 尝试json解析
-            message = JsonTool.parse(response);
-        } catch (IllegalArgumentException e) {
-            // 解析失败 则返回 false
-            LoggerUtil.agent.error(e.getMessage());
-            return false;
-        }
+  }
 
-        // 验证消息结构完整性
-        boolean msgComplete = message.containsKey(SocketMessage.FIELD_TASK_NO)
-                && message.containsKey(SocketMessage.FIELD_EXTRA)
-                && message.containsKey(SocketMessage.FIELD_RESULT);
-        if (!msgComplete) {
-            // 消息结构缺失则返回false
-            LoggerUtil.agent.warn("Message incomplete");
-            return false;
-        }
-
-        return true;
+  /**
+   * 检查消息完整性
+   *
+   * @param response socket server返回的消息
+   * @return 是否完整
+   */
+  private boolean checkMsgComplete(String response) {
+    if (response == null) {
+      return false;
     }
 
-
-    /**
-     * 连接SocketServer 并注册 type:agent
-     */
-    private void init() {
-        this.connect();
-        this.registerType();
+    JSONObject message;
+    try {
+      // 尝试json解析
+      message = JsonTool.parse(response);
+    } catch (IllegalArgumentException e) {
+      // 解析失败 则返回 false
+      LoggerUtil.agent.error(e.getMessage());
+      return false;
     }
 
-    /**
-     * 连接socketServer
-     */
-    private void connect() {
-        try {
-            socket = new Socket(SocketMessage.HOST, port);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    // 验证消息结构完整性
+    boolean msgComplete = message.containsKey(SocketMessage.FIELD_TASK_NO)
+        && message.containsKey(SocketMessage.FIELD_EXTRA)
+        && message.containsKey(SocketMessage.FIELD_RESULT);
+    if (!msgComplete) {
+      // 消息结构缺失则返回false
+      LoggerUtil.agent.warn("Message incomplete");
+      return false;
     }
 
-    /**
-     * 注册设备类型 action:register, value: agent
-     */
-    private void registerType() {
-        JSONObject msg = new JSONObject();
-        msg.put(SocketMessage.FIELD_ACTION, SocketMessage.ACTION_REGISTER);
-        msg.put(SocketMessage.FIELD_VALUE, SocketMessage.TYPE_AGENT);
-        send(msg.toJSONString());
-    }
+    return true;
+  }
 
-    /**
-     * 向socketserver发送字符串
-     *
-     * @param words 待发送字符串
-     */
-    private void send(String words) {
-        try {
-            // 消息末端增加 \n，以表示 一条消息结束
-            words += "\n";
-            socket.getOutputStream().write(words.getBytes(StandardCharsets.UTF_8));
-        } catch (IOException e) {
-            LoggerUtil.agent.error(e.getMessage());
-        }
-    }
 
-    /**
-     * 接收socketserver返回的字符串
-     *
-     * @return 接收到的字符串
-     */
-    private String receiveMessage() {
-        String line = null;
-        try {
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(
-                            socket.getInputStream(),
-                            StandardCharsets.UTF_8));
-            line = br.readLine();
-        } catch (IOException e) {
-            LoggerUtil.agent.error(e.getMessage(), e);
-        }
-        return line;
+  /**
+   * 连接SocketServer 并注册 type:agent
+   */
+  private void init() {
+    this.connect();
+    this.registerType();
+  }
+
+  /**
+   * 连接socketServer
+   */
+  private void connect() {
+    try {
+      socket = new Socket(SocketMessage.HOST, port);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+  }
+
+  /**
+   * 注册设备类型 action:register, value: agent
+   */
+  private void registerType() {
+    JSONObject msg = new JSONObject();
+    msg.put(SocketMessage.FIELD_ACTION, SocketMessage.ACTION_REGISTER);
+    msg.put(SocketMessage.FIELD_VALUE, SocketMessage.TYPE_AGENT);
+    send(msg.toJSONString());
+  }
+
+  /**
+   * 向socketserver发送字符串
+   *
+   * @param words 待发送字符串
+   */
+  private void send(String words) {
+    try {
+      // 消息末端增加 \n，以表示 一条消息结束
+      words += "\n";
+      socket.getOutputStream().write(words.getBytes(StandardCharsets.UTF_8));
+    } catch (IOException e) {
+      LoggerUtil.agent.error(e.getMessage());
+    }
+  }
+
+  /**
+   * 接收socketserver返回的字符串
+   *
+   * @return 接收到的字符串
+   */
+  private String receiveMessage() {
+    String line = null;
+    try {
+      BufferedReader br = new BufferedReader(
+          new InputStreamReader(
+              socket.getInputStream(),
+              StandardCharsets.UTF_8));
+      line = br.readLine();
+    } catch (IOException e) {
+      LoggerUtil.agent.error(e.getMessage(), e);
+    }
+    return line;
+  }
 }

@@ -9,17 +9,16 @@ package machines.real.commons;
  */
 
 public interface IMachineOnline {
-    /**
-     * 获取agent在线状态
-     *
-     * @return true在线, false离线
-     */
-    boolean isAgentOnline();
 
-    /**
-     * 设置agent上下线,如果状态变更, 相应DF进行注册与注销
-     *
-     * @param agentOnline
-     */
-    void setAgentOnline(boolean agentOnline);
+  /**
+   * 获取agent在线状态.
+   *
+   * @return true在线, false离线
+   */
+  boolean isAgentOnline();
+
+  /**
+   * 设置agent上下线,如果状态变更, 相应DF进行注册与注销.
+   */
+  void setAgentOnline(boolean agentOnline);
 }

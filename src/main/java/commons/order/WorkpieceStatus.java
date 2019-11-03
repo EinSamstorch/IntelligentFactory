@@ -1,7 +1,6 @@
 package commons.order;
 
 import com.alibaba.fastjson.JSONObject;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -15,148 +14,149 @@ import java.util.List;
 
 
 public class WorkpieceStatus implements Serializable {
-    private String orderId;
-    private String workpieceId;
-    private String goodsId;
-    private String detailSize;
-    private String providerId;
-    private String preOwnerId;
-    private String curOwnerId;
-    private String lastAgvId;
-    private Integer bufferPos;
-    private List<String> processPlan;
-    private Integer processIndex = 0;
-    private Integer warehousePosition;
-    /**
-     * 工序分步
-     */
-    private Integer processStep;
 
-    public WorkpieceStatus(String orderId, String workpieceId, String goodsId, String detailSize) {
-        this.orderId = orderId;
-        this.workpieceId = workpieceId;
-        this.goodsId = goodsId;
-        this.detailSize = detailSize;
+  private String orderId;
+  private String workpieceId;
+  private String goodsId;
+  private String detailSize;
+  private String providerId;
+  private String preOwnerId;
+  private String curOwnerId;
+  private String lastAgvId;
+  private Integer bufferPos;
+  private List<String> processPlan;
+  private Integer processIndex = 0;
+  private Integer warehousePosition;
+  /**
+   * 工序分步
+   */
+  private Integer processStep;
 
-        // 加载工艺路线
-        processPlan = ProcessPlan.getProcessPlan(goodsId);
-        initParamters();
-    }
+  public WorkpieceStatus(String orderId, String workpieceId, String goodsId, String detailSize) {
+    this.orderId = orderId;
+    this.workpieceId = workpieceId;
+    this.goodsId = goodsId;
+    this.detailSize = detailSize;
 
-    public static void main(String[] args) {
-        WorkpieceStatus wpInfo = new WorkpieceStatus("001", "001", "003", "");
-        JSONObject json = new JSONObject();
-        json.put("extra", wpInfo);
-        System.out.println(json.toJSONString());
-    }
+    // 加载工艺路线
+    processPlan = ProcessPlan.getProcessPlan(goodsId);
+    initParamters();
+  }
 
-    private void initParamters() {
-        providerId = "";
-        preOwnerId = "";
-        curOwnerId = "";
-        lastAgvId = "";
-        bufferPos = 0;
-        warehousePosition = 0;
-        processStep = 1;
-    }
+  public static void main(String[] args) {
+    WorkpieceStatus wpInfo = new WorkpieceStatus("001", "001", "003", "");
+    JSONObject json = new JSONObject();
+    json.put("extra", wpInfo);
+    System.out.println(json.toJSONString());
+  }
 
-    public String getOrderId() {
-        return orderId;
-    }
+  private void initParamters() {
+    providerId = "";
+    preOwnerId = "";
+    curOwnerId = "";
+    lastAgvId = "";
+    bufferPos = 0;
+    warehousePosition = 0;
+    processStep = 1;
+  }
 
-    public String getWorkpieceId() {
-        return workpieceId;
-    }
+  public String getOrderId() {
+    return orderId;
+  }
 
-    public String getGoodsId() {
-        return goodsId;
-    }
+  public String getWorkpieceId() {
+    return workpieceId;
+  }
 
-    public String getDetailSize() {
-        return detailSize;
-    }
+  public String getGoodsId() {
+    return goodsId;
+  }
 
-    public String getProviderId() {
-        return providerId;
-    }
+  public String getDetailSize() {
+    return detailSize;
+  }
 
-    public void setProviderId(String providerId) {
-        this.providerId = providerId;
-    }
+  public String getProviderId() {
+    return providerId;
+  }
 
-    public String getPreOwnerId() {
-        return preOwnerId;
-    }
+  public void setProviderId(String providerId) {
+    this.providerId = providerId;
+  }
 
-    private void setPreOwnerId(String preOwnerId) {
-        this.preOwnerId = preOwnerId;
-    }
+  public String getPreOwnerId() {
+    return preOwnerId;
+  }
 
-    public String getCurOwnerId() {
-        return curOwnerId;
-    }
+  private void setPreOwnerId(String preOwnerId) {
+    this.preOwnerId = preOwnerId;
+  }
 
-    public void setCurOwnerId(String curOwnerId) {
-        setPreOwnerId(this.curOwnerId);
-        this.curOwnerId = curOwnerId;
-    }
+  public String getCurOwnerId() {
+    return curOwnerId;
+  }
 
-    public String getLastAgvId() {
-        return lastAgvId;
-    }
+  public void setCurOwnerId(String curOwnerId) {
+    setPreOwnerId(this.curOwnerId);
+    this.curOwnerId = curOwnerId;
+  }
 
-    public void setLastAgvId(String lastAgvId) {
-        this.lastAgvId = lastAgvId;
-    }
+  public String getLastAgvId() {
+    return lastAgvId;
+  }
 
-    public int getBufferPos() {
-        return bufferPos;
-    }
+  public void setLastAgvId(String lastAgvId) {
+    this.lastAgvId = lastAgvId;
+  }
 
-    public void setBufferPos(int bufferPos) {
-        this.bufferPos = bufferPos;
-    }
+  public int getBufferPos() {
+    return bufferPos;
+  }
 
-    public List<String> getProcessPlan() {
-        return processPlan;
-    }
+  public void setBufferPos(int bufferPos) {
+    this.bufferPos = bufferPos;
+  }
 
-    public void setProcessPlan(List<String> processPlan) {
-        // List 内容是 String，不可变类型 无需深拷贝
-        this.processPlan = processPlan;
-    }
+  public List<String> getProcessPlan() {
+    return processPlan;
+  }
 
-    public int nextProcessIndex() {
-        // 返回当前工序步骤索引，并移动索引至下一步
-        return this.processIndex++;
-    }
+  public void setProcessPlan(List<String> processPlan) {
+    // List 内容是 String，不可变类型 无需深拷贝
+    this.processPlan = processPlan;
+  }
 
-    public Integer getWarehousePosition() {
-        return warehousePosition;
-    }
+  public int nextProcessIndex() {
+    // 返回当前工序步骤索引，并移动索引至下一步
+    return this.processIndex++;
+  }
 
-    public void setWarehousePosition(Integer warehousePosition) {
-        this.warehousePosition = warehousePosition;
-    }
+  public Integer getWarehousePosition() {
+    return warehousePosition;
+  }
 
-    public Integer getProcessStep() {
-        return processStep;
-    }
+  public void setWarehousePosition(Integer warehousePosition) {
+    this.warehousePosition = warehousePosition;
+  }
 
-    public void setProcessStep(Integer processStep) {
-        this.processStep = processStep;
-    }
+  public Integer getProcessStep() {
+    return processStep;
+  }
 
-    public void resetProcessStep() {
-        this.processStep = 1;
-    }
+  public void setProcessStep(Integer processStep) {
+    this.processStep = processStep;
+  }
 
-    public void setNextProcessStep() {
-        this.processStep += 1;
-    }
+  public void resetProcessStep() {
+    this.processStep = 1;
+  }
 
-    @Override
-    public String toString() {
-        return JSONObject.toJSONString(this);
-    }
+  public void setNextProcessStep() {
+    this.processStep += 1;
+  }
+
+  @Override
+  public String toString() {
+    return JSONObject.toJSONString(this);
+  }
 }

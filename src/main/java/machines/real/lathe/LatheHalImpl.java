@@ -11,25 +11,26 @@ import machines.real.commons.hal.MachineHalImpl;
  */
 
 public class LatheHalImpl extends MachineHalImpl implements LatheHal {
-    private static final String CMD_GRAB_ITEM = "grab_item";
-    private static final String CMD_RELEASE_ITEM = "release_item";
 
-    public LatheHalImpl() {
-        super();
-    }
+  private static final String CMD_GRAB_ITEM = "grab_item";
+  private static final String CMD_RELEASE_ITEM = "release_item";
 
-    public LatheHalImpl(int port) {
-        super(port);
-    }
+  public LatheHalImpl() {
+    super();
+  }
 
-    @Override
-    public boolean grabItem() {
-        return executeCmd(CMD_GRAB_ITEM, "");
-    }
+  public LatheHalImpl(int port) {
+    super(port);
+  }
 
-    @Override
-    public boolean releaseItem() {
-        return executeCmd(CMD_RELEASE_ITEM, "");
-    }
+  @Override
+  public boolean grabItem() {
+    return executeCmd(CMD_GRAB_ITEM, "");
+  }
+
+  @Override
+  public boolean releaseItem() {
+    return executeCmd(CMD_RELEASE_ITEM, "");
+  }
 
 }

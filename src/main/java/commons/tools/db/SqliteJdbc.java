@@ -1,7 +1,6 @@
 package commons.tools.db;
 
 import commons.tools.LoggerUtil;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -16,31 +15,32 @@ import java.sql.SQLException;
 
 
 public class SqliteJdbc {
-    protected Connection con = null;
-    private String dbName;
 
-    public SqliteJdbc(String dbName) {
-        this.dbName = dbName;
-    }
+  protected Connection con = null;
+  private String dbName;
 
-    public void connect() {
-        try {
-            Class.forName("org.sqlite.JDBC");
-            this.con = DriverManager.getConnection(String.format("jdbc:sqlite:%s", dbName));
-            this.con.setAutoCommit(true);
-        } catch (Exception e) {
-            LoggerUtil.db.error(e.getClass().getName() + ": " + e.getMessage());
-            System.exit(0);
-        }
-    }
+  public SqliteJdbc(String dbName) {
+    this.dbName = dbName;
+  }
 
-    public void close() {
-        if (this.con != null) {
-            try {
-                this.con.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+  public void connect() {
+    try {
+      Class.forName("org.sqlite.JDBC");
+      this.con = DriverManager.getConnection(String.format("jdbc:sqlite:%s", dbName));
+      this.con.setAutoCommit(true);
+    } catch (Exception e) {
+      LoggerUtil.db.error(e.getClass().getName() + ": " + e.getMessage());
+      System.exit(0);
     }
+  }
+
+  public void close() {
+    if (this.con != null) {
+      try {
+        this.con.close();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+  }
 }

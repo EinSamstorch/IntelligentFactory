@@ -1,6 +1,5 @@
 package machines.real.commons.behaviours.simple;
 
-
 import commons.tools.DfServiceType;
 import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
@@ -8,11 +7,10 @@ import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import java.util.Random;
 import machines.real.commons.buffer.Buffer;
 import machines.real.commons.buffer.BufferState;
 import machines.real.commons.request.AgvRequest;
-
-import java.util.Random;
 
 /**
  * .
@@ -23,64 +21,71 @@ import java.util.Random;
  */
 
 public class CallForAgv extends SimpleBehaviour {
-    private AgvRequest request;
-    private Buffer buffer;
-    private boolean init = true;
-    private boolean isDone = false;
-    private String conversationId;
 
-    public CallForAgv(Agent a, AgvRequest request, Buffer buffer) {
-        super(a);
-        this.request = request;
-        this.buffer = buffer;
-        conversationId = String.format("CALL_FOR_AGV_%d", new Random().nextInt());
-    }
+  private AgvRequest request;
+  private Buffer buffer;
+  private boolean init = true;
+  private boolean isDone = false;
+  private String conversationId;
 
-    @Override
-    public void action() {
-        if (init) {
-            // 发送运输请求
-            initSendRequest();
-        } else {
-            // 等待通知完成
-            waitForInform();
-        }
-    }
+  /**
+   * 请求agv.
+   * @param a 请求方agent
+   * @param request agv搬运请求
+   * @param buffer 货物当前位置的buffer对象
+   */
+  public CallForAgv(Agent a, AgvRequest request, Buffer buffer) {
+    super(a);
+    this.request = request;
+    this.buffer = buffer;
+    conversationId = String.format("CALL_FOR_AGV_%d", new Random().nextInt());
+  }
 
-    @Override
-    public boolean done() {
-        return isDone;
+  @Override
+  public void action() {
+    if (init) {
+      // 发送运输请求
+      initSendRequest();
+    } else {
+      // 等待通知完成
+      waitForInform();
     }
+  }
 
-    private void initSendRequest() {
-        ACLMessage msg = null;
-        try {
-            msg = DfUtils.createRequestMsg(request);
-            DfUtils.searchDf(myAgent, msg, DfServiceType.AGV);
-            // 发送运输请求
-            msg.setConversationId(conversationId);
-            myAgent.send(msg);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        init = false;
-        LoggerUtil.hal.debug("Call for agv.");
-    }
+  @Override
+  public boolean done() {
+    return isDone;
+  }
 
-    private void waitForInform() {
-        MessageTemplate mt = MessageTemplate.MatchConversationId(conversationId);
-        ACLMessage receive = myAgent.receive(mt);
-        if (receive != null) {
-            if (receive.getPerformative() == ACLMessage.INFORM) {
-                // 已到达
-                isDone = true;
-                buffer.getBufferState().setState(BufferState.STATE_WAITING);
-                LoggerUtil.agent.info(String.format("Workpiece arrived at %d", buffer.getIndex()));
-            } else {
-                LoggerUtil.agent.error("Performative error.");
-            }
-        } else {
-            block();
-        }
+  private void initSendRequest() {
+    ACLMessage msg = null;
+    try {
+      msg = DfUtils.createRequestMsg(request);
+      DfUtils.searchDf(myAgent, msg, DfServiceType.AGV);
+      // 发送运输请求
+      msg.setConversationId(conversationId);
+      myAgent.send(msg);
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+    init = false;
+    LoggerUtil.hal.debug("Call for agv.");
+  }
+
+  private void waitForInform() {
+    MessageTemplate mt = MessageTemplate.MatchConversationId(conversationId);
+    ACLMessage receive = myAgent.receive(mt);
+    if (receive != null) {
+      if (receive.getPerformative() == ACLMessage.INFORM) {
+        // 已到达
+        isDone = true;
+        buffer.getBufferState().setState(BufferState.STATE_WAITING);
+        LoggerUtil.agent.info(String.format("Workpiece arrived at %d", buffer.getIndex()));
+      } else {
+        LoggerUtil.agent.error("Performative error.");
+      }
+    } else {
+      block();
+    }
+  }
 }

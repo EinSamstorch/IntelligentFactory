@@ -7,7 +7,6 @@ import commons.tools.DfUtils;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
-
 import java.util.Queue;
 
 /**
@@ -20,33 +19,34 @@ import java.util.Queue;
 
 
 public class HandleOrders extends TickerBehaviour {
-    private Queue<OrderInfo> orderInfoQueue;
 
-    public HandleOrders(Agent agent, long period) {
-        super(agent, period);
-    }
+  private Queue<OrderInfo> orderInfoQueue;
 
-    public void setOrderInfoQueue(Queue<OrderInfo> orderInfoQueue) {
-        this.orderInfoQueue = orderInfoQueue;
-    }
+  public HandleOrders(Agent agent, long period) {
+    super(agent, period);
+  }
 
-    @Override
-    protected void onTick() {
-        while (true) {
-            OrderInfo oi = orderInfoQueue.poll();
-            if (oi == null) {
-                break;
-            }
-            for (WorkpieceStatus wpInfo : oi.getWpInfoList()) {
-                try {
-                    // TODO 未来此处需要做处理，失败的消息需要记录并重试。
-                    ACLMessage msg = DfUtils.createRequestMsg(wpInfo);
-                    DfUtils.searchDf(myAgent, msg, DfServiceType.WORKER);
-                    myAgent.send(msg);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+  public void setOrderInfoQueue(Queue<OrderInfo> orderInfoQueue) {
+    this.orderInfoQueue = orderInfoQueue;
+  }
+
+  @Override
+  protected void onTick() {
+    while (true) {
+      OrderInfo oi = orderInfoQueue.poll();
+      if (oi == null) {
+        break;
+      }
+      for (WorkpieceStatus wpInfo : oi.getWpInfoList()) {
+        try {
+          // TODO 未来此处需要做处理，失败的消息需要记录并重试。
+          ACLMessage msg = DfUtils.createRequestMsg(wpInfo);
+          DfUtils.searchDf(myAgent, msg, DfServiceType.WORKER);
+          myAgent.send(msg);
+        } catch (Exception e) {
+          e.printStackTrace();
         }
+      }
     }
+  }
 }

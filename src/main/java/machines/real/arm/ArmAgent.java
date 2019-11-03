@@ -13,22 +13,23 @@ import jade.core.behaviours.ThreadedBehaviourFactory;
  */
 
 public class ArmAgent extends BaseAgent {
-    /**
-     * 通过反射获取,在 IMachineOnline中调用
-     */
-    private String armPwd;
 
-    public void setArmPwd(String armPwd) {
-        this.armPwd = armPwd;
+  /**
+   * 通过反射获取,在 IMachineOnline中调用.
+   */
+  private String armPwd;
+
+  public void setArmPwd(String armPwd) {
+    this.armPwd = armPwd;
+  }
+
+  @Override
+  protected void setup() {
+    super.setup();
+
+    ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
+    for (Behaviour behaviour : behaviours) {
+      addBehaviour(tbf.wrap(behaviour));
     }
-
-    @Override
-    protected void setup() {
-        super.setup();
-
-        ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
-        for (Behaviour behaviour : behaviours) {
-            addBehaviour(tbf.wrap(behaviour));
-        }
-    }
+  }
 }

@@ -12,34 +12,35 @@ import machines.real.commons.hal.BaseHal;
  */
 
 public class ArmHalImpl extends BaseHal implements ArmHal {
-    private static final String CMD_MOVE_ITEM = "move_item";
-    private static final String FIELD_FROM = "from";
-    private static final String FIELD_TO = "to";
-    private static final String FIELD_GOODSID = "goodsId";
-    private static final String FIELD_STEP = "step";
 
-    public ArmHalImpl() {
-        super();
-    }
+  private static final String CMD_MOVE_ITEM = "move_item";
+  private static final String FIELD_FROM = "from";
+  private static final String FIELD_TO = "to";
+  private static final String FIELD_GOODSID = "goodsId";
+  private static final String FIELD_STEP = "step";
 
-    public ArmHalImpl(int port) {
-        super(port);
-    }
+  public ArmHalImpl() {
+    super();
+  }
 
-    @Override
-    public boolean moveItem(String from, String to, String goodsid, int step) {
-        JSONObject extra = new JSONObject();
-        extra.put(FIELD_FROM, from);
-        extra.put(FIELD_TO, to);
-        extra.put(FIELD_GOODSID, goodsid);
-        if (step != 0) {
-            extra.put(FIELD_STEP, step);
-        }
-        return executeCmd(CMD_MOVE_ITEM, extra);
-    }
+  public ArmHalImpl(int port) {
+    super(port);
+  }
 
-    @Override
-    public boolean moveItem(String from, String to, String goodsid) {
-        return moveItem(from, to, goodsid, 0);
+  @Override
+  public boolean moveItem(String from, String to, String goodsid, int step) {
+    JSONObject extra = new JSONObject();
+    extra.put(FIELD_FROM, from);
+    extra.put(FIELD_TO, to);
+    extra.put(FIELD_GOODSID, goodsid);
+    if (step != 0) {
+      extra.put(FIELD_STEP, step);
     }
+    return executeCmd(CMD_MOVE_ITEM, extra);
+  }
+
+  @Override
+  public boolean moveItem(String from, String to, String goodsid) {
+    return moveItem(from, to, goodsid, 0);
+  }
 }

@@ -18,52 +18,53 @@ import machines.real.warehouse.WarehouseHal;
  */
 
 public class ItemExportBehaviour extends CyclicBehaviour {
-    private WarehouseHal hal;
-    private Integer posOut;
 
-    public ItemExportBehaviour() {
-        super();
-    }
+  private WarehouseHal hal;
+  private Integer posOut;
 
-    public void setHal(WarehouseHal hal) {
-        this.hal = hal;
-    }
+  public ItemExportBehaviour() {
+    super();
+  }
 
-    public void setPosOut(Integer posOut) {
-        this.posOut = posOut;
-    }
+  public void setHal(WarehouseHal hal) {
+    this.hal = hal;
+  }
 
-    @Override
-    public void action() {
-        MessageTemplate mt = MessageTemplate.and(
-                MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
-                MessageTemplate.MatchPerformative(ACLMessage.REQUEST)
-        );
-        ACLMessage msg = myAgent.receive(mt);
-        if (msg == null) {
-            block();
-            return;
-        }
-        WarehouseRequest request = null;
-        try {
-            request = (WarehouseRequest) msg.getContentObject();
-        } catch (UnreadableException e) {
-            e.printStackTrace();
-        }
-        if (request != null) {
-            Integer itemPosition = request.getItemPosition();
-            // 通知AGV取货
-            ACLMessage reply = msg.createReply();
-            reply.setPerformative(ACLMessage.INFORM);
-            myAgent.send(reply);
-            if (hal.moveItem(itemPosition, posOut)) {
-                LoggerUtil.hal.info(String.format("Succeed! Export item from %d", itemPosition));
-            } else {
-                LoggerUtil.hal.error(String.format("Failed! Export item from %d", itemPosition));
-                myAgent.clean(false);
-            }
-        } else {
-            LoggerUtil.hal.error("Request NPE Error.");
-        }
+  public void setPosOut(Integer posOut) {
+    this.posOut = posOut;
+  }
+
+  @Override
+  public void action() {
+    MessageTemplate mt = MessageTemplate.and(
+        MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
+        MessageTemplate.MatchPerformative(ACLMessage.REQUEST)
+    );
+    ACLMessage msg = myAgent.receive(mt);
+    if (msg == null) {
+      block();
+      return;
     }
+    WarehouseRequest request = null;
+    try {
+      request = (WarehouseRequest) msg.getContentObject();
+    } catch (UnreadableException e) {
+      e.printStackTrace();
+    }
+    if (request != null) {
+      Integer itemPosition = request.getItemPosition();
+      // 通知AGV取货
+      ACLMessage reply = msg.createReply();
+      reply.setPerformative(ACLMessage.INFORM);
+      myAgent.send(reply);
+      if (hal.moveItem(itemPosition, posOut)) {
+        LoggerUtil.hal.info(String.format("Succeed! Export item from %d", itemPosition));
+      } else {
+        LoggerUtil.hal.error(String.format("Failed! Export item from %d", itemPosition));
+        myAgent.clean(false);
+      }
+    } else {
+      LoggerUtil.hal.error("Request NPE Error.");
+    }
+  }
 }

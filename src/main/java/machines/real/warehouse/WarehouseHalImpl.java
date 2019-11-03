@@ -11,23 +11,24 @@ import machines.real.commons.hal.BaseHal;
  * @since 1.8
  */
 public class WarehouseHalImpl extends BaseHal implements WarehouseHal {
-    private static final String CMD_MOVE_ITEM = "move_item";
-    private static final String FIELD_FROM = "from";
-    private static final String FIELD_TO = "to";
 
-    public WarehouseHalImpl() {
-        super();
-    }
+  private static final String CMD_MOVE_ITEM = "move_item";
+  private static final String FIELD_FROM = "from";
+  private static final String FIELD_TO = "to";
 
-    public WarehouseHalImpl(int port) {
-        super(port);
-    }
+  public WarehouseHalImpl() {
+    super();
+  }
 
-    @Override
-    public synchronized boolean moveItem(int from, int to) {
-        JSONObject extra = new JSONObject();
-        extra.put(FIELD_FROM, from);
-        extra.put(FIELD_TO, to);
-        return executeCmd(CMD_MOVE_ITEM, extra);
-    }
+  public WarehouseHalImpl(int port) {
+    super(port);
+  }
+
+  @Override
+  public synchronized boolean moveItem(int from, int to) {
+    JSONObject extra = new JSONObject();
+    extra.put(FIELD_FROM, from);
+    extra.put(FIELD_TO, to);
+    return executeCmd(CMD_MOVE_ITEM, extra);
+  }
 }

@@ -1,11 +1,10 @@
 package machines.real.lathe.behaviours.simple;
 
 import jade.core.behaviours.Behaviour;
+import java.lang.reflect.Method;
 import machines.real.commons.behaviours.simple.ExecuteActionBehaviour;
 import machines.real.lathe.LatheHal;
 import machines.real.lathe.LatheHalImpl;
-
-import java.lang.reflect.Method;
 
 /**
  * 车床夹具动作.
@@ -16,25 +15,26 @@ import java.lang.reflect.Method;
  */
 
 public class LatheHalBehaviours {
-    public static Behaviour grabItem(LatheHal hal) {
-        return getBehaviour(hal, "grabItem", "Grab item.");
-    }
 
-    public static Behaviour releaseItem(LatheHal hal) {
-        return getBehaviour(hal, "releaseItem", "Release item.");
-    }
+  public static Behaviour grabItem(LatheHal hal) {
+    return getBehaviour(hal, "grabItem", "Grab item.");
+  }
 
-    private static Behaviour getBehaviour(LatheHal hal, String methodName, String infoStr) {
-        Method grabItemMethod = null;
-        try {
-            grabItemMethod = LatheHalImpl.class.getMethod(methodName);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        if (grabItemMethod != null) {
-            return new ExecuteActionBehaviour(hal, grabItemMethod, null, infoStr);
-        }
-        return null;
+  public static Behaviour releaseItem(LatheHal hal) {
+    return getBehaviour(hal, "releaseItem", "Release item.");
+  }
+
+  private static Behaviour getBehaviour(LatheHal hal, String methodName, String infoStr) {
+    Method grabItemMethod = null;
+    try {
+      grabItemMethod = LatheHalImpl.class.getMethod(methodName);
+    } catch (NoSuchMethodException e) {
+      e.printStackTrace();
     }
+    if (grabItemMethod != null) {
+      return new ExecuteActionBehaviour(hal, grabItemMethod, null, infoStr);
+    }
+    return null;
+  }
 
 }

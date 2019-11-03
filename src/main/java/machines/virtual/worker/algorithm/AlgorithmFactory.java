@@ -1,7 +1,6 @@
 package machines.virtual.worker.algorithm;
 
 import jade.lang.acl.ACLMessage;
-
 import java.util.ArrayList;
 
 /**
@@ -13,7 +12,8 @@ import java.util.ArrayList;
  */
 
 public class AlgorithmFactory {
-    public static ACLMessage decision(ArrayList<ACLMessage> msgArray, int strategy) {
-        return BestPrice.getBestOffer(msgArray, strategy);
-    }
+
+  public static ACLMessage decision(ArrayList<ACLMessage> msgArray, int strategy) {
+    return BestPrice.getBestOffer(msgArray, strategy);
+  }
 }

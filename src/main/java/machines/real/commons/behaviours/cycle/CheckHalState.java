@@ -15,43 +15,44 @@ import redis.clients.jedis.JedisPool;
  */
 
 public class CheckHalState<T extends BaseAgent, H extends BaseHal> extends TickerBehaviour {
-    private T tAgent;
-    private H hal;
-    private boolean redisEnable = false;
-    private JedisPool pool;
 
-    /**
-     * Construct a <code>TickerBehaviour</code> that call its
-     * <code>onTick()</code> method every <code>period</code> ms.
-     *
-     * @param a      is the pointer to the agent
-     * @param period the tick period in ms
-     */
-    public CheckHalState(T a, long period, H hal) {
-        super(a, period);
-        this.tAgent = a;
-        this.hal = hal;
-    }
+  private T baseAgent;
+  private H hal;
+  private boolean redisEnable = false;
+  private JedisPool pool;
 
-    public void setRedisEnable(boolean redisEnable) {
-        this.redisEnable = redisEnable;
-    }
+  /**
+   * Construct a <code>TickerBehaviour</code> that call its
+   * <code>onTick()</code> method every <code>period</code> ms.
+   *
+   * @param a is the pointer to the agent
+   * @param period the tick period in ms
+   */
+  public CheckHalState(T a, long period, H hal) {
+    super(a, period);
+    this.baseAgent = a;
+    this.hal = hal;
+  }
 
-    public void setPool(JedisPool pool) {
-        this.pool = pool;
-    }
+  public void setRedisEnable(boolean redisEnable) {
+    this.redisEnable = redisEnable;
+  }
 
-    @Override
-    protected void onTick() {
-        boolean online = false;
-        if (hal.checkHalOnline()) {
-            online = true;
-        }
-        tAgent.setAgentOnline(online);
-        if (redisEnable) {
-            Jedis jedis = pool.getResource();
-            jedis.set(tAgent.getLocalName(), online ? "online" : "offline");
-            jedis.close();
-        }
+  public void setPool(JedisPool pool) {
+    this.pool = pool;
+  }
+
+  @Override
+  protected void onTick() {
+    boolean online = false;
+    if (hal.checkHalOnline()) {
+      online = true;
     }
+    baseAgent.setAgentOnline(online);
+    if (redisEnable) {
+      Jedis jedis = pool.getResource();
+      jedis.set(baseAgent.getLocalName(), online ? "online" : "offline");
+      jedis.close();
+    }
+  }
 }

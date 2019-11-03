@@ -14,29 +14,30 @@ import jade.lang.acl.MessageTemplate;
  */
 
 public class WaitForArmInform extends SimpleBehaviour {
-    private boolean isDone = false;
-    private String conversationId;
 
-    public WaitForArmInform(Agent a, String conversationId) {
-        super(a);
-        this.conversationId = conversationId;
-    }
+  private boolean isDone = false;
+  private String conversationId;
 
-    @Override
-    public void action() {
-        MessageTemplate mt = MessageTemplate.MatchConversationId(conversationId);
-        ACLMessage receive = myAgent.receive(mt);
-        if (receive != null) {
-            if (receive.getPerformative() == ACLMessage.INFORM) {
-                isDone = true;
-            }
-        } else {
-            block();
-        }
-    }
+  public WaitForArmInform(Agent a, String conversationId) {
+    super(a);
+    this.conversationId = conversationId;
+  }
 
-    @Override
-    public boolean done() {
-        return isDone;
+  @Override
+  public void action() {
+    MessageTemplate mt = MessageTemplate.MatchConversationId(conversationId);
+    ACLMessage receive = myAgent.receive(mt);
+    if (receive != null) {
+      if (receive.getPerformative() == ACLMessage.INFORM) {
+        isDone = true;
+      }
+    } else {
+      block();
     }
+  }
+
+  @Override
+  public boolean done() {
+    return isDone;
+  }
 }

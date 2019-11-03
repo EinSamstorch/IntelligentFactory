@@ -11,13 +11,14 @@ import java.io.Serializable;
  */
 
 public class ContractNetContent implements Serializable {
-    private Integer offerPrice;
 
-    public ContractNetContent(Integer offerPrice) {
-        this.offerPrice = offerPrice;
-    }
+  private Integer offerPrice;
 
-    public Integer getOfferPrice() {
-        return offerPrice;
-    }
+  public ContractNetContent(Integer offerPrice) {
+    this.offerPrice = offerPrice;
+  }
+
+  public Integer getOfferPrice() {
+    return offerPrice;
+  }
 }

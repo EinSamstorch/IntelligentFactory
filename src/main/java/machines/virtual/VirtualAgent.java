@@ -13,14 +13,15 @@ import jade.core.behaviours.ThreadedBehaviourFactory;
  */
 
 public class VirtualAgent extends BaseAgent {
-    @Override
-    protected void setup() {
-        super.setup();
-        registerDf(serviceType);
 
-        ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
-        for (Behaviour behaviour : behaviours) {
-            addBehaviour(tbf.wrap(behaviour));
-        }
+  @Override
+  protected void setup() {
+    super.setup();
+    registerDf(serviceType);
+
+    ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
+    for (Behaviour behaviour : behaviours) {
+      addBehaviour(tbf.wrap(behaviour));
     }
+  }
 }
