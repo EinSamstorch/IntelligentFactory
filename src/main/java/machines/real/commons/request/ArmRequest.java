@@ -19,6 +19,7 @@ public class ArmRequest implements Serializable {
 
   /**
    * 机械手搬运请求.
+   *
    * @param from 起始位置
    * @param to 终点位置
    * @param goodsId 货物类型
@@ -31,20 +32,13 @@ public class ArmRequest implements Serializable {
     this.step = step;
   }
 
-  /**
-   * 复制一个新的请求.
-   * @param request 待复制请求
-   */
-  public ArmRequest copyOf(ArmRequest request) {
-    return new ArmRequest(request.from, request.to, request.goodsId, request.step);
-  }
-
   public ArmRequest(String from, String to, String goodsId) {
     this(from, to, goodsId, 0);
   }
 
   /**
    * 根据上料请求,生成对应的下料请求, 即交换from与to.
+   *
    * @param request 上料请求
    * @return 下料请求
    */
@@ -58,6 +52,7 @@ public class ArmRequest implements Serializable {
 
   /**
    * 根据上料请求,生成对应的掉转装夹请求, 即从to到to.
+   *
    * @param request 上料请求
    * @return 掉转装夹请求
    */
@@ -71,6 +66,7 @@ public class ArmRequest implements Serializable {
 
   /**
    * 根据上一步请求,生成对应的下一步, 即对step+1.
+   *
    * @param request 上一步请求
    * @return 下一步请求
    */
@@ -84,6 +80,7 @@ public class ArmRequest implements Serializable {
 
   /**
    * 根据动作请求,生成该组的动作的终结请求,即step = -1.
+   *
    * @param request 该组动作请求
    * @return 终结动作请求
    */
@@ -94,6 +91,15 @@ public class ArmRequest implements Serializable {
         request.goodsId,
         -1
     );
+  }
+
+  /**
+   * 复制一个新的请求.
+   *
+   * @param request 待复制请求
+   */
+  public ArmRequest copyOf(ArmRequest request) {
+    return new ArmRequest(request.from, request.to, request.goodsId, request.step);
   }
 
   public String getFrom() {

@@ -22,6 +22,7 @@ public class AgvRequest implements Serializable {
 
   /**
    * AGV搬运请求.
+   *
    * @param from 工件搬运起始位置
    * @param to 工件搬运终点位置
    * @param wpInfo 工件具体信息

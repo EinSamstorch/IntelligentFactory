@@ -16,7 +16,8 @@ import machines.real.commons.IOfferService;
 /**
  * Agent模板，添加一些必须实现的函数.
  *
- * <p>继承步骤： 1.继承该类 2.重载 setup函数，并调用super.setup(); 删除(3.调用registerDF();) 由agent状态管理行为监管 CheckHalState
+ * <p>继承步骤： 1.继承该类 2.重载 setup函数，并调用super.setup(); 删除(3.调用registerDF();) 由agent状态管理行为监管
+ * CheckHalState
  * 4.增加自定义行为
  *
  * @author <a href="mailto:junfeng_pan96@qq.com">junfeng</a>

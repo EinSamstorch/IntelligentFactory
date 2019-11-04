@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
-    <import resource="../redis.xml"/>
-    <import resource="../settings.xml"/>
+<beans xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+  <bean class="machines.real.arm.ArmAgent" id="agent">
+    <property name="serviceType">
+      <util:constant static-field="commons.tools.DfServiceType.ARM"/>
+    </property>
+    <property name="armPwd" ref="armPwd"/>
+    <!-- agent 行为集-->
+    <property name="behaviours">
+      <list>
+        <!-- agent状态管理 -->
+        <bean class="machines.real.commons.behaviours.cycle.CheckHalState">
+          <constructor-arg name="a" ref="agent"/>
+          <constructor-arg name="period" value="5000"/>
+          <constructor-arg name="hal" ref="hal"/>
+          <property name="redisEnable" value="${redis.enable}"/>
+          <property name="pool" ref="jedisPool"/>
+        </bean>
+        <!-- 执行搬运请求 -->
+        <bean class="machines.real.arm.behaviours.cycle.MoveItemBehaviour">
+          <property name="hal" ref="hal"/>
+        </bean>
+      </list>
+    </property>
+  </bean>
+  <bean class="machines.real.arm.ArmHalImpl" id="hal">
+    <!-- socket server监听端口 -->
+    <constructor-arg name="port" value="${hal.port}"/>
+  </bean>
 
-    <!-- 配置Agent -->
-    <bean id="agent" class="machines.real.arm.ArmAgent">
-        <property name="serviceType">
-            <util:constant static-field="commons.tools.DfServiceType.ARM"/>
-        </property>
-        <property name="armPwd" ref="armPwd"/>
-        <!-- agent 行为集-->
-        <property name="behaviours">
-            <list>
-                <!-- agent状态管理 -->
-                <bean class="machines.real.commons.behaviours.cycle.CheckHalState">
-                    <constructor-arg name="a" ref="agent"/>
-                    <constructor-arg name="period" value="5000"/>
-                    <constructor-arg name="hal" ref="hal"/>
-                    <property name="redisEnable" value="${redis.enable}"/>
-                    <property name="pool" ref="jedisPool"/>
-                </bean>
-                <!-- 执行搬运请求 -->
-                <bean class="machines.real.arm.behaviours.cycle.MoveItemBehaviour">
-                    <property name="hal" ref="hal"/>
-                </bean>
-            </list>
-        </property>
-    </bean>
+  <!-- 配置Agent -->
+  <bean class="java.lang.String" id="armPwd">
+    <constructor-arg name="original" value="${arm.password}"/>
+  </bean>
 
-    <!-- 配置 hal -->
-    <bean id="hal" class="machines.real.arm.ArmHalImpl">
-        <!-- socket server监听端口 -->
-        <constructor-arg name="port" value="${hal.port}"/>
-    </bean>
-    <!-- 注入密码 -->
-    <bean id="armPwd" class="java.lang.String">
-        <constructor-arg name="original" value="${arm.password}"/>
-    </bean>
+  <!-- 配置 hal -->
+  <import resource="../settings.xml"/>
+  <!-- 注入密码 -->
+  <import resource="../redis.xml"/>
 </beans>
 

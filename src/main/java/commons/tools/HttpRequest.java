@@ -20,6 +20,7 @@ public class HttpRequest {
 
   /**
    * 向特定网址发送get请求.
+   *
    * @param url 网址
    * @param param 携带参数
    * @return 返回消息

@@ -31,6 +31,11 @@ public class RawContractNetResponder extends ContractNetResponder {
 
   private DbInterface db;
 
+  /**
+   * 原料应标行为.
+   * @param warehouseAgent 仓库agent
+   * @param mt 消息模板
+   */
   public RawContractNetResponder(WarehouseAgent warehouseAgent, MessageTemplate mt) {
     super(warehouseAgent, mt);
     ApplicationContext ac = new FileSystemXmlApplicationContext("./resources/sql.xml");
@@ -38,7 +43,7 @@ public class RawContractNetResponder extends ContractNetResponder {
   }
 
   /**
-   * 处理原料招标请求
+   * 处理原料招标请求.
    *
    * @param cfp 招标信息， content: String goodsid
    * @return ACLMessage content: String quantity

@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+<beans xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
 
-    <import resource="../settings.xml"/>
+  <bean class="machines.virtual.VirtualAgent" id="agent">
+    <property name="serviceType">
+      <util:constant static-field="commons.tools.DfServiceType.WORKER"/>
+    </property>
+    <!-- agent 行为集-->
+    <property name="behaviours">
+      <list>
+        <bean class="machines.virtual.worker.behaviours.cycle.HandleWorkpiece">
+          <property name="detectRatio" ref="detectRatio"/>
+        </bean>
+      </list>
+    </property>
+  </bean>
 
-    <!-- 配置Agent -->
-    <bean id="agent" class="machines.virtual.VirtualAgent">
-        <property name="serviceType">
-            <util:constant static-field="commons.tools.DfServiceType.WORKER"/>
-        </property>
-        <!-- agent 行为集-->
-        <property name="behaviours">
-            <list>
-                <bean class="machines.virtual.worker.behaviours.cycle.HandleWorkpiece">
-                    <property name="detectRatio" ref="detectRatio"/>
-                </bean>
-            </list>
-        </property>
-    </bean>
-    <bean id="detectRatio" class="java.lang.Integer">
-        <constructor-arg name="value" value="${worker.ratio}"/>
-    </bean>
+  <!-- 配置Agent -->
+  <bean class="java.lang.Integer" id="detectRatio">
+    <constructor-arg name="value" value="${worker.ratio}"/>
+  </bean>
+  <import resource="../settings.xml"/>
 </beans>
 

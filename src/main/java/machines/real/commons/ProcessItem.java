@@ -5,6 +5,7 @@ import machines.real.commons.buffer.Buffer;
 
 /**
  * 定义处理工件的动作集合，一般是 SequentialBehaviour.
+ *
  * @author junfeng
  */
 

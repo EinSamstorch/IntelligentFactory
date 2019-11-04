@@ -32,6 +32,7 @@ public class ProductContractNetResponder extends ContractNetResponder {
 
   /**
    * 成品库应标行为.
+   *
    * @param warehouseAgent 提供成品存储的agent
    * @param mt 消息模板
    */

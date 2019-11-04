@@ -23,6 +23,14 @@ public class SendRequstToArm extends OneShotBehaviour {
   private String conversationId;
   private String infoString;
 
+  /**
+   * 请求机械手搬运.
+   * @param a 请求方agent
+   * @param request 机械手搬运任务
+   * @param password 机械手密码
+   * @param conversationId 会话id,用于匹配回信
+   * @param infoString 消息字符串,用于日志输出
+   */
   public SendRequstToArm(Agent a, ArmRequest request, String password, String conversationId,
       String infoString) {
     super(a);

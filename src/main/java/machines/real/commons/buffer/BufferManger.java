@@ -16,6 +16,7 @@ public class BufferManger {
 
   /**
    * 通过给定的数组,生成BufferManager.
+   *
    * @param indexes 各个buffer的索引
    */
   public BufferManger(int[] indexes) {
@@ -27,6 +28,7 @@ public class BufferManger {
 
   /**
    * 通过给定的特定字符串,生成BufferManager.
+   *
    * @param indexesStr 以逗号分割的buffer索引字符串
    */
   public BufferManger(String indexesStr) {
@@ -126,6 +128,7 @@ public class BufferManger {
 
   /**
    * 获得空闲工位台数量.
+   *
    * @return 空闲数量
    */
   public int getFreeQuantity() {

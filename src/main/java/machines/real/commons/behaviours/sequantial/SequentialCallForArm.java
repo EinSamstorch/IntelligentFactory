@@ -20,6 +20,14 @@ public class SequentialCallForArm {
   private SequentialCallForArm() {
   }
 
+  /**
+   * 封装机械手搬运请求,透明内部通信细节.
+   * @param agent 请求方agent
+   * @param request 机械手搬运任务
+   * @param password 机械手密码
+   * @param infoStr 消息字符串,用于日志显示
+   * @return 封装后的机械手调用行为
+   */
   public static SequentialBehaviour getBehaviour(
       Agent agent, ArmRequest request, String password, String infoStr) {
     SequentialBehaviour s = new SequentialBehaviour();

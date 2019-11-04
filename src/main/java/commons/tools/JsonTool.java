@@ -17,6 +17,7 @@ public class JsonTool {
 
   /**
    * 解析字符串,获得JSONObject对象.
+   *
    * @param msg 待解析语句
    * @return json对象
    * @throws IllegalArgumentException 消息为null, 为空,为{} 则抛出该异常

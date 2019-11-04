@@ -23,6 +23,9 @@ public class SqliteJdbc {
     this.dbName = dbName;
   }
 
+  /**
+   * 连接jdbc数据库.
+   */
   public void connect() {
     try {
       Class.forName("org.sqlite.JDBC");
@@ -34,6 +37,9 @@ public class SqliteJdbc {
     }
   }
 
+  /**
+   * 关闭数据库的连接.
+   */
   public void close() {
     if (this.con != null) {
       try {

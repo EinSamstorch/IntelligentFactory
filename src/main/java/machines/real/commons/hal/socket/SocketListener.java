@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 监听socket返回消息并存入自身Map<taskNo, resultStr>中.
+ * 监听socket返回消息并存入自身Map[taskNo, resultStr]中.
  *
  * @author <a href="mailto:junfeng_pan96@qq.com">junfeng</a>
  * @version 1.0.0.0
@@ -62,7 +62,7 @@ public class SocketListener extends Thread {
 
 
   /**
-   * 检查输入的字符串是否是 动作语句的回复
+   * 检查输入的字符串是否是 动作语句的回复.
    *
    * @param msg 待检查字符串
    * @return 包含 result和 info字段的json语句，返回true, 否则 false
@@ -88,7 +88,7 @@ public class SocketListener extends Thread {
   }
 
   /**
-   * 检查消息完整性
+   * 检查消息完整性.
    *
    * @param response socket server返回的消息
    * @return 是否完整
@@ -123,7 +123,7 @@ public class SocketListener extends Thread {
 
 
   /**
-   * 连接SocketServer 并注册 type:agent
+   * 连接SocketServer 并注册 type:agent.
    */
   private void init() {
     this.connect();
@@ -131,7 +131,7 @@ public class SocketListener extends Thread {
   }
 
   /**
-   * 连接socketServer
+   * 连接socketServer.
    */
   private void connect() {
     try {
@@ -142,7 +142,7 @@ public class SocketListener extends Thread {
   }
 
   /**
-   * 注册设备类型 action:register, value: agent
+   * 注册设备类型 action:register, value: agent.
    */
   private void registerType() {
     JSONObject msg = new JSONObject();
@@ -152,7 +152,7 @@ public class SocketListener extends Thread {
   }
 
   /**
-   * 向socketserver发送字符串
+   * 向socketserver发送字符串.
    *
    * @param words 待发送字符串
    */
@@ -167,7 +167,7 @@ public class SocketListener extends Thread {
   }
 
   /**
-   * 接收socketserver返回的字符串
+   * 接收socketserver返回的字符串.
    *
    * @return 接收到的字符串
    */

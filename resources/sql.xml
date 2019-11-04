@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd">
-    <bean id="db" class="machines.real.warehouse.WarehouseMysql">
-        <constructor-arg>
-            <map key-type="java.lang.String" value-type="java.lang.String">
-                <entry key="mysql_ip" value="127.0.0.1"/>
-                <entry key="mysql_port" value="3306"/>
-                <entry key="mysql_db" value="smartfactory"/>
-                <entry key="mysql_user" value="root"/>
-                <entry key="mysql_pwd" value="endlessloop"/>
-            </map>
-        </constructor-arg>
-    </bean>
+  <bean class="machines.real.warehouse.WarehouseMysql" id="db">
+    <constructor-arg>
+      <map key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="mysql_ip" value="127.0.0.1"/>
+        <entry key="mysql_port" value="3306"/>
+        <entry key="mysql_db" value="smartfactory"/>
+        <entry key="mysql_user" value="root"/>
+        <entry key="mysql_pwd" value="endlessloop"/>
+      </map>
+    </constructor-arg>
+  </bean>
 
-    <!--    <bean id="db" class="machines.real.warehouse.WarehouseSqlite" init-method="initTable">-->
-    <!--        <constructor-arg name="dbName" value="resources/db/warehouse.db"/>-->
-    <!--    </bean>-->
+  <!--    <bean id="db" class="machines.real.warehouse.WarehouseSqlite" init-method="initTable">-->
+  <!--        <constructor-arg name="dbName" value="resources/db/warehouse.db"/>-->
+  <!--    </bean>-->
 
 </beans>

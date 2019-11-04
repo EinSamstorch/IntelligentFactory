@@ -31,6 +31,9 @@ public class SocketSender {
     this(5656);
   }
 
+  /**
+   * 连接socket server.
+   */
   public void connect() {
     try {
       socket = new Socket(SocketMessage.HOST, port);
@@ -70,7 +73,7 @@ public class SocketSender {
   }
 
   /**
-   * 接收socketserver返回的字符串
+   * 接收socketserver返回的字符串.
    *
    * @return 接收到的字符串
    */

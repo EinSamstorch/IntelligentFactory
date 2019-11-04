@@ -22,7 +22,7 @@ public class WarehouseMysql extends MysqlJdbc implements DbInterface {
   /**
    * 构造器 .
    *
-   * @param mysqlInfo Map<String, String> 包含 mysql_ip, mysql_port, mysql_db, mysql_user 字段
+   * @param mysqlInfo 包含 mysql_ip, mysql_port, mysql_db, mysql_user 字段
    */
   public WarehouseMysql(Map<String, String> mysqlInfo) {
     super(mysqlInfo);

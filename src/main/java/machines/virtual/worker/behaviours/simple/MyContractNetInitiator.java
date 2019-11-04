@@ -34,6 +34,7 @@ public class MyContractNetInitiator extends ContractNetInitiator {
 
   /**
    * 发起一个招投标.
+   *
    * @param a 发标agent
    * @param cfp 招标信息
    * @param serviceType 需要的服务类型

@@ -37,9 +37,9 @@ public class WarehouseSqlite extends SqliteJdbc implements DbInterface {
   }
 
   /**
-   * 获取 raw 表里的所有数据
+   * 获取 raw 表里的所有数据.
    *
-   * @return Map<String position, String goodsid>
+   * @return position, goodsid
    */
   private Map<Integer, String> getRawTable() {
     Map<Integer, String> raw = new ConcurrentHashMap<>(35);
@@ -66,7 +66,7 @@ public class WarehouseSqlite extends SqliteJdbc implements DbInterface {
   }
 
   /**
-   * 从product表里获取空位
+   * 从product表里获取空位.
    *
    * @return 空位 position
    */
@@ -156,7 +156,7 @@ public class WarehouseSqlite extends SqliteJdbc implements DbInterface {
   }
 
   /**
-   * 更新product表信息
+   * 更新product表信息.
    *
    * @param position 位置id
    * @param wpInfo 工件信息

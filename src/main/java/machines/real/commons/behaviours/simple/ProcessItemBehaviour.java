@@ -18,6 +18,7 @@ public class ProcessItemBehaviour {
 
   /**
    * 获取加工物品的behaviour对象.
+   *
    * @param hal 加工方的hal
    * @param buffer 货物所处buffer
    * @return 加工行为对象

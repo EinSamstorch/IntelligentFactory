@@ -98,6 +98,7 @@ public class DfUtils {
 
   /**
    * 创建Request请求填充消息头.
+   *
    * @return request消息
    */
   public static ACLMessage createRequestMsgHeader() {

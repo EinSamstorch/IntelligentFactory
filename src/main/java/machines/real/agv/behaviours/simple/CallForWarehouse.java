@@ -29,6 +29,7 @@ public class CallForWarehouse extends SimpleBehaviour {
 
   /**
    * 请求仓库.
+   *
    * @param a 请求方agent
    * @param request 仓库搬运请求
    * @param notifyFinish 信号量通知是否完成

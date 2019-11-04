@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
-    <import resource="../settings.xml"/>
-    <!-- 配置Agent -->
-    <bean id="agent" class="machines.virtual.VirtualAgent">
-        <property name="serviceType">
-            <util:constant static-field="commons.tools.DfServiceType.CLOUD_UPDATE"/>
-        </property>
-        <!-- agent 行为集-->
-        <property name="behaviours">
-            <list>
-                <bean class="machines.virtual.cloud.behaviours.cycle.GetOrder">
-                    <constructor-arg name="agent" ref="agent"/>
-                    <constructor-arg name="period" value="10000"/>
-                    <property name="website" ref="website"/>
-                    <property name="orderInfoQueue" ref="orderInfoQueue"/>
-                </bean>
-                <bean class="machines.virtual.cloud.behaviours.cycle.HandleOrders">
-                    <constructor-arg name="agent" ref="agent"/>
-                    <constructor-arg name="period" value="10000"/>
-                    <property name="orderInfoQueue" ref="orderInfoQueue"/>
-                </bean>
-            </list>
-        </property>
-    </bean>
+<beans xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+  <bean class="machines.virtual.VirtualAgent" id="agent">
+    <property name="serviceType">
+      <util:constant static-field="commons.tools.DfServiceType.CLOUD_UPDATE"/>
+    </property>
+    <!-- agent 行为集-->
+    <property name="behaviours">
+      <list>
+        <bean class="machines.virtual.cloud.behaviours.cycle.GetOrder">
+          <constructor-arg name="agent" ref="agent"/>
+          <constructor-arg name="period" value="10000"/>
+          <property name="website" ref="website"/>
+          <property name="orderInfoQueue" ref="orderInfoQueue"/>
+        </bean>
+        <bean class="machines.virtual.cloud.behaviours.cycle.HandleOrders">
+          <constructor-arg name="agent" ref="agent"/>
+          <constructor-arg name="period" value="10000"/>
+          <property name="orderInfoQueue" ref="orderInfoQueue"/>
+        </bean>
+      </list>
+    </property>
+  </bean>
+  <!-- 配置Agent -->
+  <bean class="java.lang.String" id="website">
+    <constructor-arg name="original" value="${cloud.website}"/>
+  </bean>
 
-    <!-- 注入网址 -->
-    <bean id="website" class="java.lang.String">
-        <constructor-arg name="original" value="${cloud.website}"/>
-    </bean>
-    <bean id="orderInfoQueue" class="java.util.concurrent.LinkedBlockingQueue"/>
+  <!-- 注入网址 -->
+  <bean class="java.util.concurrent.LinkedBlockingQueue" id="orderInfoQueue"/>
+  <import resource="../settings.xml"/>
 </beans>
 

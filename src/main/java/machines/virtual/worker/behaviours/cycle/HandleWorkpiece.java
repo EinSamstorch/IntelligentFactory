@@ -46,13 +46,13 @@ public class HandleWorkpiece extends CyclicBehaviour {
         MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST));
     ACLMessage msg = myAgent.receive(mt);
     if (msg == null) {
-      if(retrying) {
+      if (retrying) {
         // 当前进行重试中, 休眠5000ms
         retrying = false;
         block(5000);
       } else {
         // 当前没有进行重试, 查询是否有重试任务
-        if(!retryQueue.isEmpty()) {
+        if (!retryQueue.isEmpty()) {
           // 有重试任务, 执行它
           retrying = true;
           processRetry();

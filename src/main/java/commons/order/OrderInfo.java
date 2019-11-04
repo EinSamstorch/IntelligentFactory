@@ -6,10 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import java.util.Vector;
 
 
-
 /**
- * 订单信息类.
- * 云端获取的订单信息格式如下：
+ * 订单信息类. 云端获取的订单信息格式如下：
  * <pre>
  * {
  *  "orderDate": "2019-2-4 14:58:37",
@@ -25,11 +23,10 @@ import java.util.Vector;
  *  "orderPrior": "0"
  * }
  * </pre>
- * 订单信息类
- * { "orderDate": "2019-2-4 14:58:37", "orderDetails": [{ "goodsId": "001",
- *   "id": 165, "jobDes": "{\"D1\":\"80\",\"D2\":\"35.5\",\"D3\":\"58.0\",\"D4\":\"8.0\",
- *            \"D5\":\"70.0\",\"N\":\"4\",\"L1\":\"15.0\",\"L2\":\"30.0\",\"Motto\":\"南航智造\"}",
- *   "jobNum": 1 }], "orderDtime": "2020-05-20 00:00:00", "orderId": "004061", "orderPrior": "0" }
+ * 订单信息类 { "orderDate": "2019-2-4 14:58:37", "orderDetails": [{ "goodsId": "001", "id": 165,
+ * "jobDes": "{\"D1\":\"80\",\"D2\":\"35.5\",\"D3\":\"58.0\",\"D4\":\"8.0\",
+ * \"D5\":\"70.0\",\"N\":\"4\",\"L1\":\"15.0\",\"L2\":\"30.0\",\"Motto\":\"南航智造\"}", "jobNum": 1 }],
+ * "orderDtime": "2020-05-20 00:00:00", "orderId": "004061", "orderPrior": "0" }
  *
  * @author <a href="mailto:junfeng_pan96@qq.com">junfeng</a>
  * @version 1.1.0.0
@@ -66,10 +63,10 @@ public class OrderInfo {
   /**
    * 构造器.
    *
-   * @param orderDate    订单生成时间
-   * @param orderDtime   订单截止时间
-   * @param orderId      订单id
-   * @param orderPrior   订单优先级
+   * @param orderDate 订单生成时间
+   * @param orderDtime 订单截止时间
+   * @param orderId 订单id
+   * @param orderPrior 订单优先级
    * @param orderDetails 订单详细内容
    */
   public OrderInfo(String orderDate, String orderDtime, String orderId, String orderPrior,
@@ -112,8 +109,7 @@ public class OrderInfo {
   }
 
   /**
-   * 根据订单详细内容，解析工件信息.
-   * 详细内容格式如下：
+   * 根据订单详细内容，解析工件信息. 详细内容格式如下：
    * <pre>
    *     [{工件信息1},{工件信息2},…]
    * </pre>

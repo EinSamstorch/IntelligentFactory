@@ -26,6 +26,7 @@ public class ExecuteActionBehaviour extends SimpleBehaviour {
 
   /**
    * 执行特定动作的行为.
+   *
    * @param actionObj 动作的执行者对象
    * @param actionMethod 需要执行的动作函数名
    * @param buffer 工位台对象
@@ -41,6 +42,7 @@ public class ExecuteActionBehaviour extends SimpleBehaviour {
 
   /**
    * 执行特定动作的行为.
+   *
    * @param actionObj 动作的执行者对象
    * @param actionMethod 需要执行的动作函数名
    * @param buffer 工位台对象

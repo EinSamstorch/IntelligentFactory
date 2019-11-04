@@ -4,6 +4,7 @@ import machines.real.commons.hal.MachineHal;
 
 /**
  * 车床Hal接口.
+ *
  * @author junfeng
  */
 

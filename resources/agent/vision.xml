@@ -1,73 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util" xmlns="http://www.springframework.org/schema/beans"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
-    <import resource="../redis.xml"/>
-    <import resource="../settings.xml"/>
-    <!-- 配置Agent -->
-    <bean id="agent" class="machines.real.commons.RealMachineAgent">
-        <property name="armPwd" value="${arm.password}"/>
-        <property name="hal" ref="hal"/>
-        <property name="bufferManger" ref="bufferManager"/>
-        <property name="machineState" ref="machineState"/>
-        <property name="serviceType">
-            <util:constant static-field="commons.tools.DfServiceType.VISION"/>
-        </property>
-        <!-- agent 动作集 -->
-        <property name="behaviours">
-            <list>
-                <!-- agent状态管理 -->
-                <bean class="machines.real.commons.behaviours.cycle.CheckHalState">
-                    <constructor-arg name="a" ref="agent"/>
-                    <constructor-arg name="period" value="5000"/>
-                    <constructor-arg name="hal" ref="hal"/>
-                    <property name="redisEnable" value="${redis.enable}"/>
-                    <property name="pool" ref="jedisPool"/>
-                </bean>
-                <!-- buffer管理行为 -->
-                <bean class="machines.real.commons.behaviours.cycle.MaintainBufferBehaviour">
-                    <property name="bufferManger" ref="bufferManager"/>
-                </bean>
-                <!-- 上料行为 -->
-                <bean class="machines.real.commons.behaviours.cycle.LoadItemBehaviour">
-                    <constructor-arg name="machineAgent" ref="agent"/>
-                    <constructor-arg name="processItem">
-                        <bean class="machines.real.vision.behaviours.sequential.VisionProcessItem"/>
-                    </constructor-arg>
-                </bean>
-                <!-- 检测仪服务应标 -->
-                <bean class="machines.real.vision.behaviours.cycle.CheckItemContractNetResponder">
-                    <constructor-arg name="visionAgent" ref="agent"/>
-                    <constructor-arg name="mt" ref="matchProtocol"/>
-                </bean>
-            </list>
-        </property>
-    </bean>
-    <bean id="hal" class="machines.real.vision.VisionHalImpl">
-        <constructor-arg name="port" value="${hal.port}"/>
-    </bean>
-    <bean id="bufferManager" class="machines.real.commons.buffer.BufferManger">
-        <constructor-arg name="indexesStr" value="${machine.buffers}"/>
-    </bean>
-    <bean id="machineState" class="machines.real.commons.MachineState"/>
+<beans xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+  <bean class="machines.real.commons.RealMachineAgent" id="agent">
+    <property name="armPwd" value="${arm.password}"/>
+    <property name="hal" ref="hal"/>
+    <property name="bufferManger" ref="bufferManager"/>
+    <property name="machineState" ref="machineState"/>
+    <property name="serviceType">
+      <util:constant static-field="commons.tools.DfServiceType.VISION"/>
+    </property>
+    <!-- agent 动作集 -->
+    <property name="behaviours">
+      <list>
+        <!-- agent状态管理 -->
+        <bean class="machines.real.commons.behaviours.cycle.CheckHalState">
+          <constructor-arg name="a" ref="agent"/>
+          <constructor-arg name="period" value="5000"/>
+          <constructor-arg name="hal" ref="hal"/>
+          <property name="redisEnable" value="${redis.enable}"/>
+          <property name="pool" ref="jedisPool"/>
+        </bean>
+        <!-- buffer管理行为 -->
+        <bean class="machines.real.commons.behaviours.cycle.MaintainBufferBehaviour">
+          <property name="bufferManger" ref="bufferManager"/>
+        </bean>
+        <!-- 上料行为 -->
+        <bean class="machines.real.commons.behaviours.cycle.LoadItemBehaviour">
+          <constructor-arg name="machineAgent" ref="agent"/>
+          <constructor-arg name="processItem">
+            <bean class="machines.real.vision.behaviours.sequential.VisionProcessItem"/>
+          </constructor-arg>
+        </bean>
+        <!-- 检测仪服务应标 -->
+        <bean class="machines.real.vision.behaviours.cycle.CheckItemContractNetResponder">
+          <constructor-arg name="visionAgent" ref="agent"/>
+          <constructor-arg name="mt" ref="matchProtocol"/>
+        </bean>
+      </list>
+    </property>
+  </bean>
+  <bean class="machines.real.vision.VisionHalImpl" id="hal">
+    <constructor-arg name="port" value="${hal.port}"/>
+  </bean>
+  <!-- 配置Agent -->
+  <bean class="machines.real.commons.buffer.BufferManger" id="bufferManager">
+    <constructor-arg name="indexesStr" value="${machine.buffers}"/>
+  </bean>
+  <bean class="machines.real.commons.MachineState" id="machineState"/>
+  <bean class="jade.lang.acl.MessageTemplate" factory-method="and" id="matchProtocol">
+    <!-- match Contract Net -->
+    <constructor-arg name="op1">
+      <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchProtocol">
+        <constructor-arg type="java.lang.String">
+          <util:constant
+            static-field="jade.domain.FIPANames.InteractionProtocol.FIPA_CONTRACT_NET"/>
+        </constructor-arg>
+      </bean>
+    </constructor-arg>
+    <!-- match CFP -->
+    <constructor-arg name="op2">
+      <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchPerformative">
+        <constructor-arg name="value">
+          <util:constant static-field="jade.lang.acl.ACLMessage.CFP"/>
+        </constructor-arg>
+      </bean>
+    </constructor-arg>
+  </bean>
+  <import resource="../settings.xml"/>
 
-    <bean id="matchProtocol" class="jade.lang.acl.MessageTemplate" factory-method="and">
-        <!-- match Contract Net -->
-        <constructor-arg name="op1">
-            <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchProtocol">
-                <constructor-arg type="java.lang.String">
-                    <util:constant static-field="jade.domain.FIPANames.InteractionProtocol.FIPA_CONTRACT_NET"/>
-                </constructor-arg>
-            </bean>
-        </constructor-arg>
-        <!-- match CFP -->
-        <constructor-arg name="op2">
-            <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchPerformative">
-                <constructor-arg name="value">
-                    <util:constant static-field="jade.lang.acl.ACLMessage.CFP"/>
-                </constructor-arg>
-            </bean>
-        </constructor-arg>
-    </bean>
+  <import resource="../redis.xml"/>
 </beans>

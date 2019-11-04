@@ -28,10 +28,17 @@ public class WorkpieceStatus implements Serializable {
   private Integer processIndex = 0;
   private Integer warehousePosition;
   /**
-   * 工序分步
+   * 工序分步.
    */
   private Integer processStep;
 
+  /**
+   * 工件状态信息封装.
+   * @param orderId 订单号
+   * @param workpieceId 工件号
+   * @param goodsId 种类
+   * @param detailSize 具体尺寸信息
+   */
   public WorkpieceStatus(String orderId, String workpieceId, String goodsId, String detailSize) {
     this.orderId = orderId;
     this.workpieceId = workpieceId;
@@ -41,13 +48,6 @@ public class WorkpieceStatus implements Serializable {
     // 加载工艺路线
     processPlan = ProcessPlan.getProcessPlan(goodsId);
     initParamters();
-  }
-
-  public static void main(String[] args) {
-    WorkpieceStatus wpInfo = new WorkpieceStatus("001", "001", "003", "");
-    JSONObject json = new JSONObject();
-    json.put("extra", wpInfo);
-    System.out.println(json.toJSONString());
   }
 
   private void initParamters() {

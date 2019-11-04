@@ -1,12 +1,13 @@
 package machines.real.warehouse;
 
 /**
+ * 仓库Hal应该实现的接口.
  * @author junfeng
  */
 public interface WarehouseHal {
 
   /**
-   * 将货物从from移动至to
+   * 将货物从from移动至to.
    *
    * @param from 起点
    * @param to 终点

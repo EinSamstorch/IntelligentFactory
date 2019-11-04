@@ -22,6 +22,7 @@ public class ItemImportBehaviour extends OneShotBehaviour {
 
   /**
    * 仓库入库请求.
+   *
    * @param whAgent 仓库agent
    * @param request 入库请求
    */

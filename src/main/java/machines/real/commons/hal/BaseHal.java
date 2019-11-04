@@ -36,6 +36,7 @@ public class BaseHal {
 
   /**
    * 最底层的hal 封装共同的特征, 使用指定端口生成sender和listener.
+   *
    * @param port 指定的server端口
    */
   public BaseHal(int port) {
@@ -97,6 +98,7 @@ public class BaseHal {
 
   /**
    * 检查对应的hal是否在线.
+   *
    * @return 在线true, 离线false.
    */
   public boolean checkHalOnline() {
