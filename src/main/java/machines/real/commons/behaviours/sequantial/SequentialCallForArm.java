@@ -22,6 +22,7 @@ public class SequentialCallForArm {
 
   /**
    * 封装机械手搬运请求,透明内部通信细节.
+   *
    * @param agent 请求方agent
    * @param request 机械手搬运任务
    * @param password 机械手密码

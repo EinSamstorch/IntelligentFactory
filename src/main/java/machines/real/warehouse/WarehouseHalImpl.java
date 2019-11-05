@@ -1,7 +1,7 @@
 package machines.real.warehouse;
 
 import com.alibaba.fastjson.JSONObject;
-import machines.real.commons.hal.BaseHal;
+import machines.real.commons.hal.BaseHalImpl;
 
 /**
  * 仓库硬件适配层代理人，提供统一接口函数。具体硬件操作，通过socket server转发至对应socket client处理。.
@@ -10,7 +10,7 @@ import machines.real.commons.hal.BaseHal;
  * @version 1.0.0.0
  * @since 1.8
  */
-public class WarehouseHalImpl extends BaseHal implements WarehouseHal {
+public class WarehouseHalImpl extends BaseHalImpl implements WarehouseHal {
 
   private static final String CMD_MOVE_ITEM = "move_item";
   private static final String FIELD_FROM = "from";

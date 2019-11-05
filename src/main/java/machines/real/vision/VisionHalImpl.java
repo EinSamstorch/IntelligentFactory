@@ -16,7 +16,7 @@ import machines.real.commons.hal.MachineHalImpl;
 public class VisionHalImpl extends MachineHalImpl {
 
   private static final String CMD_CHECK = "check";
-  private Object checkValue;
+  private String checkValue;
 
   public VisionHalImpl() {
     super();
@@ -32,7 +32,7 @@ public class VisionHalImpl extends MachineHalImpl {
     JSONObject extra = new JSONObject();
     extra.put("goodsId", goodsId);
     if (executeCmd(CMD_CHECK, extra)) {
-      checkValue = ((JSONObject) getExtraInfo()).toJSONString();
+      checkValue = getExtraInfo();
       LoggerUtil.hal.info(String.format("OrderId: %s, WorkpieceId: %s, GoodsId: %s. Values: %s",
           wpInfo.getOrderId(),
           wpInfo.getWorkpieceId(),

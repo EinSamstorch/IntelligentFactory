@@ -1,7 +1,7 @@
 package machines.real.arm;
 
 import com.alibaba.fastjson.JSONObject;
-import machines.real.commons.hal.BaseHal;
+import machines.real.commons.hal.BaseHalImpl;
 
 /**
  * hal for arm robot.
@@ -11,7 +11,7 @@ import machines.real.commons.hal.BaseHal;
  * @since 1.8
  */
 
-public class ArmHalImpl extends BaseHal implements ArmHal {
+public class ArmHalImpl extends BaseHalImpl implements ArmHal {
 
   private static final String CMD_MOVE_ITEM = "move_item";
   private static final String FIELD_FROM = "from";

@@ -25,6 +25,7 @@ public class SendRequstToArm extends OneShotBehaviour {
 
   /**
    * 请求机械手搬运.
+   *
    * @param a 请求方agent
    * @param request 机械手搬运任务
    * @param password 机械手密码

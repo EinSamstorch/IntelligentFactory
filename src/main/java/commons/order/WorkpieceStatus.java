@@ -34,6 +34,7 @@ public class WorkpieceStatus implements Serializable {
 
   /**
    * 工件状态信息封装.
+   *
    * @param orderId 订单号
    * @param workpieceId 工件号
    * @param goodsId 种类

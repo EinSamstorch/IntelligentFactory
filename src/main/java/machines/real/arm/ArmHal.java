@@ -1,6 +1,8 @@
 package machines.real.arm;
 
-public interface ArmHal {
+import machines.real.commons.hal.BaseHal;
+
+public interface ArmHal extends BaseHal {
 
   /**
    * 搬运工件.

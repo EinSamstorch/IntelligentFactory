@@ -1,7 +1,7 @@
 package machines.real.agv;
 
 import com.alibaba.fastjson.JSONObject;
-import machines.real.commons.hal.BaseHal;
+import machines.real.commons.hal.BaseHalImpl;
 
 /**
  * Agv对应硬件层.
@@ -10,7 +10,7 @@ import machines.real.commons.hal.BaseHal;
  * @version 1.0.0.0
  * @since 1.8
  */
-public class AgvHalImpl extends BaseHal implements AgvHal {
+public class AgvHalImpl extends BaseHalImpl implements AgvHal {
 
   private static final String CMD_MOVE = "move";
   private static final String FIELD_FROM = "from";

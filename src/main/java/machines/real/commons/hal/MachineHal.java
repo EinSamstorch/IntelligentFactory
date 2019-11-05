@@ -2,7 +2,7 @@ package machines.real.commons.hal;
 
 import commons.order.WorkpieceStatus;
 
-public interface MachineHal {
+public interface MachineHal extends BaseHal {
 
   /**
    * 加工处理工件.

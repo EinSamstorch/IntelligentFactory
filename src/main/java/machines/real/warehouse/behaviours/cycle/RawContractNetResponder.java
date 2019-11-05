@@ -33,6 +33,7 @@ public class RawContractNetResponder extends ContractNetResponder {
 
   /**
    * 原料应标行为.
+   *
    * @param warehouseAgent 仓库agent
    * @param mt 消息模板
    */

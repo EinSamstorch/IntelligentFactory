@@ -2,7 +2,7 @@ package machines.real.commons.behaviours.cycle;
 
 import commons.BaseAgent;
 import jade.core.behaviours.TickerBehaviour;
-import machines.real.commons.hal.BaseHal;
+import machines.real.commons.hal.BaseHalImpl;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -14,7 +14,7 @@ import redis.clients.jedis.JedisPool;
  * @since 1.8
  */
 
-public class CheckHalState<T extends BaseAgent, H extends BaseHal> extends TickerBehaviour {
+public class CheckHalState<T extends BaseAgent, H extends BaseHalImpl> extends TickerBehaviour {
 
   private T baseAgent;
   private H hal;

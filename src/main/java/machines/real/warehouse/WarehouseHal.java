@@ -1,10 +1,13 @@
 package machines.real.warehouse;
 
+import machines.real.commons.hal.BaseHal;
+
 /**
  * 仓库Hal应该实现的接口.
+ *
  * @author junfeng
  */
-public interface WarehouseHal {
+public interface WarehouseHal extends BaseHal {
 
   /**
    * 将货物从from移动至to.

@@ -10,7 +10,7 @@ import commons.order.WorkpieceStatus;
  * @since 1.8
  */
 
-public class MachineHalImpl extends BaseHal implements MachineHal {
+public class MachineHalImpl extends BaseHalImpl implements MachineHal {
 
   private static final String CMD_PROCESS = "process";
   private static final String CMD_EVALUATE = "evaluate";
@@ -35,7 +35,7 @@ public class MachineHalImpl extends BaseHal implements MachineHal {
   @Override
   public int evaluate(WorkpieceStatus wpInfo) {
     if (executeCmd(CMD_EVALUATE, wpInfo)) {
-      return (int) Float.parseFloat((String) getExtraInfo());
+      return (int) Float.parseFloat(getExtraInfo());
     } else {
       return 0;
     }

@@ -1,6 +1,8 @@
 package machines.real.agv;
 
-public interface AgvHal {
+import machines.real.commons.hal.BaseHal;
+
+public interface AgvHal extends BaseHal {
 
   /**
    * 运输工件.
