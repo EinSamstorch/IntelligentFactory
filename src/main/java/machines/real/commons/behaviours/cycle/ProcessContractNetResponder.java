@@ -59,7 +59,10 @@ public class ProcessContractNetResponder extends ContractNetResponder {
     }
 
     // 预估时间作为标书内容
-    int evaluateTime = hal.evaluate(wpInfo);
+    int evaluateTime = hal.evaluate(wpInfo, 5000);
+    if (evaluateTime < 0) {
+      throw new FailureException("Hal timeout.");
+    }
     evaluateTime += machineAgent.getBufferManger().getAllWaitingTime();
     ContractNetContent content = new ContractNetContent(evaluateTime);
 
@@ -102,7 +105,11 @@ public class ProcessContractNetResponder extends ContractNetResponder {
     // 放入机床buffer中
     buffer.setWpInfo(wpInfo);
     buffer.getBufferState().setState(BufferState.STATE_ARRIVING);
-    buffer.setEvaluateTime(hal.evaluate(wpInfo));
+    int evaluateTime = hal.evaluate(wpInfo, 5000);
+    if (evaluateTime < 0) {
+      throw new FailureException("Hal timeout.");
+    }
+    buffer.setEvaluateTime(evaluateTime);
     // call for agv
     AgvRequest request = new AgvRequest(from, to, wpInfo);
     machineAgent.addBehaviour(new CallForAgv(machineAgent, request, buffer));

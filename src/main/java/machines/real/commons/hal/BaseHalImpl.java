@@ -64,11 +64,30 @@ public class BaseHalImpl implements BaseHal {
   }
 
   protected JSONObject getResponse(int taskNo) {
+    return getResponse(taskNo, 0);
+  }
+
+  /**
+   * 获得response.
+   *
+   * @param taskNo 任务号
+   * @param timeoutMills 超时时间 毫秒
+   * @return response, 超时返回null
+   */
+  protected JSONObject getResponse(int taskNo, long timeoutMills) {
     Map<Integer, JSONObject> m = listener.getResponseMap();
+    long currentTimestamp = 0;
+    if (timeoutMills > 0) {
+      currentTimestamp = System.currentTimeMillis();
+    }
     while (true) {
       JSONObject response = m.get(taskNo);
       if (response != null) {
         return response;
+      }
+      if (currentTimestamp > 0
+          && System.currentTimeMillis() > currentTimestamp + timeoutMills) {
+        return null;
       }
       sleep(500);
     }
@@ -84,13 +103,20 @@ public class BaseHalImpl implements BaseHal {
 
 
   protected boolean executeCmd(String cmd, Object extra) {
-    if (!checkHalOnline()) {
+    return executeCmd(cmd, extra, 0);
+  }
 
+  protected boolean executeCmd(String cmd, Object extra, long timeoutMills) {
+    if (!checkHalOnline()) {
       return false;
     }
     int taskNo = sendMessageToMachine(cmd, extra);
 
-    JSONObject response = getResponse(taskNo);
+    JSONObject response = getResponse(taskNo, timeoutMills);
+    if (response == null) {
+      extraInfo = "Hal timeout.";
+      return false;
+    }
     if (!Objects.equals(SocketMessage.RESULT_SUCCESS,
         response.getString(SocketMessage.FIELD_RESULT))) {
       return false;

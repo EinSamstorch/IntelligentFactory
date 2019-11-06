@@ -34,10 +34,15 @@ public class MachineHalImpl extends BaseHalImpl implements MachineHal {
 
   @Override
   public int evaluate(WorkpieceStatus wpInfo) {
-    if (executeCmd(CMD_EVALUATE, wpInfo)) {
+    return evaluate(wpInfo, 0);
+  }
+
+  @Override
+  public int evaluate(WorkpieceStatus wpInfo, long timeoutMills) {
+    if (executeCmd(CMD_EVALUATE, wpInfo, timeoutMills)) {
       return (int) Float.parseFloat(getExtraInfo());
     } else {
-      return 0;
+      return -1;
     }
   }
 }
