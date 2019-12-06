@@ -10,17 +10,17 @@ import machines.real.commons.hal.BaseHalImpl;
  * @version 1.0.0.0
  * @since 1.8
  */
-public class AgvHalImpl extends BaseHalImpl implements AgvHal {
+public class SingleAgvHalImpl extends BaseHalImpl implements SingleAgvHal {
 
   private static final String CMD_MOVE = "move";
   private static final String FIELD_FROM = "from";
   private static final String FIELD_TO = "to";
 
-  public AgvHalImpl() {
+  public SingleAgvHalImpl() {
     super();
   }
 
-  public AgvHalImpl(int port) {
+  public SingleAgvHalImpl(int port) {
     super(port);
   }
 
