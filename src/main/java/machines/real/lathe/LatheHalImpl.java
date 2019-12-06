@@ -25,12 +25,12 @@ public class LatheHalImpl extends MachineHalImpl implements LatheHal {
 
   @Override
   public boolean grabItem() {
-    return executeCmd(CMD_GRAB_ITEM, "");
+    return executeCmd(CMD_GRAB_ITEM);
   }
 
   @Override
   public boolean releaseItem() {
-    return executeCmd(CMD_RELEASE_ITEM, "");
+    return executeCmd(CMD_RELEASE_ITEM);
   }
 
 }

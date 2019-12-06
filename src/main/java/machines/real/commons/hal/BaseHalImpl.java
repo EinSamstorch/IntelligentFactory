@@ -102,6 +102,9 @@ public class BaseHalImpl implements BaseHal {
   }
 
 
+  protected boolean executeCmd(String cmd) {
+    return executeCmd(cmd, "", 0);
+  }
   protected boolean executeCmd(String cmd, Object extra) {
     return executeCmd(cmd, extra, 0);
   }

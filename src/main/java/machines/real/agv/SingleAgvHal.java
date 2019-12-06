@@ -2,7 +2,13 @@ package machines.real.agv;
 
 import machines.real.commons.hal.BaseHal;
 
-public interface AgvHal extends BaseHal {
+/**
+ * 单AGV系统的AGV agent硬件层.
+ *
+ * 早期硬件层兄弟不愿分离出功能
+ * @author junfeng
+ */
+public interface SingleAgvHal extends BaseHal {
 
   /**
    * 运输工件.
