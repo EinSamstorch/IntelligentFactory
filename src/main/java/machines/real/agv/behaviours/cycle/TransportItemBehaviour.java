@@ -9,7 +9,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.util.leap.Iterator;
-import machines.real.agv.AgvHal;
+import machines.real.agv.SingleAgvHal;
 import machines.real.agv.behaviours.simple.CallForWarehouse;
 import machines.real.commons.request.AgvRequest;
 import machines.real.commons.request.WarehouseRequest;
@@ -29,7 +29,7 @@ public class TransportItemBehaviour extends CyclicBehaviour {
   private static final int STATE_CALL_WH = 2;
   private static final int STATE_DO_TASK = 3;
   private static final int STATE_WAIT_WH = 4;
-  private AgvHal hal;
+  private SingleAgvHal hal;
   private int state;
   private AgvRequest request;
   private ACLMessage requestMsg;
@@ -40,7 +40,7 @@ public class TransportItemBehaviour extends CyclicBehaviour {
     this.state = STATE_READY;
   }
 
-  public void setHal(AgvHal hal) {
+  public void setHal(SingleAgvHal hal) {
     this.hal = hal;
   }
 

@@ -26,7 +26,7 @@
       </list>
     </property>
   </bean>
-  <bean class="machines.real.agv.AgvHalImpl" id="hal">
+  <bean class="machines.real.agv.SingleAgvHalImpl" id="hal">
     <!-- socket server监听端口 -->
     <constructor-arg name="port" value="${hal.port}"/>
   </bean>
