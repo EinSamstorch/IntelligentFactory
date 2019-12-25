@@ -15,7 +15,7 @@ public interface IOfferService {
    * 注册服务.
    *
    * @param serviceType 服务类型
-   * @param props 额外属性
+   * @param props       额外属性
    */
   void registerDf(String serviceType, Properties props);
 
@@ -23,7 +23,7 @@ public interface IOfferService {
    * 注册服务.
    *
    * @param serviceType 服务类型
-   * @param password 服务密码
+   * @param password    服务密码
    */
   void registerDf(String serviceType, String password);
 

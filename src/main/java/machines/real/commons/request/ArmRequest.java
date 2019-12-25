@@ -20,10 +20,10 @@ public class ArmRequest implements Serializable {
   /**
    * 机械手搬运请求.
    *
-   * @param from 起始位置
-   * @param to 终点位置
+   * @param from    起始位置
+   * @param to      终点位置
    * @param goodsId 货物类型
-   * @param step 搬运步骤, 铣床与检测仪该参数均为0, 车床该参数与具体装夹过程相关, 为-1时代表一组装夹动作完成
+   * @param step    搬运步骤, 铣床与检测仪该参数均为0, 车床该参数与具体装夹过程相关, 为-1时代表一组装夹动作完成
    */
   public ArmRequest(String from, String to, String goodsId, Integer step) {
     this.from = from;

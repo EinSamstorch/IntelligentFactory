@@ -35,10 +35,10 @@ public class WorkpieceStatus implements Serializable {
   /**
    * 工件状态信息封装.
    *
-   * @param orderId 订单号
+   * @param orderId     订单号
    * @param workpieceId 工件号
-   * @param goodsId 种类
-   * @param detailSize 具体尺寸信息
+   * @param goodsId     种类
+   * @param detailSize  具体尺寸信息
    */
   public WorkpieceStatus(String orderId, String workpieceId, String goodsId, String detailSize) {
     this.orderId = orderId;

@@ -159,7 +159,7 @@ public class WarehouseSqlite extends SqliteJdbc implements DbInterface {
    * 更新product表信息.
    *
    * @param position 位置id
-   * @param wpInfo 工件信息
+   * @param wpInfo   工件信息
    */
   private void updateProductTable(int position, WorkpieceStatus wpInfo) {
     connect();

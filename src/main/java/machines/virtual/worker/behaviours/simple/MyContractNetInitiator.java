@@ -35,10 +35,10 @@ public class MyContractNetInitiator extends ContractNetInitiator {
   /**
    * 发起一个招投标.
    *
-   * @param a 发标agent
-   * @param cfp 招标信息
+   * @param a           发标agent
+   * @param cfp         招标信息
    * @param serviceType 需要的服务类型
-   * @param retryQueue 重试队列
+   * @param retryQueue  重试队列
    */
   public MyContractNetInitiator(Agent a, ACLMessage cfp, String serviceType,
       Queue<RetryMessage> retryQueue) {

@@ -25,7 +25,7 @@ public class CheckHalState<T extends BaseAgent, H extends BaseHalImpl> extends T
    * Construct a <code>TickerBehaviour</code> that call its
    * <code>onTick()</code> method every <code>period</code> ms.
    *
-   * @param a is the pointer to the agent
+   * @param a      is the pointer to the agent
    * @param period the tick period in ms
    */
   public CheckHalState(T a, long period, H hal) {

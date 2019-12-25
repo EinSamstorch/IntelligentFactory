@@ -27,7 +27,7 @@ public class ProcessFinishedBehaviour extends OneShotBehaviour {
    * 加工完成,转交给worker进行下一工序招投标.
    *
    * @param machineAgent 加工方agent
-   * @param buffer 工位台对象
+   * @param buffer       工位台对象
    */
   public ProcessFinishedBehaviour(RealMachineAgent machineAgent, Buffer buffer) {
     super(machineAgent);
