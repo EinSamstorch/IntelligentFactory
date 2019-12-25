@@ -102,7 +102,7 @@ public class TransportItemBehaviour extends CyclicBehaviour {
           state = STATE_DO_TASK;
         }
       } else {
-        LoggerUtil.hal.error("Request NPE Error.");
+        LoggerUtil.hal.error("Agv request NPE error.");
       }
     } else {
       block(1000);
