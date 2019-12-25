@@ -61,8 +61,8 @@ public class Push2CloudBehaviour extends SimpleBehaviour {
   /**
    * 构造器.
    *
-   * @param ca cloud{@link CloudAgent}
-   * @param param API对应参数
+   * @param ca     cloud{@link CloudAgent}
+   * @param param  API对应参数
    * @param choice 选择API
    */
   public Push2CloudBehaviour(CloudAgent ca, String param, int choice) {

@@ -11,7 +11,8 @@ import machines.real.commons.hal.BaseHalImpl;
  * @since 1.8
  */
 
-public class MultiAgvHalImpl extends BaseHalImpl implements MultiAgvHal{
+public class MultiAgvHalImpl extends BaseHalImpl implements MultiAgvHal {
+
   private static final String CMD_EXPORT_ITEM = "export_item";
   private static final String CMD_IMPORT_ITEM = "import_item";
   private static final String CMD_MOVE = "move";

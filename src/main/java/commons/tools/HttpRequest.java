@@ -21,7 +21,7 @@ public class HttpRequest {
   /**
    * 向特定网址发送get请求.
    *
-   * @param url 网址
+   * @param url   网址
    * @param param 携带参数
    * @return 返回消息
    */
@@ -69,8 +69,8 @@ public class HttpRequest {
   /**
    * 从云端获取新订单.
    *
-   * @param host 云端地址
-   * @param numTodo 待处理订单数量
+   * @param host     云端地址
+   * @param numTodo  待处理订单数量
    * @param numDoing 正在处理的订单数量
    * @return 网页返回的字符串
    */

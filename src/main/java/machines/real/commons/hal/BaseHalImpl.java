@@ -49,7 +49,7 @@ public class BaseHalImpl implements BaseHal {
   /**
    * 向SocketServer发送命令.
    *
-   * @param cmd 命令
+   * @param cmd   命令
    * @param extra 额外内容
    * @return 任务号
    */
@@ -70,7 +70,7 @@ public class BaseHalImpl implements BaseHal {
   /**
    * 获得response.
    *
-   * @param taskNo 任务号
+   * @param taskNo       任务号
    * @param timeoutMills 超时时间 毫秒
    * @return response, 超时返回null
    */
@@ -105,6 +105,7 @@ public class BaseHalImpl implements BaseHal {
   protected boolean executeCmd(String cmd) {
     return executeCmd(cmd, "", 0);
   }
+
   protected boolean executeCmd(String cmd, Object extra) {
     return executeCmd(cmd, extra, 0);
   }

@@ -30,7 +30,7 @@ public class DfUtils {
   /**
    * 搜索 黄页服务 按照 服务类型 搜索 提供方 将提供方地址写入 消息 收件人.
    *
-   * @param msg 招标消息
+   * @param msg  招标消息
    * @param type 服务类型 {@link DfServiceType}
    */
   public static void searchDf(Agent agent, ACLMessage msg, String type, String password)

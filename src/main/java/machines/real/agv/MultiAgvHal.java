@@ -5,10 +5,12 @@ import machines.real.commons.hal.BaseHal;
 /**
  * 多AGV系统 agv agent硬件层.
  *
- * 分离出多个功能模块.
+ * <p>分离出多个功能模块.
+ *
  * @author junfeng
  */
 public interface MultiAgvHal extends BaseHal {
+
   /**
    * 运输工件.
    *

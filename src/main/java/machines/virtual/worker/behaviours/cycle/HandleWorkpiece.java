@@ -97,7 +97,7 @@ public class HandleWorkpiece extends CyclicBehaviour {
   /**
    * 处理招投标.
    *
-   * @param wpInfo 工件状态信息
+   * @param wpInfo      工件状态信息
    * @param serviceType 需求服务类型
    */
   private void processOn(WorkpieceStatus wpInfo, String serviceType) {

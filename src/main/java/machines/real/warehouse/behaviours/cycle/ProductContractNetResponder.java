@@ -34,7 +34,7 @@ public class ProductContractNetResponder extends ContractNetResponder {
    * 成品库应标行为.
    *
    * @param warehouseAgent 提供成品存储的agent
-   * @param mt 消息模板
+   * @param mt             消息模板
    */
   public ProductContractNetResponder(WarehouseAgent warehouseAgent, MessageTemplate mt) {
     super(warehouseAgent, mt);
