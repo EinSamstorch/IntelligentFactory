@@ -14,10 +14,10 @@ public interface MultiAgvHal extends BaseHal {
   /**
    * 运输工件.
    *
-   * @param destination 目的工位台
+   * @param path 移动路径
    * @return 成功true
    */
-  boolean move(int destination);
+  boolean move(String path);
 
   /**
    * 输出货物.
@@ -32,4 +32,11 @@ public interface MultiAgvHal extends BaseHal {
    * @return 货物接收完成, 返回true
    */
   boolean importItem();
+
+  /**
+   * 获取Agv当前位置.
+   *
+   * @return 位置标号
+   */
+  int getPosition();
 }

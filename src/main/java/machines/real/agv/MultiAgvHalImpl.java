@@ -15,13 +15,14 @@ public class MultiAgvHalImpl extends BaseHalImpl implements MultiAgvHal {
 
   private static final String CMD_EXPORT_ITEM = "export_item";
   private static final String CMD_IMPORT_ITEM = "import_item";
+  private static final String CMD_GET_POSTION = "get_position";
   private static final String CMD_MOVE = "move";
   private static final String FIELD_DESTINATION = "destination";
 
   @Override
-  public boolean move(int destination) {
+  public boolean move(String path) {
     JSONObject extra = new JSONObject();
-    extra.put(FIELD_DESTINATION, destination);
+    extra.put(FIELD_DESTINATION, path);
     return executeCmd(CMD_MOVE, extra);
   }
 
@@ -33,5 +34,17 @@ public class MultiAgvHalImpl extends BaseHalImpl implements MultiAgvHal {
   @Override
   public boolean importItem() {
     return executeCmd(CMD_IMPORT_ITEM);
+  }
+
+  @Override
+  public int getPosition() {
+    while (!executeCmd(CMD_GET_POSTION)) {
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+    return Integer.parseInt(getExtraInfo());
   }
 }
