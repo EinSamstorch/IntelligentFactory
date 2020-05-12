@@ -19,6 +19,14 @@ public class MultiAgvHalImpl extends BaseHalImpl implements MultiAgvHal {
   private static final String CMD_MOVE = "move";
   private static final String FIELD_DESTINATION = "destination";
 
+  public MultiAgvHalImpl() {
+    super();
+  }
+
+  public MultiAgvHalImpl(int port) {
+    super(port);
+  }
+
   @Override
   public boolean move(String path) {
     JSONObject extra = new JSONObject();

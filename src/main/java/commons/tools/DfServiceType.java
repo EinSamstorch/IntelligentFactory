@@ -18,6 +18,7 @@ public class DfServiceType {
   public static final String MILL = "mill";
   public static final String VISION = "vision";
   public static final String AGV = "agv";
+  public static final String AGVINSTANCE = "agv_instance";
   public static final String ARM = "arm";
   public static final String PRODUCT = "product";
 }

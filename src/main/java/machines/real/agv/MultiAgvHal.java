@@ -36,7 +36,7 @@ public interface MultiAgvHal extends BaseHal {
   /**
    * 获取Agv当前位置.
    *
-   * @return 位置标号
+   * @return 位置标号nnn
    */
   int getPosition();
 }
