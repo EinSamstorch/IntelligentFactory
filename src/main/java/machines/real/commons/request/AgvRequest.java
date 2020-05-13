@@ -16,8 +16,8 @@ public class AgvRequest implements Serializable {
   /**
    * 从from地点取货 放置到 to 地点.
    */
-  private Integer from;
-  private Integer to;
+  private int from;
+  private int to;
   private WorkpieceStatus wpInfo;
 
   /**
@@ -27,17 +27,17 @@ public class AgvRequest implements Serializable {
    * @param to     工件搬运终点位置
    * @param wpInfo 工件具体信息
    */
-  public AgvRequest(Integer from, Integer to, WorkpieceStatus wpInfo) {
+  public AgvRequest(int from, int to, WorkpieceStatus wpInfo) {
     this.from = from;
     this.to = to;
     this.wpInfo = wpInfo;
   }
 
-  public Integer getFrom() {
+  public int getFrom() {
     return from;
   }
 
-  public Integer getTo() {
+  public int getTo() {
     return to;
   }
 
