@@ -1,5 +1,7 @@
 package machines.real.agv;
 
+import java.io.Serializable;
+import machines.real.agv.actions.MachineAction;
 import machines.real.commons.hal.BaseHal;
 
 /**
@@ -11,32 +13,24 @@ import machines.real.commons.hal.BaseHal;
  */
 public interface MultiAgvHal extends BaseHal {
 
-  /**
-   * 运输工件.
-   *
-   * @param path 移动路径
-   * @return 成功true
-   */
-  boolean move(String path);
+  String CMD_EXPORT_ITEM = "export_item";
+  String CMD_IMPORT_ITEM = "import_item";
+  String CMD_GET_POSTION = "get_position";
+  String CMD_MOVE = "move";
+  String FIELD_DESTINATION = "destination";
 
   /**
-   * 输出货物.
+   * 执行动作.
    *
-   * @return 输出完成, 返回true
+   * @param action 具体动作
+   * @return 成功与否
    */
-  boolean exportItem();
+  boolean executeAction(MachineAction action);
 
   /**
-   * 接收货物.
+   * 获取额外信息.
    *
-   * @return 货物接收完成, 返回true
+   * @return 根据协议返回额外信息，若无则返回空字符串
    */
-  boolean importItem();
-
-  /**
-   * 获取Agv当前位置.
-   *
-   * @return 位置标号nnn
-   */
-  int getPosition();
+  Serializable getExtra();
 }

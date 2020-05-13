@@ -1,6 +1,7 @@
 package machines.real.agv;
 
-import com.alibaba.fastjson.JSONObject;
+import java.io.Serializable;
+import machines.real.agv.actions.MachineAction;
 import machines.real.commons.hal.BaseHalImpl;
 
 /**
@@ -13,12 +14,6 @@ import machines.real.commons.hal.BaseHalImpl;
 
 public class MultiAgvHalImpl extends BaseHalImpl implements MultiAgvHal {
 
-  private static final String CMD_EXPORT_ITEM = "export_item";
-  private static final String CMD_IMPORT_ITEM = "import_item";
-  private static final String CMD_GET_POSTION = "get_position";
-  private static final String CMD_MOVE = "move";
-  private static final String FIELD_DESTINATION = "destination";
-
   public MultiAgvHalImpl() {
     super();
   }
@@ -27,32 +22,14 @@ public class MultiAgvHalImpl extends BaseHalImpl implements MultiAgvHal {
     super(port);
   }
 
+
   @Override
-  public boolean move(String path) {
-    JSONObject extra = new JSONObject();
-    extra.put(FIELD_DESTINATION, path);
-    return executeCmd(CMD_MOVE, extra);
+  public boolean executeAction(MachineAction action) {
+    return executeCmd(action.getCmd(), action.getExtra());
   }
 
   @Override
-  public boolean exportItem() {
-    return executeCmd(CMD_EXPORT_ITEM);
-  }
-
-  @Override
-  public boolean importItem() {
-    return executeCmd(CMD_IMPORT_ITEM);
-  }
-
-  @Override
-  public int getPosition() {
-    while (!executeCmd(CMD_GET_POSTION)) {
-      try {
-        Thread.sleep(1000);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    }
-    return Integer.parseInt(getExtraInfo());
+  public Serializable getExtra() {
+    return getExtraInfo();
   }
 }
