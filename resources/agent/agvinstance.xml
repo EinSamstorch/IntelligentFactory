@@ -20,14 +20,14 @@
           <property name="pool" ref="jedisPool"/>
         </bean>
         <!-- 心跳包发送 -->
-        <bean class="machines.real.agv.behaviours.cycle.HeartBeatSender">
+        <bean class="machines.real.agv.behaviours.cycle.PositionSender">
           <constructor-arg name="a" ref="agent"/>
-          <constructor-arg name="period" value="5000"/>
+          <constructor-arg name="period" value="1000"/>
         </bean>
-        <!-- 执行搬运请求 -->
-        <!--        <bean class="machines.real.agv.behaviours.cycle.TransportItemBehaviour">-->
-        <!--          <property name="hal" ref="hal"/>-->
-        <!--        </bean>-->
+        <!-- 监听任务 -->
+        <bean class="machines.real.agv.behaviours.cycle.ActionListener">
+          <property name="hal" ref="hal"/>
+        </bean>
       </list>
     </property>
   </bean>

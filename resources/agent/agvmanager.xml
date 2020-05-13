@@ -12,7 +12,7 @@
     <property name="behaviours">
       <list>
         <!-- 监听心跳包 -->
-        <bean class="machines.real.agv.behaviours.cycle.HeartBeatListener">
+        <bean class="machines.real.agv.behaviours.cycle.PositionReceiver">
           <property name="checkInMap" ref="checkInMap"/>
         </bean>
         <!-- 移除心跳超时设备 -->
