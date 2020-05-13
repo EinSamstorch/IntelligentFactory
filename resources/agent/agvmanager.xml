@@ -21,6 +21,13 @@
           <constructor-arg name="period" value="11000"/>
           <property name="checkInMap" ref="checkInMap"/>
         </bean>
+        <!-- 提供运输服务 -->
+        <bean class="machines.real.agv.behaviours.cycle.TransportItemBehaviour2">
+          <property name="plan">
+            <bean class="machines.real.agv.algorithm.LaserAgvRoutePlan"/>
+          </property>
+          <property name="checkInMap" ref="checkInMap"/>
+        </bean>
       </list>
     </property>
   </bean>
