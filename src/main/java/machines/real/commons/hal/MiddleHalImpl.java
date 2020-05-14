@@ -1,27 +1,23 @@
-package machines.real.agv;
+package machines.real.commons.hal;
 
 import java.io.Serializable;
 import machines.real.agv.actions.MachineAction;
-import machines.real.commons.hal.BaseHalImpl;
 
 /**
- * 多AGV HAL的实现类.
+ * 中间层hal实现.
  *
  * @author <a href="mailto:junfeng_pan96@qq.com">junfeng</a>
  * @version 1.0.0.0
  * @since 1.8
  */
+public class MiddleHalImpl extends BaseHalImpl implements MiddleHal {
 
-public class MultiAgvHalImpl extends BaseHalImpl implements MultiAgvHal {
-
-  public MultiAgvHalImpl() {
-    super();
+  public MiddleHalImpl() {
   }
 
-  public MultiAgvHalImpl(int port) {
+  public MiddleHalImpl(int port) {
     super(port);
   }
-
 
   @Override
   public boolean executeAction(MachineAction action) {

@@ -31,7 +31,7 @@
       </list>
     </property>
   </bean>
-  <bean class="machines.real.agv.MultiAgvHalImpl" id="hal">
+  <bean class="machines.real.commons.hal.MiddleHalImpl" id="hal">
     <!-- socket server监听端口 -->
     <constructor-arg name="port" value="${hal.port}"/>
   </bean>

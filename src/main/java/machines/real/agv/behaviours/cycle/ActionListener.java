@@ -7,8 +7,8 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import java.io.IOException;
-import machines.real.agv.MultiAgvHal;
 import machines.real.agv.actions.MachineAction;
+import machines.real.commons.hal.MiddleHal;
 
 /**
  * AgvInstance监听动作请求.
@@ -19,13 +19,13 @@ import machines.real.agv.actions.MachineAction;
  */
 public class ActionListener extends CyclicBehaviour {
 
-  private MultiAgvHal hal;
+  private MiddleHal hal;
   private MessageTemplate mt = MessageTemplate.and(
       MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
       MessageTemplate.MatchProtocol(InteractionProtocol.FIPA_REQUEST)
   );
 
-  public void setHal(MultiAgvHal hal) {
+  public void setHal(MiddleHal hal) {
     this.hal = hal;
   }
 

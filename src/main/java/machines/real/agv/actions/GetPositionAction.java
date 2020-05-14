@@ -13,7 +13,7 @@ public class GetPositionAction extends AbstractMachineAction {
 
   @Override
   public String getCmd() {
-    return MultiAgvHal.CMD_GET_POSTION;
+    return MultiAgvHal.CMD_GET_POSITION;
   }
 
   @Override
