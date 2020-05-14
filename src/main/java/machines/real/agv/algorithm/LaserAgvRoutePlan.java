@@ -1,5 +1,10 @@
 package machines.real.agv.algorithm;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +34,7 @@ public class LaserAgvRoutePlan implements AgvRoutePlan {
    */
   private static int[] nonEdgePoints;
   private static int[] bufferNodes;
+  private static int[] bufferLocation;
 
   static {
     nonEdgePoints = new int[mCol];
@@ -38,9 +44,44 @@ public class LaserAgvRoutePlan implements AgvRoutePlan {
       nonEdgePoints[i] = mCol * (nRow - 1) + i;
     }
 
-    //
-    bufferNodes = new int[]{8, 9, 12, 13, 16, 17, 20, 21, 24, 25, 28, 29, 32, 33, 36, 37, 40, 41,
-        44, 45, 48, 49};
+    bufferNodes = new int[]{7, 8, 11, 12, 15, 16, 19, 20, 23, 24, 27, 28, 31, 32, 35, 36, 39, 40,
+        43, 44, 47, 48, 51, 52};
+
+    try {
+      initBufferLocation();
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.exit(1);
+    }
+  }
+
+  private static void initBufferLocation() throws IOException {
+    File txt = new File("./resources/buffer_map.txt");
+
+    BufferedReader reader = new BufferedReader(
+        new InputStreamReader(new FileInputStream(txt)));
+    String line = readLine(reader);
+    if ("".equalsIgnoreCase(line)) {
+      throw new IOException("Reading Buffer Map Error!");
+    }
+    bufferLocation = new int[1 + Integer.parseInt(line.trim())];
+    for (int i = 1; i < bufferLocation.length; i++) {
+      line = readLine(reader);
+      String[] s = line.split(" ");
+      bufferLocation[Integer.parseInt(s[0])] = Integer.parseInt(s[1]);
+    }
+  }
+
+  private static String readLine(BufferedReader reader) throws IOException {
+    String line = reader.readLine();
+    if (line == null) {
+      return "";
+    }
+    String[] split = line.trim().split("#");
+    if (split.length == 1) {
+      return readLine(reader);
+    }
+    return split[0];
   }
 
   private String plan0(int start, int end) {
@@ -232,5 +273,10 @@ public class LaserAgvRoutePlan implements AgvRoutePlan {
   @Override
   public int[] getEdgeNodes() {
     return bufferNodes;
+  }
+
+  @Override
+  public int[] getBufferLocation() {
+    return bufferLocation;
   }
 }

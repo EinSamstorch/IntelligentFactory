@@ -98,4 +98,20 @@ public class AgvMapUtils {
     }
     return -1;
   }
+
+  /**
+   * 转换地图点->工位台编号.
+   *
+   * @param mapNode        地图点
+   * @param bufferLocation 工位台对应的地图点信息数组
+   * @return 工位台编号， -1表示未找到
+   */
+  public static int getBufferNo(int mapNode, int[] bufferLocation) {
+    for (int i = 1; i < bufferLocation.length; i++) {
+      if (mapNode == bufferLocation[i]) {
+        return i;
+      }
+    }
+    return -1;
+  }
 }

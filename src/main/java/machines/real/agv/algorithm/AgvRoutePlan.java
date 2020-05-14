@@ -33,4 +33,11 @@ public interface AgvRoutePlan {
    * @return 边界点坐标数组
    */
   int[] getEdgeNodes();
+
+  /**
+   * 获取工位台在地图点里坐标位置.
+   *
+   * @return 工位台标号为数组索引，数组值为所在地图点，工位台标号从1开始
+   */
+  int[] getBufferLocation();
 }

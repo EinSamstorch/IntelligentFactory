@@ -17,9 +17,12 @@ import machines.real.agv.actions.InExportAction;
 import machines.real.agv.actions.MoveAction;
 import machines.real.agv.algorithm.AgvMapUtils;
 import machines.real.agv.algorithm.AgvRoutePlan;
+import machines.real.agv.behaviours.sequencial.ImExportItemBehaviour;
 import machines.real.agv.behaviours.simple.ActionCaller;
+import machines.real.agv.behaviours.simple.InteractBuffer;
 import machines.real.commons.actions.MachineAction;
 import machines.real.commons.request.AgvRequest;
+import machines.real.commons.request.BufferRequest;
 
 /**
  * 多Agv系统运输货物.
@@ -89,8 +92,14 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
         plan);
     waitCallerDone(choose, moveToStart);
     // 5. 入料
-    MachineAction importAction = new InExportAction(true);
-    waitCallerDone(choose, importAction);
+    InteractBuffer inFromBuffer = new InteractBuffer(
+        new BufferRequest(AgvMapUtils.getBufferNo(from, plan.getBufferLocation()), true));
+    ActionCaller inCaller = new ActionCaller(choose, new InExportAction(true));
+    Behaviour inBehaviour = tbf.wrap(
+        new ImExportItemBehaviour(true, inCaller, inFromBuffer));
+    while (!inBehaviour.done()) {
+      block(1000);
+    }
     // 6. 计算路径送货与清除阻塞
     String sendGoodPath = plan.getRoute(from, request.getTo());
     conflict = AgvMapUtils
@@ -101,8 +110,14 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
         request.getTo(), plan);
     waitCallerDone(choose, moveToEnd);
     // 8. 送料
-    MachineAction exportAction = new InExportAction(false);
-    waitCallerDone(choose, exportAction);
+    InteractBuffer exToBuffer = new InteractBuffer(
+        new BufferRequest(AgvMapUtils.getBufferNo(request.getTo(), plan.getBufferLocation()),
+            false));
+    ActionCaller outCaller = new ActionCaller(choose, new InExportAction(false));
+    Behaviour outBehaviour = tbf.wrap(new ImExportItemBehaviour(false, outCaller, exToBuffer));
+    while (!outBehaviour.done()) {
+      block(1000);
+    }
   }
 
   private void solveConflict(int conflict) {
