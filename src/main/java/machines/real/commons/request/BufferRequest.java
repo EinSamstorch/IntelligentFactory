@@ -4,16 +4,16 @@ import java.io.Serializable;
 
 public class BufferRequest implements Serializable {
 
-  private final int op;
+  private final boolean importMode;
   private final int bufferNo;
 
-  public BufferRequest(int op, int bufferNo) {
-    this.op = op;
+  public BufferRequest(int bufferNo, boolean importMode) {
     this.bufferNo = bufferNo;
+    this.importMode = importMode;
   }
 
-  public int getOp() {
-    return op;
+  public boolean isImportMode() {
+    return importMode;
   }
 
   public int getBufferNo() {

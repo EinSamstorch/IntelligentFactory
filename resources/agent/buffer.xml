@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+  <bean class="commons.RealAgentTemplate" id="agent">
+    <property name="serviceType">
+      <util:constant static-field="commons.tools.DfServiceType.BUFFER"/>
+    </property>
+    <!-- agent 行为集-->
+    <property name="behaviours">
+      <list>
+        <!-- agent状态管理 -->
+        <bean class="machines.real.commons.behaviours.cycle.CheckHalState">
+          <constructor-arg name="a" ref="agent"/>
+          <constructor-arg name="period" value="5000"/>
+          <constructor-arg name="hal" ref="hal"/>
+          <property name="redisEnable" value="${redis.enable}"/>
+          <property name="pool" ref="jedisPool"/>
+        </bean>
+        <!-- 监听任务 -->
+        <bean class="machines.real.buffer.behaviours.cycle.ItemManageBehaviour">
+          <property name="hal" ref="hal"/>
+        </bean>
+
+      </list>
+    </property>
+  </bean>
+  <bean class="machines.real.commons.hal.MiddleHalImpl" id="hal">
+    <!-- socket server监听端口 -->
+    <constructor-arg name="port" value="${hal.port}"/>
+  </bean>
+  <!-- 获取配置文件 -->
+  <!-- 配置Agent -->
+  <import resource="../redis.xml"/>
+
+  <!-- 配置 hal -->
+  <import resource="../settings.xml"/>
+</beans>
+

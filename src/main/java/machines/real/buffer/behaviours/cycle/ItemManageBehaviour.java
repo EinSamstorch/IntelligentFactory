@@ -1,20 +1,17 @@
 package machines.real.buffer.behaviours.cycle;
 
-import commons.tools.LoggerUtil;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.lang.acl.UnreadableException;
-import machines.real.buffer.BufferHal;
-import machines.real.buffer.behaviours.simple.InExportItemBehaviour;
-import machines.real.commons.request.BufferRequest;
+import machines.real.buffer.behaviours.simple.ImExportItemBehaviour;
+import machines.real.commons.hal.MiddleHal;
 
 public class ItemManageBehaviour extends CyclicBehaviour {
 
-  private BufferHal hal;
+  private MiddleHal hal;
 
-  public void setHal(BufferHal hal) {
+  public void setHal(MiddleHal hal) {
     this.hal = hal;
   }
 
@@ -26,17 +23,7 @@ public class ItemManageBehaviour extends CyclicBehaviour {
     );
     ACLMessage msg = myAgent.receive(mt);
     if (msg != null) {
-      BufferRequest request = null;
-      try {
-        request = (BufferRequest) msg.getContentObject();
-      } catch (UnreadableException e) {
-        e.printStackTrace();
-      }
-      if (request == null) {
-        LoggerUtil.hal.error("Buffer request NPE error.");
-        return;
-      }
-      myAgent.addBehaviour(new InExportItemBehaviour(request, hal, msg));
+      myAgent.addBehaviour(new ImExportItemBehaviour(msg, hal));
     } else {
       block();
     }
