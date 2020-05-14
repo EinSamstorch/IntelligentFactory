@@ -1,6 +1,7 @@
 package machines.real.agv.actions;
 
 import machines.real.agv.MultiAgvHal;
+import machines.real.commons.actions.AbstractMachineAction;
 
 /**
  * 获取agv当前位置点.

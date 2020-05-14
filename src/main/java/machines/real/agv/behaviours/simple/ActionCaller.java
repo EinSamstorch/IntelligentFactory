@@ -9,7 +9,7 @@ import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import java.io.IOException;
 import java.util.Random;
-import machines.real.agv.actions.MachineAction;
+import machines.real.commons.actions.MachineAction;
 
 /**
  * AgvManager向Instance发送命令请求.

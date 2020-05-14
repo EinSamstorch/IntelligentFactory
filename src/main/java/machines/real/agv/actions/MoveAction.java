@@ -2,6 +2,7 @@ package machines.real.agv.actions;
 
 import machines.real.agv.MultiAgvHal;
 import machines.real.agv.algorithm.AgvRoutePlan;
+import machines.real.commons.actions.AbstractMachineAction;
 
 /**
  * Agv移动命令.

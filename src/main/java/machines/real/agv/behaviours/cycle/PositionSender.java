@@ -8,7 +8,7 @@ import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import machines.real.agv.MultiAgvHal;
 import machines.real.agv.actions.GetPositionAction;
-import machines.real.agv.actions.MachineAction;
+import machines.real.commons.actions.MachineAction;
 
 /**
  * 定时发送位置信息，作为心跳系统.

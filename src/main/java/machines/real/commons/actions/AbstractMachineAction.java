@@ -1,4 +1,4 @@
-package machines.real.agv.actions;
+package machines.real.commons.actions;
 
 /**
  * 抽象封装部分实现.

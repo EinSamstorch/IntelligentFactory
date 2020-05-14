@@ -1,4 +1,4 @@
-package machines.real.agv.actions;
+package machines.real.commons.actions;
 
 import java.io.Serializable;
 

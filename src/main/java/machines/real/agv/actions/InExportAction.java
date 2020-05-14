@@ -1,6 +1,7 @@
 package machines.real.agv.actions;
 
 import machines.real.agv.MultiAgvHal;
+import machines.real.commons.actions.AbstractMachineAction;
 
 /**
  * Agv进出货物.

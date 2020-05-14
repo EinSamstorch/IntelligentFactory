@@ -1,7 +1,7 @@
 package machines.real.commons.hal;
 
 import java.io.Serializable;
-import machines.real.agv.actions.MachineAction;
+import machines.real.commons.actions.MachineAction;
 
 /**
  * 临时增加一层Hal.

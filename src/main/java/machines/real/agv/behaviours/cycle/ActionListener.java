@@ -7,7 +7,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import java.io.IOException;
-import machines.real.agv.actions.MachineAction;
+import machines.real.commons.actions.MachineAction;
 import machines.real.commons.hal.MiddleHal;
 
 /**
