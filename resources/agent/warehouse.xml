@@ -21,8 +21,6 @@
           <constructor-arg name="a" ref="agent"/>
           <constructor-arg name="period" value="5000"/>
           <constructor-arg name="hal" ref="hal"/>
-          <property name="redisEnable" value="${redis.enable}"/>
-          <property name="pool" ref="jedisPool"/>
         </bean>
         <!-- 入库动作 -->
         <bean class="machines.real.warehouse.behaviours.cycle.ItemExportBehaviour">
@@ -95,11 +93,6 @@
     </constructor-arg>
   </bean>
 
-  <!-- 原料应标消息模板 -->
   <import resource="../settings.xml"/>
-
-  <!-- 成品应标消息模板 -->
-  <import resource="../redis.xml"/>
-
 </beans>
 

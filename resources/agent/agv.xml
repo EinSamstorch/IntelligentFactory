@@ -16,8 +16,6 @@
           <constructor-arg name="a" ref="agent"/>
           <constructor-arg name="period" value="5000"/>
           <constructor-arg name="hal" ref="hal"/>
-          <property name="redisEnable" value="${redis.enable}"/>
-          <property name="pool" ref="jedisPool"/>
         </bean>
         <!-- 执行搬运请求 -->
         <bean class="machines.real.agv.behaviours.cycle.TransportItemBehaviour">
@@ -31,9 +29,6 @@
     <constructor-arg name="port" value="${hal.port}"/>
   </bean>
   <!-- 获取配置文件 -->
-  <!-- 配置Agent -->
-  <import resource="../redis.xml"/>
-
   <!-- 配置 hal -->
   <import resource="../settings.xml"/>
 </beans>

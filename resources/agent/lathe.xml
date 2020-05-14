@@ -19,8 +19,6 @@
           <constructor-arg name="a" ref="agent"/>
           <constructor-arg name="period" value="5000"/>
           <constructor-arg name="hal" ref="hal"/>
-          <property name="redisEnable" value="${redis.enable}"/>
-          <property name="pool" ref="jedisPool"/>
         </bean>
         <!-- buffer管理行为 -->
         <bean class="machines.real.commons.behaviours.cycle.MaintainBufferBehaviour">
@@ -74,6 +72,4 @@
   </bean>
 
   <import resource="../settings.xml"/>
-
-  <import resource="../redis.xml"/>
 </beans>

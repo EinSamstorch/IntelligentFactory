@@ -113,13 +113,6 @@
       <version>1.12</version>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
-    <dependency>
-      <artifactId>jedis</artifactId>
-      <groupId>redis.clients</groupId>
-      <version>3.1.0</version>
-    </dependency>
-
     <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
     <!-- fix SLF4J: Failed to load class “org.slf4j.impl.StaticLoggerBinder” -->
     <dependency>

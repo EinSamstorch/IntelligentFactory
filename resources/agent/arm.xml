@@ -17,8 +17,6 @@
           <constructor-arg name="a" ref="agent"/>
           <constructor-arg name="period" value="5000"/>
           <constructor-arg name="hal" ref="hal"/>
-          <property name="redisEnable" value="${redis.enable}"/>
-          <property name="pool" ref="jedisPool"/>
         </bean>
         <!-- 执行搬运请求 -->
         <bean class="machines.real.arm.behaviours.cycle.MoveItemBehaviour">
@@ -39,7 +37,5 @@
 
   <!-- 配置 hal -->
   <import resource="../settings.xml"/>
-  <!-- 注入密码 -->
-  <import resource="../redis.xml"/>
 </beans>
 
