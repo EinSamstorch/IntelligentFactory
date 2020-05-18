@@ -94,7 +94,7 @@ public class TransportItemBehaviour extends CyclicBehaviour {
         e.printStackTrace();
       }
       if (request != null) {
-        int from = request.getFrom();
+        int from = request.getFromBuffer();
         this.request = request;
         if (from == WAREHOUSE_EXPORT) {
           state = STATE_CALL_WH;
@@ -110,8 +110,8 @@ public class TransportItemBehaviour extends CyclicBehaviour {
   }
 
   private void doTask() {
-    int from = this.request.getFrom();
-    int to = this.request.getTo();
+    int from = this.request.getFromBuffer();
+    int to = this.request.getToBuffer();
     if (hal.move(from, to)) {
       LoggerUtil.hal.info(String.format("Success! Request from %d to %d.", from, to));
       // 通知取货

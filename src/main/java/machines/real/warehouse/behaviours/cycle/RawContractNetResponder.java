@@ -98,7 +98,7 @@ public class RawContractNetResponder extends ContractNetResponder {
       wpInfo.setProviderId(myAgent.getLocalName());
       wpInfo.setCurOwnerId(myAgent.getLocalName());
       // map location for exporter of warehouse
-      wpInfo.setBufferPos(26);
+      wpInfo.setBufferPos(-2);
 
       // 发送至Worker 进行下一轮招标
       ACLMessage msg = DfUtils.createRequestMsg(wpInfo);

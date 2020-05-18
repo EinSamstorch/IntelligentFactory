@@ -279,4 +279,9 @@ public class LaserAgvRoutePlan implements AgvRoutePlan {
   public int[] getBufferLocation() {
     return bufferLocation;
   }
+
+  @Override
+  public int getBufferMap(int bufferNo) {
+    return bufferLocation[bufferNo];
+  }
 }

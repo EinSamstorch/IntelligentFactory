@@ -40,4 +40,12 @@ public interface AgvRoutePlan {
    * @return 工位台标号为数组索引，数组值为所在地图点，工位台标号从1开始
    */
   int[] getBufferLocation();
+
+  /**
+   * 定义工位台在地图中的位置.
+   *
+   * @param bufferNo 工位台索引
+   * @return 工位台的地图索引
+   */
+  int getBufferMap(int bufferNo);
 }

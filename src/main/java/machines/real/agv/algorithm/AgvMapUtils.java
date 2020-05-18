@@ -114,4 +114,17 @@ public class AgvMapUtils {
     }
     return -1;
   }
+
+  /**
+   * 获取工位台对应位置.
+   *
+   * @param bufferNo 工位台编号，规定：仓库入库出库口为特殊工位台，编号为 地图点索引 的相反值， 如-2, -1等
+   * @return 地图点位置
+   */
+  public static int getBufferMap(int bufferNo, AgvRoutePlan plan) {
+    if (bufferNo < 0) {
+      return -bufferNo;
+    }
+    return plan.getBufferMap(bufferNo);
+  }
 }

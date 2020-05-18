@@ -65,13 +65,14 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
       return;
     }
     // 取货点
-    int from = request.getFrom();
+    int fromBuffer = request.getFromBuffer();
+    int fromLoc = AgvMapUtils.getBufferMap(fromBuffer, plan);
     AID choose = null;
     int distance = Integer.MAX_VALUE;
     for (AID agv : checkInMap.keySet()) {
       // 1. 获取agv当前位置
       int loc = AgvMapUtils.getLocationMap().get(agv);
-      int d = plan.getDistance(loc, from);
+      int d = plan.getDistance(loc, fromLoc);
       if (distance > d) {
         choose = agv;
         distance = d;
@@ -83,41 +84,51 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     }
     // 3. 计算路径取货与清除阻塞
     int pos = AgvMapUtils.getLocationMap().get(choose);
-    String getGoodPath = plan.getRoute(pos, from);
+    String getGoodPath = plan.getRoute(pos, fromLoc);
     int conflict = AgvMapUtils
         .conflictNode(Arrays.stream(getGoodPath.split(",")).mapToInt(Integer::parseInt).toArray());
     solveConflict(conflict);
     // 4. 到达取货点
-    MachineAction moveToStart = new MoveAction(AgvMapUtils.getLocationMap().get(choose), from,
+    MachineAction moveToStart = new MoveAction(AgvMapUtils.getLocationMap().get(choose), fromLoc,
         plan);
     waitCallerDone(choose, moveToStart);
     // 5. 入料
-    InteractBuffer inFromBuffer = new InteractBuffer(
-        new BufferRequest(AgvMapUtils.getBufferNo(from, plan.getBufferLocation()), true));
-    ActionCaller inCaller = new ActionCaller(choose, new InExportAction(true));
-    Behaviour inBehaviour = tbf.wrap(
-        new ImExportItemBehaviour(true, inCaller, inFromBuffer));
-    while (!inBehaviour.done()) {
-      block(1000);
+    if (fromBuffer < 0) {
+      // TODO 如果对象是仓库，需要修改操作
+    } else {
+      InteractBuffer inFromBuffer = new InteractBuffer(
+          new BufferRequest(fromBuffer, true));
+      ActionCaller inCaller = new ActionCaller(choose, new InExportAction(true));
+      Behaviour inBehaviour = tbf.wrap(
+          new ImExportItemBehaviour(true, inCaller, inFromBuffer));
+      while (!inBehaviour.done()) {
+        block(1000);
+      }
     }
+
     // 6. 计算路径送货与清除阻塞
-    String sendGoodPath = plan.getRoute(from, request.getTo());
+    int toBuffer = request.getToBuffer();
+    int toLoc = AgvMapUtils.getBufferMap(toBuffer, plan);
+    String sendGoodPath = plan.getRoute(fromLoc, toLoc);
     conflict = AgvMapUtils
         .conflictNode(Arrays.stream(sendGoodPath.split(",")).mapToInt(Integer::parseInt).toArray());
     solveConflict(conflict);
     // 7. 到达送货点
-    MachineAction moveToEnd = new MoveAction(AgvMapUtils.getLocationMap().get(choose),
-        request.getTo(), plan);
+    MachineAction moveToEnd = new MoveAction(
+        AgvMapUtils.getLocationMap().get(choose), toLoc, plan);
     waitCallerDone(choose, moveToEnd);
     // 8. 送料
-    InteractBuffer exToBuffer = new InteractBuffer(
-        new BufferRequest(AgvMapUtils.getBufferNo(request.getTo(), plan.getBufferLocation()),
-            false));
-    ActionCaller outCaller = new ActionCaller(choose, new InExportAction(false));
-    Behaviour outBehaviour = tbf.wrap(new ImExportItemBehaviour(false, outCaller, exToBuffer));
-    while (!outBehaviour.done()) {
-      block(1000);
+    if (toBuffer < 0) {
+      // TODO 如果对象是仓库，需要修改
+    } else {
+      InteractBuffer exToBuffer = new InteractBuffer(new BufferRequest(toBuffer, false));
+      ActionCaller outCaller = new ActionCaller(choose, new InExportAction(false));
+      Behaviour outBehaviour = tbf.wrap(new ImExportItemBehaviour(false, outCaller, exToBuffer));
+      while (!outBehaviour.done()) {
+        block(1000);
+      }
     }
+
   }
 
   private void solveConflict(int conflict) {

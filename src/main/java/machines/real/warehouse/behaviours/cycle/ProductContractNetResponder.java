@@ -80,10 +80,9 @@ public class ProductContractNetResponder extends ContractNetResponder {
       // 更新 wpInfo
       wpInfo.setCurOwnerId(myAgent.getLocalName());
       // 入库口
-      wpInfo.setBufferPos(25);
-
+      wpInfo.setBufferPos(-1);
       // call for agv
-      AgvRequest request = new AgvRequest(currentLocation, 25, wpInfo);
+      AgvRequest request = new AgvRequest(currentLocation, -1, wpInfo);
       myAgent.addBehaviour(new CallForAgv(myAgent, request));
 
       ACLMessage inform = accept.createReply();
