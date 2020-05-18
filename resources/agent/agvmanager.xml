@@ -23,15 +23,14 @@
         </bean>
         <!-- 提供运输服务 -->
         <bean class="machines.real.agv.behaviours.cycle.TransportItemBehaviour2">
-          <property name="plan">
-            <bean class="machines.real.agv.algorithm.LaserAgvRoutePlan"/>
-          </property>
+          <property name="plan" ref="plan"/>
           <property name="checkInMap" ref="checkInMap"/>
         </bean>
       </list>
     </property>
   </bean>
 
+  <import resource="../agv_route_plan.xml"/>
   <util:map id="checkInMap" key-type="jade.core.AID" value-type="java.lang.Long"
     map-class="java.util.concurrent.ConcurrentHashMap"/>
 </beans>
