@@ -21,6 +21,7 @@
         <bean class="machines.real.agv.behaviours.cycle.PositionSender">
           <constructor-arg name="a" ref="agent"/>
           <constructor-arg name="period" value="1000"/>
+          <property name="hal" ref="hal"/>
         </bean>
         <!-- 监听任务 -->
         <bean class="machines.real.agv.behaviours.cycle.ActionListener">

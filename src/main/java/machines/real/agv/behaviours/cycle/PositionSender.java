@@ -6,9 +6,9 @@ import commons.tools.LoggerUtil;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
-import machines.real.agv.MultiAgvHal;
 import machines.real.agv.actions.GetPositionAction;
 import machines.real.commons.actions.MachineAction;
+import machines.real.commons.hal.MiddleHal;
 
 /**
  * 定时发送位置信息，作为心跳系统.
@@ -19,9 +19,9 @@ import machines.real.commons.actions.MachineAction;
  */
 public class PositionSender extends TickerBehaviour {
 
-  private MultiAgvHal hal;
+  private MiddleHal hal;
 
-  public void setHal(MultiAgvHal hal) {
+  public void setHal(MiddleHal hal) {
     this.hal = hal;
   }
 
@@ -38,7 +38,7 @@ public class PositionSender extends TickerBehaviour {
     if (!result) {
       return;
     }
-    int pos = (int) hal.getExtra();
+    int pos = Integer.parseInt((String) hal.getExtra());
     msg.setContent(String.valueOf(pos));
     try {
       DfUtils.searchDf(myAgent, msg, DfServiceType.AGV);
