@@ -87,53 +87,70 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     // 3. 计算路径取货与清除阻塞
     int pos = AgvMapUtils.getLocationMap().get(choose);
     String getGoodPath = plan.getRoute(pos, fromLoc);
-    int conflict = AgvMapUtils
-        .conflictNode(Arrays.stream(getGoodPath.split(",")).mapToInt(Integer::parseInt).toArray());
-    solveConflict(conflict);
-    // 4. 到达取货点
-    MachineAction moveToStart = new MoveAction(AgvMapUtils.getLocationMap().get(choose), fromLoc,
-        plan);
-    waitCallerDone(choose, moveToStart);
+    if (!"".equals(getGoodPath)) {
+      // 需移动
+      int conflict = AgvMapUtils
+          .conflictNode(
+              Arrays.stream(getGoodPath.split(",")).mapToInt(Integer::parseInt).toArray());
+      solveConflict(conflict);
+      // 4. 到达取货点
+      MachineAction moveToStart = new MoveAction(AgvMapUtils.getLocationMap().get(choose), fromLoc,
+          plan);
+      waitCallerDone(choose, moveToStart);
+    }
     // 5. 入料
     if (fromBuffer < 0) {
       // TODO 如果对象是仓库，需要修改操作
       Behaviour callForWh = tbf.wrap(
-          new CallForWarehouse2(new WarehouseRequest(request.getWpInfo().getWarehousePosition())));
+          new CallForWarehouse2(
+              new WarehouseRequest(request.getWpInfo().getWarehousePosition(), false)));
       myAgent.addBehaviour(callForWh);
       waitBehaviourDone(callForWh);
+      // TODO AGV入料，仓库出料
+    } else {
+      // 与buffer交互
+      InteractBuffer inFromBuffer = new InteractBuffer(
+          new BufferRequest(fromBuffer, true));
+      ActionCaller inCaller = new ActionCaller(choose, new InExportAction(true));
+      Behaviour inBehaviour = tbf.wrap(
+          new ImExportItemBehaviour(true, inCaller, inFromBuffer));
+      myAgent.addBehaviour(inBehaviour);
+      waitBehaviourDone(inBehaviour);
     }
-    InteractBuffer inFromBuffer = new InteractBuffer(
-        new BufferRequest(fromBuffer, true));
-    ActionCaller inCaller = new ActionCaller(choose, new InExportAction(true));
-    Behaviour inBehaviour = tbf.wrap(
-        new ImExportItemBehaviour(true, inCaller, inFromBuffer));
-    myAgent.addBehaviour(inBehaviour);
-    waitBehaviourDone(inBehaviour);
 
     // 6. 计算路径送货与清除阻塞
     int toBuffer = request.getToBuffer();
     int toLoc = AgvMapUtils.getBufferMap(toBuffer, plan);
     String sendGoodPath = plan.getRoute(fromLoc, toLoc);
-    conflict = AgvMapUtils
-        .conflictNode(Arrays.stream(sendGoodPath.split(",")).mapToInt(Integer::parseInt).toArray());
-    solveConflict(conflict);
-    // 7. 到达送货点
-    MachineAction moveToEnd = new MoveAction(
-        AgvMapUtils.getLocationMap().get(choose), toLoc, plan);
-    waitCallerDone(choose, moveToEnd);
+    if (!"".equals(sendGoodPath)) {
+      // 需移动
+      int conflict = AgvMapUtils
+          .conflictNode(
+              Arrays.stream(sendGoodPath.split(",")).mapToInt(Integer::parseInt).toArray());
+      solveConflict(conflict);
+      // 7. 到达送货点
+      MachineAction moveToEnd = new MoveAction(
+          AgvMapUtils.getLocationMap().get(choose), toLoc, plan);
+      waitCallerDone(choose, moveToEnd);
+    }
     // 8. 送料
     if (toBuffer < 0) {
+      // TODO 仓库入料，AGV出料
+
       // TODO 如果对象是仓库，需要修改
       Behaviour callForWh = tbf.wrap(
-          new CallForWarehouse2(new WarehouseRequest(request.getWpInfo().getWarehousePosition())));
+          new CallForWarehouse2(
+              new WarehouseRequest(request.getWpInfo().getWarehousePosition(), true)));
       myAgent.addBehaviour(callForWh);
       waitBehaviourDone(callForWh);
+    } else {
+      // 与buffer交互
+      InteractBuffer exToBuffer = new InteractBuffer(new BufferRequest(toBuffer, false));
+      ActionCaller outCaller = new ActionCaller(choose, new InExportAction(false));
+      Behaviour outBehaviour = tbf.wrap(new ImExportItemBehaviour(false, outCaller, exToBuffer));
+      myAgent.addBehaviour(outBehaviour);
+      waitBehaviourDone(outBehaviour);
     }
-    InteractBuffer exToBuffer = new InteractBuffer(new BufferRequest(toBuffer, false));
-    ActionCaller outCaller = new ActionCaller(choose, new InExportAction(false));
-    Behaviour outBehaviour = tbf.wrap(new ImExportItemBehaviour(false, outCaller, exToBuffer));
-    myAgent.addBehaviour(outBehaviour);
-    waitBehaviourDone(outBehaviour);
   }
 
   private void solveConflict(int conflict) {

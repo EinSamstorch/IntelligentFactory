@@ -12,13 +12,19 @@ import java.io.Serializable;
 
 public class WarehouseRequest implements Serializable {
 
-  private Integer itemPosition;
+  private int itemPosition;
+  private boolean importMode;
 
-  public WarehouseRequest(Integer itemPosition) {
+  public WarehouseRequest(int itemPosition, boolean importMode) {
     this.itemPosition = itemPosition;
+    this.importMode = importMode;
   }
 
-  public Integer getItemPosition() {
+  public int getItemPosition() {
     return itemPosition;
+  }
+
+  public boolean isImportMode() {
+    return importMode;
   }
 }

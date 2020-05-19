@@ -10,19 +10,19 @@ import machines.real.commons.request.WarehouseRequest;
 import machines.real.warehouse.WarehouseHal;
 
 /**
- * .
+ * 工件移动管理.
  *
  * @author <a href="mailto:junfeng_pan96@qq.com">junfeng</a>
  * @version 1.0.0.0
  * @since 1.8
  */
 
-public class ItemExportBehaviour extends CyclicBehaviour {
+public class ItemMoveBehaviour extends CyclicBehaviour {
 
   private WarehouseHal hal;
   private Integer posOut;
 
-  public ItemExportBehaviour() {
+  public ItemMoveBehaviour() {
     super();
   }
 

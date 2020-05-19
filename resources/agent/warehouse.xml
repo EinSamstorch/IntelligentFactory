@@ -23,7 +23,7 @@
           <constructor-arg name="hal" ref="hal"/>
         </bean>
         <!-- 入库动作 -->
-        <bean class="machines.real.warehouse.behaviours.cycle.ItemExportBehaviour">
+        <bean class="machines.real.warehouse.behaviours.cycle.ItemMoveBehaviour">
           <property name="hal" ref="hal"/>
           <property name="posOut" ref="posOut"/>
         </bean>
