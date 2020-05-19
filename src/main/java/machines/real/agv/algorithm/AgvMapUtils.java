@@ -14,7 +14,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AgvMapUtils {
 
-  private static volatile boolean[] nodeMap = new boolean[60];
+  /**
+   * 硬编码了地图点个数， 可以通过Spring 反射注入AgvRoutePlan 获取实例，获取地图大小.
+   */
+  private static volatile boolean[] nodeMap = new boolean[60 + 1];
   private static Map<AID, Integer> locationMap = new ConcurrentHashMap<>();
 
   /**

@@ -44,8 +44,8 @@ public class LaserAgvRoutePlan implements AgvRoutePlan {
       nonEdgePoints[i] = mCol * (nRow - 1) + i;
     }
 
-    bufferNodes = new int[]{7, 8, 11, 12, 15, 16, 19, 20, 23, 24, 27, 28, 31, 32, 35, 36, 39, 40,
-        43, 44, 47, 48, 51, 52};
+    bufferNodes = new int[]{8, 9, 12, 13, 16, 17, 20, 21, 24, 25, 28, 29, 32, 33, 36, 37, 40, 41,
+        44, 45, 48, 49, 52};
 
     try {
       initBufferLocation();
