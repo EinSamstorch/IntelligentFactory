@@ -12,6 +12,7 @@ import java.io.Serializable;
 
 public class WarehouseItemMoveRequest implements Serializable {
 
+  public static final String LANGUAGE = "MOVE";
   private int itemPosition;
 
   public WarehouseItemMoveRequest(int itemPosition) {

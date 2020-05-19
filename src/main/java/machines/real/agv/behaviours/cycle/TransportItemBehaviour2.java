@@ -17,7 +17,7 @@ import machines.real.agv.actions.InExportAction;
 import machines.real.agv.actions.MoveAction;
 import machines.real.agv.algorithm.AgvMapUtils;
 import machines.real.agv.algorithm.AgvRoutePlan;
-import machines.real.agv.behaviours.sequencial.CallForWarehouse2;
+import machines.real.agv.behaviours.sequencial.CallWarehouseMoveItem;
 import machines.real.agv.behaviours.sequencial.ImExportItemBehaviour;
 import machines.real.agv.behaviours.simple.ActionCaller;
 import machines.real.agv.behaviours.simple.InteractBuffer;
@@ -102,7 +102,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     if (fromBuffer < 0) {
       // TODO 如果对象是仓库，需要修改操作
       Behaviour callForWh = tbf.wrap(
-          new CallForWarehouse2(
+          new CallWarehouseMoveItem(
               new WarehouseItemMoveRequest(request.getWpInfo().getWarehousePosition(), false)));
       myAgent.addBehaviour(callForWh);
       waitBehaviourDone(callForWh);
@@ -139,7 +139,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
 
       // TODO 如果对象是仓库，需要修改
       Behaviour callForWh = tbf.wrap(
-          new CallForWarehouse2(
+          new CallWarehouseMoveItem(
               new WarehouseItemMoveRequest(request.getWpInfo().getWarehousePosition(), true)));
       myAgent.addBehaviour(callForWh);
       waitBehaviourDone(callForWh);

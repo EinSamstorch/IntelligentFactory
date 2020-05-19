@@ -11,6 +11,7 @@ import java.io.Serializable;
  */
 public class WarehouseConveyorRequest implements Serializable {
 
+  public static final String LANGUAGE = "CONVEYOR";
   private boolean importMode;
 
   public WarehouseConveyorRequest(boolean importMode) {

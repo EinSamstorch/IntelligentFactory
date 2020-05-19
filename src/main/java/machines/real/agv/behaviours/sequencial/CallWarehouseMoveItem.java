@@ -12,20 +12,20 @@ import java.util.Random;
 import machines.real.commons.request.WarehouseItemMoveRequest;
 
 /**
- * 请求仓库出货.
+ * 请求仓库移动货物.
  *
  * @author <a href="mailto:junfeng_pan96@qq.com">junfeng</a>
  * @version 1.0.0.0
  * @since 1.8
  */
-public class CallForWarehouse2 extends SequentialBehaviour {
+public class CallWarehouseMoveItem extends SequentialBehaviour {
 
   /**
-   * 请求仓库出货.
+   * 请求仓库移动货物.
    *
-   * @param request 出货请求
+   * @param request 移动货物请求
    */
-  public CallForWarehouse2(WarehouseItemMoveRequest request) {
+  public CallWarehouseMoveItem(WarehouseItemMoveRequest request) {
     String conversationId = "CALL_FOR_WH_" + new Random().nextInt();
     addSubBehaviour(new OneShotBehaviour() {
       @Override
@@ -34,6 +34,7 @@ public class CallForWarehouse2 extends SequentialBehaviour {
           ACLMessage msg = DfUtils.createRequestMsg(request);
           DfUtils.searchDf(myAgent, msg, DfServiceType.WAREHOUSE);
           msg.setConversationId(conversationId);
+          msg.setLanguage(WarehouseItemMoveRequest.LANGUAGE);
           myAgent.send(msg);
         } catch (Exception e) {
           e.printStackTrace();

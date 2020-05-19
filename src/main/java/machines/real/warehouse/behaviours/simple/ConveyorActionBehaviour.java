@@ -10,13 +10,18 @@ import machines.real.warehouse.WarehouseHal;
  * @version 1.0.0.0
  * @since 1.8
  */
-public class ConveyorBehaviour extends OneShotBehaviour {
+public class ConveyorActionBehaviour extends OneShotBehaviour {
 
   private boolean importMode;
   private WarehouseHal hal;
-  private boolean done = false;
 
-  public ConveyorBehaviour(boolean importMode, WarehouseHal hal) {
+  /**
+   * 控制传送带进出货.
+   *
+   * @param importMode true输入模式, false输出模式
+   * @param hal        硬件层
+   */
+  public ConveyorActionBehaviour(boolean importMode, WarehouseHal hal) {
     this.importMode = importMode;
     this.hal = hal;
   }

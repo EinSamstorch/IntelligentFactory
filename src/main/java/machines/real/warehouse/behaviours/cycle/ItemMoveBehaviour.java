@@ -2,7 +2,6 @@ package machines.real.warehouse.behaviours.cycle;
 
 import commons.tools.LoggerUtil;
 import jade.core.behaviours.CyclicBehaviour;
-import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
@@ -37,7 +36,7 @@ public class ItemMoveBehaviour extends CyclicBehaviour {
   @Override
   public void action() {
     MessageTemplate mt = MessageTemplate.and(
-        MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
+        MessageTemplate.MatchLanguage(WarehouseItemMoveRequest.LANGUAGE),
         MessageTemplate.MatchPerformative(ACLMessage.REQUEST)
     );
     ACLMessage msg = myAgent.receive(mt);
