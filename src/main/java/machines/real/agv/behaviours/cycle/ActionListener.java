@@ -45,7 +45,7 @@ public class ActionListener extends CyclicBehaviour {
           + e.getLocalizedMessage());
       return;
     }
-    while (hal.executeAction(action)) {
+    while (!hal.executeAction(action)) {
       block(3000);
     }
     ACLMessage reply = receive.createReply();
