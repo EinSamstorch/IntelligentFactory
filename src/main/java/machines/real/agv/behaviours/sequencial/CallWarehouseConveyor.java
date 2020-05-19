@@ -20,6 +20,11 @@ import machines.real.commons.request.WarehouseConveyorRequest;
  */
 public class CallWarehouseConveyor extends SequentialBehaviour {
 
+  /**
+   * 仓库传送带控制请求.
+   *
+   * @param request 传送带控制请求
+   */
   public CallWarehouseConveyor(WarehouseConveyorRequest request) {
     String conversationId = "CALL_FOR_WAREHOUSE_CONVEYOR_" + new Random().nextInt();
     addSubBehaviour(new OneShotBehaviour() {
