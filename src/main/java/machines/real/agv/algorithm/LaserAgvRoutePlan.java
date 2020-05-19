@@ -73,15 +73,10 @@ public class LaserAgvRoutePlan implements AgvRoutePlan {
   }
 
   private static String readLine(BufferedReader reader) throws IOException {
-    String line = reader.readLine();
-    if (line == null) {
-      return "";
+    String line;
+    while (null != (line = reader.readLine()) && line.contains("#")) {
     }
-    String[] split = line.trim().split("#");
-    if (split.length == 1) {
-      return readLine(reader);
-    }
-    return split[0];
+    return line == null ? "" : line;
   }
 
   private String plan0(int start, int end) {
