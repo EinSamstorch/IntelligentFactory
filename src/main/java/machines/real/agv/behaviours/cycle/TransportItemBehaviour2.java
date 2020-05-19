@@ -17,6 +17,7 @@ import machines.real.agv.actions.InExportAction;
 import machines.real.agv.actions.MoveAction;
 import machines.real.agv.algorithm.AgvMapUtils;
 import machines.real.agv.algorithm.AgvRoutePlan;
+import machines.real.agv.behaviours.sequencial.CallWarehouseConveyor;
 import machines.real.agv.behaviours.sequencial.CallWarehouseMoveItem;
 import machines.real.agv.behaviours.sequencial.ImExportItemBehaviour;
 import machines.real.agv.behaviours.simple.ActionCaller;
@@ -24,6 +25,7 @@ import machines.real.agv.behaviours.simple.InteractBuffer;
 import machines.real.commons.actions.MachineAction;
 import machines.real.commons.request.AgvRequest;
 import machines.real.commons.request.BufferRequest;
+import machines.real.commons.request.WarehouseConveyorRequest;
 import machines.real.commons.request.WarehouseItemMoveRequest;
 
 /**
@@ -100,21 +102,21 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     }
     // 5. 入料
     if (fromBuffer < 0) {
-      // TODO 如果对象是仓库，需要修改操作
-      Behaviour callForWh = tbf.wrap(
-          new CallWarehouseMoveItem(
-              new WarehouseItemMoveRequest(request.getWpInfo().getWarehousePosition(), false)));
-      myAgent.addBehaviour(callForWh);
-      waitBehaviourDone(callForWh);
-      // TODO AGV入料，仓库出料
+      // 如果对象是仓库，需要修改操作
+      Behaviour callWhMoveItem = new CallWarehouseMoveItem(
+          new WarehouseItemMoveRequest(request.getWpInfo().getWarehousePosition()));
+      waitBehaviourDone(callWhMoveItem);
+      // AGV入料
+      waitCallerDone(choose, new InExportAction(true));
+      // 仓库出料
+      Behaviour whExport = new CallWarehouseConveyor(new WarehouseConveyorRequest(false));
+      waitBehaviourDone(whExport);
     } else {
       // 与buffer交互
       InteractBuffer inFromBuffer = new InteractBuffer(
           new BufferRequest(fromBuffer, true));
       ActionCaller inCaller = new ActionCaller(choose, new InExportAction(true));
-      Behaviour inBehaviour = tbf.wrap(
-          new ImExportItemBehaviour(true, inCaller, inFromBuffer));
-      myAgent.addBehaviour(inBehaviour);
+      Behaviour inBehaviour = new ImExportItemBehaviour(true, inCaller, inFromBuffer);
       waitBehaviourDone(inBehaviour);
     }
 
@@ -135,20 +137,20 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     }
     // 8. 送料
     if (toBuffer < 0) {
-      // TODO 仓库入料，AGV出料
-
-      // TODO 如果对象是仓库，需要修改
-      Behaviour callForWh = tbf.wrap(
-          new CallWarehouseMoveItem(
-              new WarehouseItemMoveRequest(request.getWpInfo().getWarehousePosition(), true)));
-      myAgent.addBehaviour(callForWh);
+      // 仓库入料
+      Behaviour whImport = new CallWarehouseConveyor(new WarehouseConveyorRequest(true));
+      waitBehaviourDone(whImport);
+      // AGV出料
+      waitCallerDone(choose, new InExportAction(false));
+      // 如果对象是仓库，需要修改
+      Behaviour callForWh = new CallWarehouseMoveItem(
+          new WarehouseItemMoveRequest(request.getWpInfo().getWarehousePosition()));
       waitBehaviourDone(callForWh);
     } else {
       // 与buffer交互
       InteractBuffer exToBuffer = new InteractBuffer(new BufferRequest(toBuffer, false));
       ActionCaller outCaller = new ActionCaller(choose, new InExportAction(false));
       Behaviour outBehaviour = tbf.wrap(new ImExportItemBehaviour(false, outCaller, exToBuffer));
-      myAgent.addBehaviour(outBehaviour);
       waitBehaviourDone(outBehaviour);
     }
   }
@@ -187,12 +189,14 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
   }
 
   private void waitCallerDone(AID receiver, MachineAction action) {
-    Behaviour b = tbf.wrap(new ActionCaller(receiver, action));
     // 等待动作完成
-    waitBehaviourDone(b);
+    waitBehaviourDone(new ActionCaller(receiver, action));
   }
 
   private void waitBehaviourDone(Behaviour b) {
+    // 额外线程运行
+    b = tbf.wrap(b);
+    myAgent.addBehaviour(b);
     while (!b.done()) {
       block(1000);
     }
