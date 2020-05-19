@@ -9,7 +9,7 @@ import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import java.util.Random;
-import machines.real.commons.request.WarehouseRequest;
+import machines.real.commons.request.WarehouseItemMoveRequest;
 
 /**
  * 请求仓库出货.
@@ -25,7 +25,7 @@ public class CallForWarehouse2 extends SequentialBehaviour {
    *
    * @param request 出货请求
    */
-  public CallForWarehouse2(WarehouseRequest request) {
+  public CallForWarehouse2(WarehouseItemMoveRequest request) {
     String conversationId = "CALL_FOR_WH_" + new Random().nextInt();
     addSubBehaviour(new OneShotBehaviour() {
       @Override

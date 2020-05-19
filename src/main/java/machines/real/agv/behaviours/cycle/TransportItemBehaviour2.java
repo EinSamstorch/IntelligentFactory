@@ -24,7 +24,7 @@ import machines.real.agv.behaviours.simple.InteractBuffer;
 import machines.real.commons.actions.MachineAction;
 import machines.real.commons.request.AgvRequest;
 import machines.real.commons.request.BufferRequest;
-import machines.real.commons.request.WarehouseRequest;
+import machines.real.commons.request.WarehouseItemMoveRequest;
 
 /**
  * 多Agv系统运输货物.
@@ -103,7 +103,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
       // TODO 如果对象是仓库，需要修改操作
       Behaviour callForWh = tbf.wrap(
           new CallForWarehouse2(
-              new WarehouseRequest(request.getWpInfo().getWarehousePosition(), false)));
+              new WarehouseItemMoveRequest(request.getWpInfo().getWarehousePosition(), false)));
       myAgent.addBehaviour(callForWh);
       waitBehaviourDone(callForWh);
       // TODO AGV入料，仓库出料
@@ -140,7 +140,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
       // TODO 如果对象是仓库，需要修改
       Behaviour callForWh = tbf.wrap(
           new CallForWarehouse2(
-              new WarehouseRequest(request.getWpInfo().getWarehousePosition(), true)));
+              new WarehouseItemMoveRequest(request.getWpInfo().getWarehousePosition(), true)));
       myAgent.addBehaviour(callForWh);
       waitBehaviourDone(callForWh);
     } else {

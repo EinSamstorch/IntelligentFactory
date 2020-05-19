@@ -6,7 +6,7 @@ import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import machines.real.commons.request.WarehouseRequest;
+import machines.real.commons.request.WarehouseItemMoveRequest;
 import machines.real.warehouse.WarehouseHal;
 
 /**
@@ -45,9 +45,9 @@ public class ItemMoveBehaviour extends CyclicBehaviour {
       block();
       return;
     }
-    WarehouseRequest request = null;
+    WarehouseItemMoveRequest request = null;
     try {
-      request = (WarehouseRequest) msg.getContentObject();
+      request = (WarehouseItemMoveRequest) msg.getContentObject();
     } catch (UnreadableException e) {
       e.printStackTrace();
     }

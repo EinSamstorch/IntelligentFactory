@@ -9,7 +9,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import java.util.Random;
 import machines.real.commons.request.AgvRequest;
-import machines.real.commons.request.WarehouseRequest;
+import machines.real.commons.request.WarehouseItemMoveRequest;
 import machines.real.warehouse.WarehouseAgent;
 
 /**
@@ -62,7 +62,7 @@ public class CallForAgv extends SimpleBehaviour {
           // 已到达
           done = true;
           // 发送搬运请求
-          WarehouseRequest request = new WarehouseRequest(
+          WarehouseItemMoveRequest request = new WarehouseItemMoveRequest(
               this.request.getWpInfo().getWarehousePosition());
           myAgent.addBehaviour(new ItemImportBehaviour((WarehouseAgent) myAgent, request));
 
