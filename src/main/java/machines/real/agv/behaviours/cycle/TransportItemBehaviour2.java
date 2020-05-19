@@ -17,12 +17,14 @@ import machines.real.agv.actions.InExportAction;
 import machines.real.agv.actions.MoveAction;
 import machines.real.agv.algorithm.AgvMapUtils;
 import machines.real.agv.algorithm.AgvRoutePlan;
+import machines.real.agv.behaviours.sequencial.CallForWarehouse2;
 import machines.real.agv.behaviours.sequencial.ImExportItemBehaviour;
 import machines.real.agv.behaviours.simple.ActionCaller;
 import machines.real.agv.behaviours.simple.InteractBuffer;
 import machines.real.commons.actions.MachineAction;
 import machines.real.commons.request.AgvRequest;
 import machines.real.commons.request.BufferRequest;
+import machines.real.commons.request.WarehouseRequest;
 
 /**
  * 多Agv系统运输货物.
@@ -95,16 +97,18 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     // 5. 入料
     if (fromBuffer < 0) {
       // TODO 如果对象是仓库，需要修改操作
-    } else {
-      InteractBuffer inFromBuffer = new InteractBuffer(
-          new BufferRequest(fromBuffer, true));
-      ActionCaller inCaller = new ActionCaller(choose, new InExportAction(true));
-      Behaviour inBehaviour = tbf.wrap(
-          new ImExportItemBehaviour(true, inCaller, inFromBuffer));
-      while (!inBehaviour.done()) {
-        block(1000);
-      }
+      Behaviour callForWh = tbf.wrap(
+          new CallForWarehouse2(new WarehouseRequest(request.getWpInfo().getWarehousePosition())));
+      myAgent.addBehaviour(callForWh);
+      waitBehaviourDone(callForWh);
     }
+    InteractBuffer inFromBuffer = new InteractBuffer(
+        new BufferRequest(fromBuffer, true));
+    ActionCaller inCaller = new ActionCaller(choose, new InExportAction(true));
+    Behaviour inBehaviour = tbf.wrap(
+        new ImExportItemBehaviour(true, inCaller, inFromBuffer));
+    myAgent.addBehaviour(inBehaviour);
+    waitBehaviourDone(inBehaviour);
 
     // 6. 计算路径送货与清除阻塞
     int toBuffer = request.getToBuffer();
@@ -120,15 +124,16 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     // 8. 送料
     if (toBuffer < 0) {
       // TODO 如果对象是仓库，需要修改
-    } else {
-      InteractBuffer exToBuffer = new InteractBuffer(new BufferRequest(toBuffer, false));
-      ActionCaller outCaller = new ActionCaller(choose, new InExportAction(false));
-      Behaviour outBehaviour = tbf.wrap(new ImExportItemBehaviour(false, outCaller, exToBuffer));
-      while (!outBehaviour.done()) {
-        block(1000);
-      }
+      Behaviour callForWh = tbf.wrap(
+          new CallForWarehouse2(new WarehouseRequest(request.getWpInfo().getWarehousePosition())));
+      myAgent.addBehaviour(callForWh);
+      waitBehaviourDone(callForWh);
     }
-
+    InteractBuffer exToBuffer = new InteractBuffer(new BufferRequest(toBuffer, false));
+    ActionCaller outCaller = new ActionCaller(choose, new InExportAction(false));
+    Behaviour outBehaviour = tbf.wrap(new ImExportItemBehaviour(false, outCaller, exToBuffer));
+    myAgent.addBehaviour(outBehaviour);
+    waitBehaviourDone(outBehaviour);
   }
 
   private void solveConflict(int conflict) {
@@ -167,8 +172,13 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
   private void waitCallerDone(AID receiver, MachineAction action) {
     Behaviour b = tbf.wrap(new ActionCaller(receiver, action));
     // 等待动作完成
+    waitBehaviourDone(b);
+  }
+
+  private void waitBehaviourDone(Behaviour b) {
     while (!b.done()) {
       block(1000);
     }
   }
+
 }
