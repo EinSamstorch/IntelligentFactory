@@ -51,7 +51,9 @@ public class CallWarehouseMoveItem extends SequentialBehaviour {
         if (receive != null) {
           if (receive.getPerformative() == ACLMessage.INFORM) {
             done = true;
-            LoggerUtil.agent.info("Workpiece is ready to export.");
+            LoggerUtil.agent.info((request.isIn() ? "Import" : "Export")
+                + ": warehouse move item from/to: "
+                + request.getItemPosition());
           } else {
             LoggerUtil.agent.error("Response code error, code: " + receive.getPerformative());
           }

@@ -88,72 +88,22 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
       return;
     }
     LoggerUtil.agent.debug("Choose agv: " + choose.getLocalName());
-    // 3. 计算路径取货与清除阻塞
-    int pos = AgvMapUtils.getLocationMap().get(choose);
-    String getGoodPath = plan.getRoute(pos, fromLoc);
-    if (!"".equals(getGoodPath)) {
-      // 需移动
-      int conflict = AgvMapUtils
-          .conflictNode(
-              Arrays.stream(getGoodPath.split(",")).mapToInt(Integer::parseInt).toArray());
-      solveConflict(conflict);
-      // 4. 到达取货点
-      MachineAction moveToStart = new MoveAction(plan.getRoute(
-          AgvMapUtils.getLocationMap().get(choose), fromLoc));
-      waitCallerDone(choose, moveToStart);
-    }
-    // 5. 入料
+    // 3. agv前往取货点
+    agvMove(fromBuffer, choose);
+    // 4. AGV入料
     if (fromBuffer < 0) {
-      // 如果对象是仓库，需要修改操作
-      Behaviour callWhMoveItem = new CallWarehouseMoveItem(
-          new WarehouseItemMoveRequest(request.getWpInfo().getWarehousePosition(), true));
-      waitBehaviourDone(callWhMoveItem);
-      // AGV入料
-      waitCallerDone(choose, new InExportAction(true));
-      // 仓库出料
-      Behaviour whExport = new CallWarehouseConveyor(new WarehouseConveyorRequest(false));
-      waitBehaviourDone(whExport);
+      interactWarehouse(true, choose, request.getWpInfo().getWarehousePosition());
     } else {
-      // 与buffer交互
-      InteractBuffer inFromBuffer = new InteractBuffer(
-          new BufferRequest(fromBuffer, true));
-      ActionCaller inCaller = new ActionCaller(choose, new InExportAction(true));
-      Behaviour inBehaviour = new ImExportItemBehaviour(true, inCaller, inFromBuffer);
-      waitBehaviourDone(inBehaviour);
+      interactBuffer(true, choose, fromBuffer);
     }
-
-    // 6. 计算路径送货与清除阻塞
+    // 5. agv前往送货点
     int toBuffer = request.getToBuffer();
-    int toLoc = AgvMapUtils.getBufferMap(toBuffer, plan);
-    String sendGoodPath = plan.getRoute(fromLoc, toLoc);
-    if (!"".equals(sendGoodPath)) {
-      // 需移动
-      int conflict = AgvMapUtils
-          .conflictNode(
-              Arrays.stream(sendGoodPath.split(",")).mapToInt(Integer::parseInt).toArray());
-      solveConflict(conflict);
-      // 7. 到达送货点
-      MachineAction moveToEnd = new MoveAction(
-          plan.getRoute(AgvMapUtils.getLocationMap().get(choose), toLoc));
-      waitCallerDone(choose, moveToEnd);
-    }
-    // 8. 送料
+    agvMove(toBuffer, choose);
+    // 6. AGV送料
     if (toBuffer < 0) {
-      // 仓库入料
-      Behaviour whImport = new CallWarehouseConveyor(new WarehouseConveyorRequest(true));
-      waitBehaviourDone(whImport);
-      // AGV出料
-      waitCallerDone(choose, new InExportAction(false));
-      // 如果对象是仓库，需要修改
-      Behaviour callForWh = new CallWarehouseMoveItem(
-          new WarehouseItemMoveRequest(request.getWpInfo().getWarehousePosition(), false));
-      waitBehaviourDone(callForWh);
+      interactWarehouse(false, choose, request.getWpInfo().getWarehousePosition());
     } else {
-      // 与buffer交互
-      InteractBuffer exToBuffer = new InteractBuffer(new BufferRequest(toBuffer, false));
-      ActionCaller outCaller = new ActionCaller(choose, new InExportAction(false));
-      Behaviour outBehaviour = tbf.wrap(new ImExportItemBehaviour(false, outCaller, exToBuffer));
-      waitBehaviourDone(outBehaviour);
+      interactBuffer(false, choose, toBuffer);
     }
     ACLMessage msg = msgQueue.remove();
     ACLMessage reply = msg.createReply();
@@ -209,4 +159,54 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     }
   }
 
+  private void interactWarehouse(boolean agvImport, AID agv, int warehousePos) {
+    // agv从仓库取货
+    // 1. 仓库移动货物到出口
+    // 2. agv启动收货模式
+    // 3. 仓库传送带启动出货模式
+    // agv送货入仓库
+    // 1. 仓库传送带启动入货模式
+    // 2. agv启动出货模式
+    // 3. 仓库移动货物到指定位置
+    Behaviour[] bs = new Behaviour[3];
+    bs[agvImport ? 0 : 2] = new CallWarehouseMoveItem(
+        new WarehouseItemMoveRequest(warehousePos, !agvImport));
+    bs[1] = new ActionCaller(agv, new InExportAction(agvImport));
+    bs[agvImport ? 2 : 0] = new CallWarehouseConveyor(new WarehouseConveyorRequest(!agvImport));
+    for (Behaviour b : bs) {
+      waitBehaviourDone(b);
+    }
+  }
+
+  private void interactBuffer(boolean agvImport, AID agv, int bufferNo) {
+    // 交互buffer， 进出货模式与agv进出货模式相反
+    InteractBuffer interactBuffer = new InteractBuffer(new BufferRequest(bufferNo, !agvImport));
+    // 交互agv货仓
+    ActionCaller imExCaller = new ActionCaller(agv, new InExportAction(agvImport));
+    // 组装行为
+    Behaviour outBehaviour = new ImExportItemBehaviour(agvImport, imExCaller, interactBuffer);
+    // 等待完成
+    waitBehaviourDone(outBehaviour);
+  }
+
+  private void agvMove(int bufferNo, AID agv) {
+
+    int toLoc = AgvMapUtils.getBufferMap(bufferNo, plan);
+    int fromLoc = AgvMapUtils.getLocationMap().get(agv);
+
+    String movePath = plan.getRoute(fromLoc, toLoc);
+    if ("".equals(movePath)) {
+      // 无需移动
+      return;
+    }
+    // 计算冲突
+    int conflict = AgvMapUtils
+        .conflictNode(
+            Arrays.stream(movePath.split(",")).mapToInt(Integer::parseInt).toArray());
+    // 解决冲突
+    solveConflict(conflict);
+    // 移动agv
+    MachineAction moveAction = new MoveAction(plan.getRoute(fromLoc, toLoc));
+    waitCallerDone(agv, moveAction);
+  }
 }

@@ -29,8 +29,7 @@ public class ImExportItemBehaviour extends OneShotBehaviour {
     }
     ImExportAction action = new ImExportAction(request.isImportMode(),
         request.getBufferNo());
-
-    while (hal.executeAction(action)) {
+    while (!hal.executeAction(action)) {
       LoggerUtil.hal.error(String.format("%s Failed! Buffer: %s, extra: %s.",
           request.isImportMode() ? "Import" : "Export",
           request.getBufferNo(),
@@ -43,6 +42,7 @@ public class ImExportItemBehaviour extends OneShotBehaviour {
         request.getBufferNo()));
     ACLMessage reply = msg.createReply();
     reply.setPerformative(ACLMessage.INFORM);
+    reply.setContent("done");
     myAgent.send(reply);
   }
 }

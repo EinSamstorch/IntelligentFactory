@@ -79,7 +79,7 @@ public class ActionCaller extends SimpleBehaviour {
       action.setResultExtra(receive.getContentObject());
     } catch (UnreadableException e) {
       LoggerUtil.agent.error("Deserialization result extra failed! From: "
-          + receive.getSender().getLocalName()
+          + receive.getSender().getLocalName() + ", "
           + e.getLocalizedMessage());
       action.setResultExtra("");
     }

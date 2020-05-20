@@ -38,11 +38,11 @@ public class InteractBuffer extends SimpleBehaviour {
   }
 
   private void sendMessage() {
-    ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-    msg.setConversationId(conversationId);
+    ACLMessage msg;
 
     try {
-      msg.setContentObject(request);
+      msg = DfUtils.createRequestMsg(request);
+      msg.setConversationId(conversationId);
       DfUtils.searchDf(myAgent, msg, DfServiceType.BUFFER);
     } catch (IOException e) {
       // setContentObject

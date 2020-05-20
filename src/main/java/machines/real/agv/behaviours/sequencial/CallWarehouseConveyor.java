@@ -52,7 +52,8 @@ public class CallWarehouseConveyor extends SequentialBehaviour {
         if (receive != null) {
           if (receive.getPerformative() == ACLMessage.INFORM) {
             done = true;
-            LoggerUtil.agent.info("Workpiece is ready to export.");
+            LoggerUtil.agent
+                .info("Workpiece is ready to " + (request.isImportMode() ? "import." : "export."));
           } else {
             LoggerUtil.agent.error("Response code error, code: " + receive.getPerformative());
           }
