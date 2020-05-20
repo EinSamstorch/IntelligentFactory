@@ -45,9 +45,11 @@ public class ActionListener extends CyclicBehaviour {
           + e.getLocalizedMessage());
       return;
     }
+    LoggerUtil.agent.debug("Action: " + action.getCmd() + ", extra: " + action.getExtra());
     while (!hal.executeAction(action)) {
       block(3000);
     }
+    LoggerUtil.agent.debug("Action done!");
     ACLMessage reply = receive.createReply();
     reply.setPerformative(ACLMessage.INFORM);
     reply.setLanguage("done");
