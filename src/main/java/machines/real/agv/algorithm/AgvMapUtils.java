@@ -94,9 +94,9 @@ public class AgvMapUtils {
    * @return -1代表无冲突， 返回第一个有冲突的坐标
    */
   public static int conflictNode(int[] path) {
-    for (int i : path) {
-      if (nodeMap[i]) {
-        return i;
+    for (int i = 1; i < path.length; i++) {
+      if (nodeMap[path[i]]) {
+        return path[i];
       }
     }
     return -1;
