@@ -193,25 +193,18 @@ public class LaserAgvRoutePlan implements AgvRoutePlan {
     int startRow = getRow(start);
     int endRow = getRow(end);
     int startCol = getCol(start);
-    int endCol = getCol(end);
-    if (Math.abs(startRow - endRow) < 2) {
-      // 相邻位置 转移不了，需要特殊处理
-      // TODO
-      return "NotImplement";
-    } else {
-      String[] path = new String[2 + Math.abs(startRow - endRow) + 1];
-      // 写入起点和终点
-      path[0] = String.valueOf(start);
-      path[path.length - 1] = String.valueOf(end);
-      int colDiff = startCol == 1 ? 1 : -1;
-      int rowDiff = startRow < endRow ? mCol : -mCol;
-      int tempPoint = start + colDiff;
-      for (int i = 0; i <= Math.abs(startRow - endRow); i++) {
-        path[i + 1] = String.valueOf(tempPoint);
-        tempPoint += rowDiff;
-      }
-      return String.join(",", path);
+    String[] path = new String[2 + Math.abs(startRow - endRow) + 1];
+    // 写入起点和终点
+    path[0] = String.valueOf(start);
+    path[path.length - 1] = String.valueOf(end);
+    int colDiff = startCol == 1 ? 1 : -1;
+    int rowDiff = startRow < endRow ? mCol : -mCol;
+    int tempPoint = start + colDiff;
+    for (int i = 0; i <= Math.abs(startRow - endRow); i++) {
+      path[i + 1] = String.valueOf(tempPoint);
+      tempPoint += rowDiff;
     }
+    return String.join(",", path);
   }
 
   private int getRow(int num) {
