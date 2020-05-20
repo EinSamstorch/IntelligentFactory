@@ -28,6 +28,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 public class ProductContractNetResponder extends ContractNetResponder {
 
+  private int importBuffer = -2;
   private DbInterface db;
 
   /**
@@ -80,7 +81,7 @@ public class ProductContractNetResponder extends ContractNetResponder {
       wpInfo.setCurOwnerId(myAgent.getLocalName());
       int oldBuffer = wpInfo.getBufferPos();
       // 入库口
-      wpInfo.setBufferPos(-1);
+      wpInfo.setBufferPos(importBuffer);
       // call for agv
       AgvRequest request = new AgvRequest(oldBuffer, -1, wpInfo);
       myAgent.addBehaviour(new CallForAgv(request));
