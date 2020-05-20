@@ -86,6 +86,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     if (choose == null) {
       return;
     }
+    LoggerUtil.agent.debug("Choose agv: " + choose.getLocalName());
     // 3. 计算路径取货与清除阻塞
     int pos = AgvMapUtils.getLocationMap().get(choose);
     String getGoodPath = plan.getRoute(pos, fromLoc);
@@ -96,8 +97,8 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
               Arrays.stream(getGoodPath.split(",")).mapToInt(Integer::parseInt).toArray());
       solveConflict(conflict);
       // 4. 到达取货点
-      MachineAction moveToStart = new MoveAction(AgvMapUtils.getLocationMap().get(choose), fromLoc,
-          plan);
+      MachineAction moveToStart = new MoveAction(plan.getRoute(
+          AgvMapUtils.getLocationMap().get(choose), fromLoc));
       waitCallerDone(choose, moveToStart);
     }
     // 5. 入料
@@ -132,7 +133,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
       solveConflict(conflict);
       // 7. 到达送货点
       MachineAction moveToEnd = new MoveAction(
-          AgvMapUtils.getLocationMap().get(choose), toLoc, plan);
+          plan.getRoute(AgvMapUtils.getLocationMap().get(choose), toLoc));
       waitCallerDone(choose, moveToEnd);
     }
     // 8. 送料
@@ -164,7 +165,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
       LoggerUtil.agent.info(
           "Route plan conflict! Pos: " + conflict + ", agent: " + conflictAid.getLocalName());
       int newLoc = AgvMapUtils.getFreeEdgeNode(plan.getEdgeNodes(), 4);
-      MoveAction moveConflict = new MoveAction(conflict, newLoc, plan);
+      MoveAction moveConflict = new MoveAction(plan.getRoute(conflict, newLoc));
       waitCallerDone(conflictAid, moveConflict);
     }
   }

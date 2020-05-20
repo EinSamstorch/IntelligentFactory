@@ -56,8 +56,9 @@ public class ActionCaller extends SimpleBehaviour {
     try {
       msg.setContentObject(action);
     } catch (IOException e) {
+      e.printStackTrace();
       LoggerUtil.agent
-          .error("Serialization failed! Cmd: " + action.getCmd() + e.getLocalizedMessage());
+          .error("Serialization failed! Cmd: " + action.getCmd() + ", " + e.getLocalizedMessage());
       return;
     }
     myAgent.send(msg);

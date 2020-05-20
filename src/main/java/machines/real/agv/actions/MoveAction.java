@@ -1,7 +1,6 @@
 package machines.real.agv.actions;
 
 import machines.real.agv.MultiAgvHal;
-import machines.real.agv.algorithm.AgvRoutePlan;
 import machines.real.commons.actions.AbstractMachineAction;
 
 /**
@@ -13,21 +12,15 @@ import machines.real.commons.actions.AbstractMachineAction;
  */
 public class MoveAction extends AbstractMachineAction {
 
-  private int from;
-  private int to;
-  private AgvRoutePlan plan;
+  private String path;
 
   /**
    * 构造移动动作.
    *
-   * @param from 起点
-   * @param to   终点
-   * @param plan 规划算法
+   * @param path 路径
    */
-  public MoveAction(int from, int to, AgvRoutePlan plan) {
-    this.from = from;
-    this.to = to;
-    this.plan = plan;
+  public MoveAction(String path) {
+    this.path = path;
   }
 
   @Override
@@ -37,6 +30,6 @@ public class MoveAction extends AbstractMachineAction {
 
   @Override
   public Object getExtra() {
-    return plan.getRoute(from, to);
+    return path;
   }
 }
