@@ -80,7 +80,6 @@ public class LaserAgvRoutePlan implements AgvRoutePlan {
   }
 
   private String plan0(int start, int end) {
-    System.out.println(String.format("Received:{start: %d, end: %d}", start, end));
     if (start <= 0 || end <= 0) {
       // 非法坐标点
       return "";
