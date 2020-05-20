@@ -30,6 +30,7 @@
         <bean class="machines.real.warehouse.behaviours.cycle.ItemMoveBehaviour">
           <property name="hal" ref="hal"/>
           <property name="posOut" ref="posOut"/>
+          <property name="posIn" ref="posIn"/>
         </bean>
         <!-- 原料应标 -->
         <bean class="machines.real.warehouse.behaviours.cycle.RawContractNetResponder">

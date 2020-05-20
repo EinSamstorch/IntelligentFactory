@@ -19,7 +19,8 @@ import machines.real.warehouse.WarehouseHal;
 public class ItemMoveBehaviour extends CyclicBehaviour {
 
   private WarehouseHal hal;
-  private Integer posOut;
+  private int posOut;
+  private int posIn;
 
   public ItemMoveBehaviour() {
     super();
@@ -29,8 +30,12 @@ public class ItemMoveBehaviour extends CyclicBehaviour {
     this.hal = hal;
   }
 
-  public void setPosOut(Integer posOut) {
+  public void setPosOut(int posOut) {
     this.posOut = posOut;
+  }
+
+  public void setPosIn(int posIn) {
+    this.posIn = posIn;
   }
 
   @Override
@@ -51,17 +56,18 @@ public class ItemMoveBehaviour extends CyclicBehaviour {
       e.printStackTrace();
     }
     if (request != null) {
-      Integer itemPosition = request.getItemPosition();
+      int itemPosition = request.getItemPosition();
+      if (request.isIn()) {
+        hal.moveItem(posIn, itemPosition);
+        LoggerUtil.agent.info("Import item to " + itemPosition);
+      } else {
+        hal.moveItem(itemPosition, posOut);
+        LoggerUtil.agent.info("Export item to " + itemPosition);
+      }
       // 通知AGV取货
       ACLMessage reply = msg.createReply();
       reply.setPerformative(ACLMessage.INFORM);
       myAgent.send(reply);
-      if (hal.moveItem(itemPosition, posOut)) {
-        LoggerUtil.hal.info(String.format("Succeed! Export item from %d", itemPosition));
-      } else {
-        LoggerUtil.hal.error(String.format("Failed! Export item from %d", itemPosition));
-        myAgent.clean(false);
-      }
     } else {
       LoggerUtil.hal.error("Request NPE Error.");
     }

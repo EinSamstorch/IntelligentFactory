@@ -14,8 +14,10 @@ public class WarehouseItemMoveRequest implements Serializable {
 
   public static final String LANGUAGE = "MOVE";
   private int itemPosition;
+  private boolean in;
 
-  public WarehouseItemMoveRequest(int itemPosition) {
+  public WarehouseItemMoveRequest(int itemPosition, boolean in) {
+    this.in = in;
     this.itemPosition = itemPosition;
   }
 
@@ -23,4 +25,7 @@ public class WarehouseItemMoveRequest implements Serializable {
     return itemPosition;
   }
 
+  public boolean isIn() {
+    return in;
+  }
 }
