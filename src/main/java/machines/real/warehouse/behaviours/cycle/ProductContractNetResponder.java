@@ -83,7 +83,7 @@ public class ProductContractNetResponder extends ContractNetResponder {
       // 入库口
       wpInfo.setBufferPos(importBuffer);
       // call for agv
-      AgvRequest request = new AgvRequest(oldBuffer, -1, wpInfo);
+      AgvRequest request = new AgvRequest(oldBuffer, importBuffer, wpInfo);
       myAgent.addBehaviour(new CallForAgv(request));
 
       ACLMessage inform = accept.createReply();
