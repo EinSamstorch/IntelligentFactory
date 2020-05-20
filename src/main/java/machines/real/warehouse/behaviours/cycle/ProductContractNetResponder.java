@@ -11,10 +11,10 @@ import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetResponder;
 import java.io.IOException;
 import machines.real.commons.ContractNetContent;
+import machines.real.commons.behaviours.sequantial.CallForAgv;
 import machines.real.commons.request.AgvRequest;
 import machines.real.warehouse.DbInterface;
 import machines.real.warehouse.WarehouseAgent;
-import machines.real.warehouse.behaviours.simple.CallForAgv;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
@@ -76,14 +76,14 @@ public class ProductContractNetResponder extends ContractNetResponder {
     if (wpInfo != null) {
       int position = db.getProduct(wpInfo);
       wpInfo.setWarehousePosition(position);
-      int currentLocation = wpInfo.getBufferPos();
       // 更新 wpInfo
       wpInfo.setCurOwnerId(myAgent.getLocalName());
+      int oldBuffer = wpInfo.getBufferPos();
       // 入库口
       wpInfo.setBufferPos(-1);
       // call for agv
-      AgvRequest request = new AgvRequest(currentLocation, -1, wpInfo);
-      myAgent.addBehaviour(new CallForAgv(myAgent, request));
+      AgvRequest request = new AgvRequest(oldBuffer, -1, wpInfo);
+      myAgent.addBehaviour(new CallForAgv(request));
 
       ACLMessage inform = accept.createReply();
       inform.setPerformative(ACLMessage.INFORM);

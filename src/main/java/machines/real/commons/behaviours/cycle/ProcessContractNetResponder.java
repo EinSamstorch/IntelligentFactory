@@ -12,7 +12,7 @@ import jade.proto.ContractNetResponder;
 import java.io.IOException;
 import machines.real.commons.ContractNetContent;
 import machines.real.commons.RealMachineAgent;
-import machines.real.commons.behaviours.simple.CallForAgv;
+import machines.real.commons.behaviours.sequantial.CallForAgv;
 import machines.real.commons.buffer.Buffer;
 import machines.real.commons.buffer.BufferState;
 import machines.real.commons.hal.MachineHal;
@@ -112,7 +112,7 @@ public class ProcessContractNetResponder extends ContractNetResponder {
     buffer.setEvaluateTime(evaluateTime);
     // call for agv
     AgvRequest request = new AgvRequest(from, to, wpInfo);
-    machineAgent.addBehaviour(new CallForAgv(machineAgent, request, buffer));
+    machineAgent.addBehaviour(new CallForAgv(request, buffer));
     // 完成本次招标动作
     ACLMessage inform = accept.createReply();
     inform.setPerformative(ACLMessage.INFORM);

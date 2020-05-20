@@ -12,7 +12,7 @@ import jade.proto.ContractNetResponder;
 import java.io.IOException;
 import machines.real.commons.ContractNetContent;
 import machines.real.commons.RealMachineAgent;
-import machines.real.commons.behaviours.simple.CallForAgv;
+import machines.real.commons.behaviours.sequantial.CallForAgv;
 import machines.real.commons.buffer.Buffer;
 import machines.real.commons.request.AgvRequest;
 
@@ -82,7 +82,7 @@ public class CheckItemContractNetResponder extends ContractNetResponder {
     buffer.setWpInfo(wpInfo);
     // call for agv
     AgvRequest request = new AgvRequest(from, to, wpInfo);
-    visionAgent.addBehaviour(new CallForAgv(visionAgent, request, buffer));
+    visionAgent.addBehaviour(new CallForAgv(request, buffer));
     // 完成本次招标动作
     ACLMessage inform = accept.createReply();
     inform.setPerformative(ACLMessage.INFORM);

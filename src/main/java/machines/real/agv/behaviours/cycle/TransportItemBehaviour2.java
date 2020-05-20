@@ -41,6 +41,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
   private Map<AID, Long> checkInMap;
   private AgvRoutePlan plan;
   private ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
+  private Queue<ACLMessage> msgQueue = new LinkedList<>();
 
   public void setPlan(AgvRoutePlan plan) {
     this.plan = plan;
@@ -105,7 +106,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     if (fromBuffer < 0) {
       // 如果对象是仓库，需要修改操作
       Behaviour callWhMoveItem = new CallWarehouseMoveItem(
-          new WarehouseItemMoveRequest(request.getWpInfo().getWarehousePosition()));
+          new WarehouseItemMoveRequest(request.getWpInfo().getWarehousePosition(), true));
       waitBehaviourDone(callWhMoveItem);
       // AGV入料
       waitCallerDone(choose, new InExportAction(true));
@@ -145,7 +146,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
       waitCallerDone(choose, new InExportAction(false));
       // 如果对象是仓库，需要修改
       Behaviour callForWh = new CallWarehouseMoveItem(
-          new WarehouseItemMoveRequest(request.getWpInfo().getWarehousePosition()));
+          new WarehouseItemMoveRequest(request.getWpInfo().getWarehousePosition(), false));
       waitBehaviourDone(callForWh);
     } else {
       // 与buffer交互
@@ -154,6 +155,10 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
       Behaviour outBehaviour = tbf.wrap(new ImExportItemBehaviour(false, outCaller, exToBuffer));
       waitBehaviourDone(outBehaviour);
     }
+    ACLMessage msg = msgQueue.remove();
+    ACLMessage reply = msg.createReply();
+    reply.setPerformative(ACLMessage.INFORM);
+    myAgent.send(reply);
   }
 
   private void solveConflict(int conflict) {
@@ -187,6 +192,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
       return;
     }
     queue.offer(request);
+    msgQueue.offer(msg);
   }
 
   private void waitCallerDone(AID receiver, MachineAction action) {
