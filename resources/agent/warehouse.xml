@@ -9,7 +9,6 @@
     <property name="posIn" ref="posIn"/>
     <!-- 出库口 -->
     <property name="posOut" ref="posOut"/>
-    <property name="hal" ref="hal"/>
     <property name="serviceType">
       <util:constant static-field="commons.tools.DfServiceType.WAREHOUSE"/>
     </property>
@@ -51,7 +50,7 @@
   <bean class="java.lang.Integer" id="posOut">
     <constructor-arg name="value" value="${warehouse.pos.out}"/>
   </bean>
-  <bean class="machines.real.warehouse.WarehouseHalImpl" id="hal">
+  <bean class="machines.real.commons.hal.MiddleHalImpl" id="hal">
     <!-- socket server监听端口 -->
     <constructor-arg name="port" value="${hal.port}"/>
   </bean>

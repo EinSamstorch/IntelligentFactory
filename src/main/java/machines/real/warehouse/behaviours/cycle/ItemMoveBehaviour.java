@@ -1,12 +1,16 @@
 package machines.real.warehouse.behaviours.cycle;
 
 import commons.tools.LoggerUtil;
+import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
+import machines.real.commons.behaviours.simple.ActionExecutor;
+import machines.real.commons.hal.MiddleHal;
 import machines.real.commons.request.WarehouseItemMoveRequest;
-import machines.real.warehouse.WarehouseHal;
+import machines.real.warehouse.actions.MoveItemAction;
 
 /**
  * 工件移动管理.
@@ -18,15 +22,16 @@ import machines.real.warehouse.WarehouseHal;
 
 public class ItemMoveBehaviour extends CyclicBehaviour {
 
-  private WarehouseHal hal;
+  private MiddleHal hal;
   private int posOut;
   private int posIn;
+  private ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
 
   public ItemMoveBehaviour() {
     super();
   }
 
-  public void setHal(WarehouseHal hal) {
+  public void setHal(MiddleHal hal) {
     this.hal = hal;
   }
 
@@ -49,27 +54,21 @@ public class ItemMoveBehaviour extends CyclicBehaviour {
       block();
       return;
     }
-    WarehouseItemMoveRequest request = null;
+    WarehouseItemMoveRequest request;
     try {
       request = (WarehouseItemMoveRequest) msg.getContentObject();
     } catch (UnreadableException e) {
       e.printStackTrace();
+      LoggerUtil.agent
+          .warn("Deserialization Error in WarehouseItemMoveRequest. " + e.getLocalizedMessage());
+      return;
     }
-    if (request != null) {
-      int itemPosition = request.getItemPosition();
-      if (request.isIn()) {
-        hal.moveItem(posIn, itemPosition);
-        LoggerUtil.agent.info("Import item to " + itemPosition);
-      } else {
-        hal.moveItem(itemPosition, posOut);
-        LoggerUtil.agent.info("Export item to " + itemPosition);
-      }
-      // 通知AGV取货
-      ACLMessage reply = msg.createReply();
-      reply.setPerformative(ACLMessage.INFORM);
-      myAgent.send(reply);
-    } else {
-      LoggerUtil.hal.error("Request NPE Error.");
+    int itemPosition = request.getItemPosition();
+    int from = request.isIn() ? posIn : itemPosition;
+    int to = request.isIn() ? itemPosition : posOut;
+    Behaviour b = tbf.wrap(new ActionExecutor(new MoveItemAction(from, to), hal, msg));
+    while (!b.done()) {
+      block(1000);
     }
   }
 }

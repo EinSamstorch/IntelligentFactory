@@ -7,9 +7,10 @@ import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
+import machines.real.commons.behaviours.simple.ActionExecutor;
+import machines.real.commons.hal.MiddleHal;
 import machines.real.commons.request.WarehouseConveyorRequest;
-import machines.real.warehouse.WarehouseHal;
-import machines.real.warehouse.behaviours.simple.ConveyorActionBehaviour;
+import machines.real.warehouse.actions.ImExportItemAction;
 
 /**
  * 传送带控制.
@@ -20,13 +21,13 @@ import machines.real.warehouse.behaviours.simple.ConveyorActionBehaviour;
  */
 public class ConveyorControlBehaviour extends CyclicBehaviour {
 
-  private WarehouseHal hal;
+  private MiddleHal hal;
   private MessageTemplate mt = MessageTemplate
       .and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
           MessageTemplate.MatchLanguage(WarehouseConveyorRequest.LANGUAGE));
   private ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
 
-  public void setHal(WarehouseHal hal) {
+  public void setHal(MiddleHal hal) {
     this.hal = hal;
   }
 
@@ -42,16 +43,17 @@ public class ConveyorControlBehaviour extends CyclicBehaviour {
       request = (WarehouseConveyorRequest) receive.getContentObject();
     } catch (UnreadableException e) {
       e.printStackTrace();
-      LoggerUtil.agent.warn("Deserialization Error. " + e.getLocalizedMessage());
+      LoggerUtil.agent
+          .warn("Deserialization Error in WarehouseConveyorRequest. " + e.getLocalizedMessage());
       return;
     }
-    Behaviour b = tbf.wrap(new ConveyorActionBehaviour(request.isImportMode(), hal));
+
+    Behaviour b = tbf.wrap(
+        new ActionExecutor(
+            new ImExportItemAction(request.isImportMode()), hal, receive));
     myAgent.addBehaviour(b);
     while (!b.done()) {
       block(1000);
     }
-    ACLMessage reply = receive.createReply();
-    reply.setPerformative(ACLMessage.INFORM);
-    myAgent.send(reply);
   }
 }
