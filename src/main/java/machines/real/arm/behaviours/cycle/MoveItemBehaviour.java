@@ -9,7 +9,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import machines.real.arm.actions.MoveItemAction;
-import machines.real.commons.ActionExecutor;
+import machines.real.commons.behaviours.simple.ActionExecutor;
 import machines.real.commons.hal.MiddleHal;
 import machines.real.commons.request.ArmRequest;
 
