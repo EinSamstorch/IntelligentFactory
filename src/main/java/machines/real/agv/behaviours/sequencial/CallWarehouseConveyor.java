@@ -5,10 +5,9 @@ import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.SequentialBehaviour;
-import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
-import jade.lang.acl.MessageTemplate;
 import java.util.Random;
+import machines.real.commons.behaviours.simple.WaitResponse;
 import machines.real.commons.request.WarehouseConveyorRequest;
 
 /**
@@ -42,29 +41,12 @@ public class CallWarehouseConveyor extends SequentialBehaviour {
       }
     });
 
-    addSubBehaviour(new SimpleBehaviour() {
-      private boolean done = false;
-
+    addSubBehaviour(new WaitResponse(conversationId) {
       @Override
       public void action() {
-        MessageTemplate mt = MessageTemplate.MatchConversationId(conversationId);
-        ACLMessage receive = myAgent.receive(mt);
-        if (receive != null) {
-          if (receive.getPerformative() == ACLMessage.INFORM) {
-            done = true;
-            LoggerUtil.agent
-                .info("Workpiece is ready to " + (request.isImportMode() ? "import." : "export."));
-          } else {
-            LoggerUtil.agent.error("Response code error, code: " + receive.getPerformative());
-          }
-        } else {
-          block();
-        }
-      }
-
-      @Override
-      public boolean done() {
-        return done;
+        super.action();
+        LoggerUtil.agent
+            .info("Workpiece is ready to " + (request.isImportMode() ? "import." : "export."));
       }
     });
   }
