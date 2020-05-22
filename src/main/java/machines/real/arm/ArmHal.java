@@ -1,27 +1,19 @@
 package machines.real.arm;
 
-import machines.real.commons.hal.BaseHal;
+import machines.real.commons.hal.MiddleHal;
 
-public interface ArmHal extends BaseHal {
+/**
+ * 定义机械手hal命令.
+ *
+ * @author <a href="mailto:junfeng_pan96@qq.com">junfeng</a>
+ * @version 1.0.0.0
+ * @since 1.8
+ */
+public interface ArmHal extends MiddleHal {
 
-  /**
-   * 搬运工件.
-   *
-   * @param from    搬运起始地
-   * @param to      搬运目的地
-   * @param goodsid 工件种类
-   * @param step    工序步骤（车床专用）
-   * @return 成功true
-   */
-  boolean moveItem(String from, String to, String goodsid, int step);
-
-  /**
-   * 搬运工件.
-   *
-   * @param from    搬运起始地
-   * @param to      搬运目的地
-   * @param goodsid 工件种类
-   * @return 成功true
-   */
-  boolean moveItem(String from, String to, String goodsid);
+  String CMD_MOVE_ITEM = "move_item";
+  String FIELD_FROM = "from";
+  String FIELD_TO = "to";
+  String FIELD_GOODSID = "goodsId";
+  String FIELD_STEP = "step";
 }
