@@ -34,7 +34,6 @@
         <!-- 检测仪服务应标 -->
         <bean class="machines.real.vision.behaviours.cycle.CheckItemContractNetResponder">
           <constructor-arg name="visionAgent" ref="agent"/>
-          <constructor-arg name="mt" ref="matchProtocol"/>
         </bean>
       </list>
     </property>
@@ -47,24 +46,6 @@
     <constructor-arg name="indexesStr" value="${machine.buffers}"/>
   </bean>
   <bean class="machines.real.commons.MachineState" id="machineState"/>
-  <bean class="jade.lang.acl.MessageTemplate" factory-method="and" id="matchProtocol">
-    <!-- match Contract Net -->
-    <constructor-arg name="op1">
-      <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchProtocol">
-        <constructor-arg type="java.lang.String">
-          <util:constant
-            static-field="jade.domain.FIPANames.InteractionProtocol.FIPA_CONTRACT_NET"/>
-        </constructor-arg>
-      </bean>
-    </constructor-arg>
-    <!-- match CFP -->
-    <constructor-arg name="op2">
-      <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchPerformative">
-        <constructor-arg name="value">
-          <util:constant static-field="jade.lang.acl.ACLMessage.CFP"/>
-        </constructor-arg>
-      </bean>
-    </constructor-arg>
-  </bean>
+
   <import resource="../settings.xml"/>
 </beans>

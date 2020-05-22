@@ -5,6 +5,7 @@ import commons.tools.LoggerUtil;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
+import jade.domain.FIPANames.InteractionProtocol;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
@@ -28,10 +29,14 @@ import machines.real.commons.request.AgvRequest;
 
 public class ProcessContractNetResponder extends ContractNetResponder {
 
+  private static MessageTemplate mt = MessageTemplate.and(
+      MessageTemplate.MatchPerformative(ACLMessage.CFP),
+      MessageTemplate.MatchProtocol(InteractionProtocol.FIPA_CONTRACT_NET)
+  );
   private RealMachineAgent machineAgent;
   private MachineHal hal;
 
-  public ProcessContractNetResponder(RealMachineAgent machineAgent, MessageTemplate mt) {
+  public ProcessContractNetResponder(RealMachineAgent machineAgent) {
     super(machineAgent, mt);
     this.machineAgent = machineAgent;
   }

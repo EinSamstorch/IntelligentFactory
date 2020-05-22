@@ -3,8 +3,8 @@ package machines.real.vision.behaviours.cycle;
 import commons.order.WorkpieceStatus;
 import commons.tools.LoggerUtil;
 import jade.domain.FIPAAgentManagement.FailureException;
-import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
+import jade.domain.FIPANames.InteractionProtocol;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
@@ -26,16 +26,20 @@ import machines.real.commons.request.AgvRequest;
 
 public class CheckItemContractNetResponder extends ContractNetResponder {
 
+  private static MessageTemplate mt = MessageTemplate.and(
+      MessageTemplate.MatchPerformative(ACLMessage.CFP),
+      MessageTemplate.MatchProtocol(InteractionProtocol.FIPA_CONTRACT_NET)
+  );
   private RealMachineAgent visionAgent;
 
-  public CheckItemContractNetResponder(RealMachineAgent visionAgent, MessageTemplate mt) {
+  public CheckItemContractNetResponder(RealMachineAgent visionAgent) {
     super(visionAgent, mt);
     this.visionAgent = visionAgent;
   }
 
   @Override
   protected ACLMessage handleCfp(ACLMessage cfp)
-      throws RefuseException, FailureException, NotUnderstoodException {
+      throws RefuseException {
     LoggerUtil.agent.debug(String.format("CFP received from: %s.", cfp.getSender().getName()));
     if (visionAgent.getBufferManger().isBufferFull()) {
       throw new RefuseException("Buffer Full!");
