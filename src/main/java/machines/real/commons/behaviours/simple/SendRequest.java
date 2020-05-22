@@ -30,7 +30,7 @@ public class SendRequest extends OneShotBehaviour {
   public SendRequest(AID receiver, Serializable request, String conversationId) {
     this.conversationId = conversationId;
 
-    ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+    ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
     msg.setProtocol(InteractionProtocol.FIPA_REQUEST);
     msg.addReceiver(receiver);
     try {

@@ -67,6 +67,7 @@ public class ItemMoveBehaviour extends CyclicBehaviour {
     int from = request.isIn() ? posIn : itemPosition;
     int to = request.isIn() ? itemPosition : posOut;
     Behaviour b = tbf.wrap(new ActionExecutor(new MoveItemAction(from, to), hal, msg));
+    myAgent.addBehaviour(b);
     while (!b.done()) {
       block(1000);
     }

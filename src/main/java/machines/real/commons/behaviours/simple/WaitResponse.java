@@ -13,7 +13,7 @@ import jade.lang.acl.MessageTemplate;
  */
 public class WaitResponse extends SimpleBehaviour {
 
-  private boolean done = false;
+  protected boolean done = false;
   private String conversationId;
 
   public WaitResponse(String conversationId) {

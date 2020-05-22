@@ -45,8 +45,10 @@ public class CallWarehouseConveyor extends SequentialBehaviour {
       @Override
       public void action() {
         super.action();
-        LoggerUtil.agent
-            .info("Workpiece is ready to " + (request.isImportMode() ? "import." : "export."));
+        if (done) {
+          LoggerUtil.agent
+              .info("Workpiece is ready to " + (request.isImportMode() ? "import." : "export."));
+        }
       }
     });
   }
