@@ -2,9 +2,10 @@ package machines.real.warehouse.behaviours.cycle;
 
 import commons.order.WorkpieceStatus;
 import commons.tools.LoggerUtil;
+import jade.core.Agent;
 import jade.domain.FIPAAgentManagement.FailureException;
-import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
+import jade.domain.FIPANames.InteractionProtocol;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
@@ -14,7 +15,6 @@ import machines.real.commons.ContractNetContent;
 import machines.real.commons.behaviours.sequantial.CallForAgv;
 import machines.real.commons.request.AgvRequest;
 import machines.real.warehouse.DbInterface;
-import machines.real.warehouse.WarehouseAgent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
@@ -28,24 +28,27 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 public class ProductContractNetResponder extends ContractNetResponder {
 
+  private static MessageTemplate mt = MessageTemplate.and(
+      MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.CFP),
+          MessageTemplate.MatchProtocol(InteractionProtocol.FIPA_CONTRACT_NET)),
+      MessageTemplate.MatchLanguage("PRODUCT")
+  );
   private int importBuffer = -2;
   private DbInterface db;
 
   /**
    * 成品库应标行为.
    *
-   * @param warehouseAgent 提供成品存储的agent
-   * @param mt             消息模板
+   * @param a 提供成品存储的agent
    */
-  public ProductContractNetResponder(WarehouseAgent warehouseAgent, MessageTemplate mt) {
-    super(warehouseAgent, mt);
+  public ProductContractNetResponder(Agent a) {
+    super(a, mt);
     ApplicationContext ac = new FileSystemXmlApplicationContext("./resources/sql.xml");
     db = ac.getBean("db", DbInterface.class);
   }
 
   @Override
-  protected ACLMessage handleCfp(ACLMessage cfp)
-      throws RefuseException, FailureException, NotUnderstoodException {
+  protected ACLMessage handleCfp(ACLMessage cfp) throws RefuseException {
     LoggerUtil.agent.debug(String.format("CFP received from: %s.", cfp.getSender().getName()));
     int quantity = db.getProductQuantity();
     if (quantity > 0) {
