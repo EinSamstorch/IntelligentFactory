@@ -1,5 +1,6 @@
 package machines.real.commons.behaviours.simple;
 
+import commons.tools.LoggerUtil;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -32,6 +33,7 @@ public class WaitResponse extends SimpleBehaviour {
       return;
     }
     done = true;
+    LoggerUtil.agent.info("Received response from: " + receive.getSender().getLocalName());
   }
 
   @Override

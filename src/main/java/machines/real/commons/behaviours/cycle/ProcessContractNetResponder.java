@@ -131,6 +131,6 @@ public class ProcessContractNetResponder extends ContractNetResponder {
     while (!b.done()) {
       block(500);
     }
-    return Integer.parseInt((String) action.getResultExtra());
+    return (int) Float.parseFloat((String) action.getResultExtra());
   }
 }

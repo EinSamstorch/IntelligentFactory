@@ -41,7 +41,7 @@ public class SendRequstToArm extends OneShotBehaviour {
   @Override
   public void action() {
     // 发送移动货物请求
-    ACLMessage msg = null;
+    ACLMessage msg;
     try {
       msg = DfUtils.createRequestMsg(request);
       DfUtils.searchDf(myAgent, msg, DfServiceType.ARM, password);
@@ -52,6 +52,6 @@ public class SendRequstToArm extends OneShotBehaviour {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    LoggerUtil.hal.debug("Call for arm. " + infoString);
+    LoggerUtil.agent.info("Call for arm. " + infoString);
   }
 }
