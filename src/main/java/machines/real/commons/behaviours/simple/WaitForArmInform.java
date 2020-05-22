@@ -23,14 +23,15 @@ public class WaitForArmInform extends SimpleBehaviour {
 
   @Override
   public void action() {
-    MessageTemplate mt = MessageTemplate.MatchConversationId(conversationId);
+    MessageTemplate mt = MessageTemplate.and(
+        MessageTemplate.MatchConversationId(conversationId),
+        MessageTemplate.MatchPerformative(ACLMessage.INFORM)
+    );
     ACLMessage receive = myAgent.receive(mt);
-    if (receive != null) {
-      if (receive.getPerformative() == ACLMessage.INFORM) {
-        isDone = true;
-      }
-    } else {
+    if (receive == null) {
       block();
+    } else {
+      isDone = true;
     }
   }
 

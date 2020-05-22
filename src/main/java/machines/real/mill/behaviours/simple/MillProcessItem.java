@@ -36,6 +36,7 @@ public class MillProcessItem implements ProcessItem {
         "Load item from buffer: " + buffer.getIndex()));
     // 加工
     s.addSubBehaviour(new ProcessItemBehaviour2(hal, buffer));
+
     // 下料
     ArmRequest unloadRequest = ArmRequest.unloadRequest(request);
     s.addSubBehaviour(new SequentialCallForArm(unloadRequest, armPwd,
