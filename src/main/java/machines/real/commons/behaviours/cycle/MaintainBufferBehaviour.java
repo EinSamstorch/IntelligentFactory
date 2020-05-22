@@ -36,7 +36,7 @@ public class MaintainBufferBehaviour extends CyclicBehaviour {
     );
     ACLMessage receive = myAgent.receive(mt);
     if (receive != null) {
-      int bufferIndex = new Integer(receive.getContent());
+      int bufferIndex = Integer.parseInt(receive.getContent());
       if (bufferManger.resetBufferByIndex(bufferIndex)) {
         LoggerUtil.agent.info(String.format("Item removed from buffer %d", bufferIndex));
       } else {
