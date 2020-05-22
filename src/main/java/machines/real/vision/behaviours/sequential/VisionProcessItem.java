@@ -6,9 +6,9 @@ import machines.real.commons.ProcessItem;
 import machines.real.commons.RealMachineAgent;
 import machines.real.commons.behaviours.sequantial.SequentialCallForArm;
 import machines.real.commons.behaviours.simple.ProcessFinishedBehaviour;
-import machines.real.commons.behaviours.simple.ProcessItemBehaviour;
+import machines.real.commons.behaviours.simple.ProcessItemBehaviour2;
 import machines.real.commons.buffer.Buffer;
-import machines.real.commons.hal.MachineHal;
+import machines.real.commons.hal.MiddleHal;
 import machines.real.commons.request.ArmRequest;
 
 /**
@@ -23,7 +23,7 @@ public class VisionProcessItem implements ProcessItem {
 
   @Override
   public Behaviour getBehaviour(RealMachineAgent realAgent, Buffer buffer, String armPwd) {
-    MachineHal hal = realAgent.getHal();
+    MiddleHal hal = realAgent.getHal();
     ArmRequest request = new ArmRequest(
         String.valueOf(buffer.getIndex()),
         realAgent.getLocalName(),
@@ -31,21 +31,14 @@ public class VisionProcessItem implements ProcessItem {
 
     SequentialBehaviour s = new SequentialBehaviour();
     // 上料
-    s.addSubBehaviour(SequentialCallForArm
-        .getBehaviour(realAgent,
-            request,
-            armPwd,
-            String.format("Load item from buffer %d.", buffer.getIndex())));
-
+    s.addSubBehaviour(new SequentialCallForArm(request, armPwd,
+        "Load item from buffer: " + buffer.getIndex()));
     // 检查
-    s.addSubBehaviour(ProcessItemBehaviour.getBehaviour(hal, buffer));
+    s.addSubBehaviour(new ProcessItemBehaviour2(hal, buffer));
     // 下料
     ArmRequest unloadRequest = ArmRequest.unloadRequest(request);
-    s.addSubBehaviour(SequentialCallForArm
-        .getBehaviour(realAgent,
-            unloadRequest,
-            armPwd,
-            String.format("Unload item from buffer %d.", buffer.getIndex())));
+    s.addSubBehaviour(new SequentialCallForArm(unloadRequest, armPwd,
+        "Unload item from buffer: " + buffer.getIndex()));
     // 下一步工序 更新机床和工位台状态
     s.addSubBehaviour(new ProcessFinishedBehaviour(realAgent, buffer));
     return s;

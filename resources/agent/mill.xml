@@ -39,7 +39,7 @@
       </list>
     </property>
   </bean>
-  <bean class="machines.real.mill.MillHalImpl" id="hal">
+  <bean class="machines.real.commons.hal.MiddleHalImpl" id="hal">
     <constructor-arg name="port" value="${hal.port}"/>
   </bean>
 

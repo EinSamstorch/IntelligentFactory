@@ -38,7 +38,7 @@
       </list>
     </property>
   </bean>
-  <bean class="machines.real.vision.VisionHalImpl" id="hal">
+  <bean class="machines.real.commons.hal.MiddleHalImpl" id="hal">
     <constructor-arg name="port" value="${hal.port}"/>
   </bean>
   <!-- 配置Agent -->

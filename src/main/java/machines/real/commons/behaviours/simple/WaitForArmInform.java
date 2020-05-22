@@ -1,6 +1,5 @@
 package machines.real.commons.behaviours.simple;
 
-import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -18,8 +17,7 @@ public class WaitForArmInform extends SimpleBehaviour {
   private boolean isDone = false;
   private String conversationId;
 
-  public WaitForArmInform(Agent a, String conversationId) {
-    super(a);
+  public WaitForArmInform(String conversationId) {
     this.conversationId = conversationId;
   }
 

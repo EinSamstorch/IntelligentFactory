@@ -2,6 +2,8 @@ package machines.real.commons.behaviours.cycle;
 
 import commons.order.WorkpieceStatus;
 import commons.tools.LoggerUtil;
+import jade.core.behaviours.Behaviour;
+import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
@@ -13,10 +15,13 @@ import jade.proto.ContractNetResponder;
 import java.io.IOException;
 import machines.real.commons.ContractNetContent;
 import machines.real.commons.RealMachineAgent;
+import machines.real.commons.actions.EvaluateAction;
+import machines.real.commons.actions.MachineAction;
 import machines.real.commons.behaviours.sequantial.CallForAgv;
+import machines.real.commons.behaviours.simple.ActionExecutor;
 import machines.real.commons.buffer.Buffer;
 import machines.real.commons.buffer.BufferState;
-import machines.real.commons.hal.MachineHal;
+import machines.real.commons.hal.MiddleHal;
 import machines.real.commons.request.AgvRequest;
 
 /**
@@ -33,15 +38,16 @@ public class ProcessContractNetResponder extends ContractNetResponder {
       MessageTemplate.MatchPerformative(ACLMessage.CFP),
       MessageTemplate.MatchProtocol(InteractionProtocol.FIPA_CONTRACT_NET)
   );
+  private ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
   private RealMachineAgent machineAgent;
-  private MachineHal hal;
+  private MiddleHal hal;
 
   public ProcessContractNetResponder(RealMachineAgent machineAgent) {
     super(machineAgent, mt);
     this.machineAgent = machineAgent;
   }
 
-  public void setHal(MachineHal hal) {
+  public void setHal(MiddleHal hal) {
     this.hal = hal;
   }
 
@@ -64,10 +70,7 @@ public class ProcessContractNetResponder extends ContractNetResponder {
     }
 
     // 预估时间作为标书内容
-    int evaluateTime = hal.evaluate(wpInfo, 5000);
-    if (evaluateTime < 0) {
-      throw new FailureException("Hal timeout.");
-    }
+    int evaluateTime = evaluate(wpInfo);
     evaluateTime += machineAgent.getBufferManger().getAllWaitingTime();
     ContractNetContent content = new ContractNetContent(evaluateTime);
 
@@ -110,10 +113,7 @@ public class ProcessContractNetResponder extends ContractNetResponder {
     // 放入机床buffer中
     buffer.setWpInfo(wpInfo);
     buffer.getBufferState().setState(BufferState.STATE_ARRIVING);
-    int evaluateTime = hal.evaluate(wpInfo, 5000);
-    if (evaluateTime < 0) {
-      throw new FailureException("Hal timeout.");
-    }
+    int evaluateTime = evaluate(wpInfo);
     buffer.setEvaluateTime(evaluateTime);
     // call for agv
     AgvRequest request = new AgvRequest(from, to, wpInfo);
@@ -122,5 +122,15 @@ public class ProcessContractNetResponder extends ContractNetResponder {
     ACLMessage inform = accept.createReply();
     inform.setPerformative(ACLMessage.INFORM);
     return inform;
+  }
+
+  private int evaluate(WorkpieceStatus wpInfo) {
+    MachineAction action = new EvaluateAction(wpInfo);
+    Behaviour b = tbf.wrap(new ActionExecutor(action, hal));
+    myAgent.addBehaviour(b);
+    while (!b.done()) {
+      block(500);
+    }
+    return Integer.parseInt((String) action.getResultExtra());
   }
 }
