@@ -2,7 +2,7 @@ package machines.real.warehouse.actions;
 
 import com.alibaba.fastjson.JSONObject;
 import machines.real.commons.actions.AbstractMachineAction;
-import machines.real.warehouse.WarehouseHal2;
+import machines.real.warehouse.WarehouseHal;
 
 /**
  * 仓库移动物品动作.
@@ -23,14 +23,14 @@ public class MoveItemAction extends AbstractMachineAction {
    */
   public MoveItemAction(int from, int to) {
     JSONObject extra = new JSONObject();
-    extra.put(WarehouseHal2.FIELD_FROM, from);
-    extra.put(WarehouseHal2.FIELD_TO, to);
+    extra.put(WarehouseHal.FIELD_FROM, from);
+    extra.put(WarehouseHal.FIELD_TO, to);
     this.extra = extra;
   }
 
   @Override
   public String getCmd() {
-    return WarehouseHal2.CMD_MOVE_ITEM;
+    return WarehouseHal.CMD_MOVE_ITEM;
   }
 
   @Override

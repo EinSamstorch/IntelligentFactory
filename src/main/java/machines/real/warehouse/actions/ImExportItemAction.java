@@ -1,7 +1,7 @@
 package machines.real.warehouse.actions;
 
 import machines.real.commons.actions.AbstractMachineAction;
-import machines.real.warehouse.WarehouseHal2;
+import machines.real.warehouse.WarehouseHal;
 
 /**
  * 仓库传送带进出货动作.
@@ -21,8 +21,8 @@ public class ImExportItemAction extends AbstractMachineAction {
   @Override
   public String getCmd() {
     return importMode
-        ? WarehouseHal2.CMD_IMPORT_ITEM
-        : WarehouseHal2.CMD_EXPORT_ITEM;
+        ? WarehouseHal.CMD_IMPORT_ITEM
+        : WarehouseHal.CMD_EXPORT_ITEM;
   }
 
   @Override

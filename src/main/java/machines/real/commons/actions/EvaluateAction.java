@@ -1,7 +1,7 @@
 package machines.real.commons.actions;
 
 import commons.order.WorkpieceStatus;
-import machines.real.commons.hal.MachineHal2;
+import machines.real.commons.hal.MachineHal;
 
 /**
  * 预估加工时间动作.
@@ -20,7 +20,7 @@ public class EvaluateAction extends AbstractMachineAction {
 
   @Override
   public String getCmd() {
-    return MachineHal2.CMD_EVALUATE;
+    return MachineHal.CMD_EVALUATE;
   }
 
   @Override

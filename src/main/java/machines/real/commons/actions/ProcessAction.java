@@ -1,7 +1,7 @@
 package machines.real.commons.actions;
 
 import commons.order.WorkpieceStatus;
-import machines.real.commons.hal.MachineHal2;
+import machines.real.commons.hal.MachineHal;
 
 /**
  * 加工工件动作.
@@ -20,7 +20,7 @@ public class ProcessAction extends AbstractMachineAction {
 
   @Override
   public String getCmd() {
-    return MachineHal2.CMD_PROCESS;
+    return MachineHal.CMD_PROCESS;
   }
 
   @Override

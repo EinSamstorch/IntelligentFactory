@@ -7,7 +7,7 @@ package machines.real.warehouse;
  * @version 1.0.0.0
  * @since 1.8
  */
-public interface WarehouseHal2 {
+public interface WarehouseHal {
 
   String CMD_MOVE_ITEM = "move_item";
   String FIELD_FROM = "from";

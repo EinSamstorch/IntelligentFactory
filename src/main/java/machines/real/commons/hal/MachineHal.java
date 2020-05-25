@@ -7,7 +7,7 @@ package machines.real.commons.hal;
  * @version 1.0.0.0
  * @since 1.8
  */
-public interface MachineHal2 {
+public interface MachineHal {
 
   String CMD_PROCESS = "process";
   String CMD_EVALUATE = "evaluate";
