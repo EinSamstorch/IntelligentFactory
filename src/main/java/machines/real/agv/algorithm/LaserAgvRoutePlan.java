@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -97,8 +98,10 @@ public class LaserAgvRoutePlan implements AgvRoutePlan {
     int endRow = getRow(end);
     int endCol = getCol(end);
     if (startRow == endRow) {
-      // 起点与终点在一行
-      return planSameRow(start, end);
+      // 起点与终点在一行, 如果点相邻距离小于(mCol - 1)则是仓库入库与出库口，否则是工位台之间
+      return Math.abs(start - end) < mCol - 1
+          ? planBetweenWarehouse(start, end)
+          : planSameRow(start, end);
     }
     if (startCol == endCol) {
       // 起点与终点在一列
@@ -109,6 +112,23 @@ public class LaserAgvRoutePlan implements AgvRoutePlan {
       return planBetweenBuffers(start, end);
     }
     return planWarehouse2Buffer(start, end);
+  }
+
+  private String planBetweenWarehouse(int start, int end) {
+    final boolean reverse = start > end;
+    // assume a < b
+    int a = Math.min(start, end);
+    int b = Math.max(start, end);
+    List<String> path = new ArrayList<>(2 + b - a + 1);
+    path.add(String.valueOf(a));
+    for (int i = 0; i < b - a + 1; i++) {
+      path.add(String.valueOf(a + mCol + i));
+    }
+    path.add(String.valueOf(b));
+    if (reverse) {
+      Collections.reverse(path);
+    }
+    return String.join(",", path);
   }
 
   private String planWarehouse2Buffer(int start, int end) {
@@ -153,7 +173,7 @@ public class LaserAgvRoutePlan implements AgvRoutePlan {
    * 工位台之间路径规划，非同一列情况.
    *
    * @param start 起点编号
-   * @param end   终点编号
+   * @param end 终点编号
    * @return 逗号分隔的路径字符串
    */
   private String planBetweenBuffers(int start, int end) {

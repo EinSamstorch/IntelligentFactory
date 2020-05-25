@@ -57,8 +57,8 @@ public class LaserAgvRoutePlanTest {
    */
   @Test
   public void testBetweenWarehouse() {
-    int[][] input = new int[][] {{2,3}, {3,2}};
-    String[] expects = new String[] {"2,6,7,3", "3,7,6,2"};
+    int[][] input = new int[][]{{2, 3}, {3, 2}};
+    String[] expects = new String[]{"2,6,7,3", "3,7,6,2"};
     testPlan(expects, input);
   }
 
