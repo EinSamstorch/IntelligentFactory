@@ -1,7 +1,5 @@
 package machines.real.warehouse;
 
-import machines.real.commons.hal.MachineHal;
-
 /**
  * 仓库hal.
  *
@@ -9,7 +7,7 @@ import machines.real.commons.hal.MachineHal;
  * @version 1.0.0.0
  * @since 1.8
  */
-public interface WarehouseHal2 extends MachineHal {
+public interface WarehouseHal2 {
 
   String CMD_MOVE_ITEM = "move_item";
   String FIELD_FROM = "from";
