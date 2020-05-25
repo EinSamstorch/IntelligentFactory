@@ -1,35 +1,23 @@
-package machines.real.commons;
+package machines;
 
-import jade.core.behaviours.Behaviour;
-import jade.core.behaviours.ThreadedBehaviourFactory;
-import machines.BaseAgent;
+import machines.real.commons.MachineState;
 import machines.real.commons.buffer.BufferManger;
 import machines.real.commons.hal.MiddleHal;
 
 /**
- * template for real machine agents.
+ * 机床agent.
  *
  * @author <a href="mailto:junfeng_pan96@qq.com">junfeng</a>
  * @version 1.0.0.0
  * @since 1.8
  */
 
-public class RealMachineAgent extends BaseAgent {
+public class RealMachineAgent extends RealAgentTemplate {
 
   private MiddleHal hal;
   private String armPwd;
   private BufferManger bufferManger;
   private MachineState machineState;
-
-  @Override
-  protected void setup() {
-    super.setup();
-
-    ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
-    for (Behaviour behaviour : behaviours) {
-      addBehaviour(tbf.wrap(behaviour));
-    }
-  }
 
   public BufferManger getBufferManger() {
     return bufferManger;

@@ -6,7 +6,7 @@ import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
-import machines.real.commons.RealMachineAgent;
+import machines.RealMachineAgent;
 import machines.real.commons.buffer.Buffer;
 import machines.real.commons.buffer.BufferState;
 

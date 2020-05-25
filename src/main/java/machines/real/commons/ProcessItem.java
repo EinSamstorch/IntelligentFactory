@@ -1,6 +1,7 @@
 package machines.real.commons;
 
 import jade.core.behaviours.Behaviour;
+import machines.RealMachineAgent;
 import machines.real.commons.buffer.Buffer;
 
 /**

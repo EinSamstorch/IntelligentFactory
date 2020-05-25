@@ -3,7 +3,7 @@ package machines.real.commons.behaviours.cycle;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
 import machines.real.commons.ProcessItem;
-import machines.real.commons.RealMachineAgent;
+import machines.RealMachineAgent;
 import machines.real.commons.buffer.Buffer;
 
 /**

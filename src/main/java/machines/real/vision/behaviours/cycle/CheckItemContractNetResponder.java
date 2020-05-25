@@ -11,7 +11,7 @@ import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetResponder;
 import java.io.IOException;
 import machines.real.commons.ContractNetContent;
-import machines.real.commons.RealMachineAgent;
+import machines.RealMachineAgent;
 import machines.real.commons.behaviours.sequantial.CallForAgv;
 import machines.real.commons.buffer.Buffer;
 import machines.real.commons.request.AgvRequest;

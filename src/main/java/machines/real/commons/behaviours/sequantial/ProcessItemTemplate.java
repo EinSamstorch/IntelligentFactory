@@ -3,7 +3,7 @@ package machines.real.commons.behaviours.sequantial;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.SequentialBehaviour;
 import machines.real.commons.ProcessItem;
-import machines.real.commons.RealMachineAgent;
+import machines.RealMachineAgent;
 import machines.real.commons.behaviours.simple.ProcessFinishedBehaviour;
 import machines.real.commons.behaviours.simple.ProcessItemBehaviour;
 import machines.real.commons.buffer.Buffer;

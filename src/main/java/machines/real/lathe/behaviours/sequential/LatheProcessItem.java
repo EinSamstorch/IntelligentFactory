@@ -2,7 +2,7 @@ package machines.real.lathe.behaviours.sequential;
 
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.SequentialBehaviour;
-import machines.real.commons.RealMachineAgent;
+import machines.RealMachineAgent;
 import machines.real.commons.behaviours.sequantial.ProcessItemTemplate;
 import machines.real.commons.behaviours.simple.ActionExecutor;
 import machines.real.commons.buffer.Buffer;
