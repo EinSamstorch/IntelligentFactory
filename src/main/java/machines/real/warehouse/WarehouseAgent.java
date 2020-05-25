@@ -1,8 +1,8 @@
 package machines.real.warehouse;
 
-import commons.BaseAgent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
+import machines.agent.BaseAgent;
 
 
 /**
@@ -16,18 +16,8 @@ import jade.core.behaviours.ThreadedBehaviourFactory;
 
 public class WarehouseAgent extends BaseAgent {
 
-  private WarehouseHal hal;
   private Integer posIn;
   private Integer posOut;
-
-
-  public WarehouseHal getHal() {
-    return hal;
-  }
-
-  public void setHal(WarehouseHal hal) {
-    this.hal = hal;
-  }
 
   public Integer getPosIn() {
     return posIn;

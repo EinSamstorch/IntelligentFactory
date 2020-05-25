@@ -38,7 +38,7 @@ public class AgentRunner {
 
   private static void startAgent() throws StaleProxyException {
     ApplicationContext settingContext = new FileSystemXmlApplicationContext(
-        "resources/settings.xml");
+        "resources/constant/settings.xml");
     Properties jadeProps = settingContext.getBean("settings", Properties.class);
     String ip = jadeProps.getProperty("jade.platform.ip", null);
     int port = Integer.parseInt(jadeProps.getProperty("setting.port", "-1"));

@@ -48,7 +48,16 @@ public class Buffer {
    */
   public Integer getRemainProcessTime() {
     int remainTime = evaluateTime - (int) (System.currentTimeMillis() - processTimestamp) / 1000;
-    return remainTime > 0 ? remainTime : 0;
+    return Math.max(remainTime, 0);
+  }
+
+  public void startProcess() {
+    this.processTimestamp = System.currentTimeMillis();
+    bufferState.setState(BufferState.STATE_PROCESSING);
+  }
+
+  public void finishProcess() {
+    bufferState.setState(BufferState.STATE_PROCESSED);
   }
 
   public void setProcessTimestamp(Long processTimestamp) {

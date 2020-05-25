@@ -1,28 +1,17 @@
 package machines.real.warehouse;
 
-import machines.real.commons.hal.BaseHal;
-
 /**
- * 仓库Hal应该实现的接口.
+ * 仓库hal.
  *
- * @author junfeng
+ * @author <a href="mailto:junfeng_pan96@qq.com">junfeng</a>
+ * @version 1.0.0.0
+ * @since 1.8
  */
-public interface WarehouseHal extends BaseHal {
+public interface WarehouseHal {
 
-  /**
-   * 将货物从from移动至to.
-   *
-   * @param from 起点
-   * @param to   终点
-   * @return 成功true，失败false
-   */
-  boolean moveItem(int from, int to);
-
-  /**
-   * 控制传送带.
-   *
-   * @param in true输入模式，false输出模式
-   * @return 是否成功
-   */
-  boolean conveyorControl(boolean in);
+  String CMD_MOVE_ITEM = "move_item";
+  String FIELD_FROM = "from";
+  String FIELD_TO = "to";
+  String CMD_EXPORT_ITEM = "export_item";
+  String CMD_IMPORT_ITEM = "import_item";
 }

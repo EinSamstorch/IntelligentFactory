@@ -19,6 +19,6 @@ public class LoggerUtil {
   public static final Logger hal = Logger.getLogger("hal");
 
   static {
-    PropertyConfigurator.configure("./resources/log4j.properties");
+    PropertyConfigurator.configure("./resources/constant/log4j.properties");
   }
 }

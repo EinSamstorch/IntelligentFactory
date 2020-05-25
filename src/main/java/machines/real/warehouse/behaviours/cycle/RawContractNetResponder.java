@@ -4,9 +4,11 @@ import commons.order.WorkpieceStatus;
 import commons.tools.DfServiceType;
 import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
+import jade.core.Agent;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
+import jade.domain.FIPANames.InteractionProtocol;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
@@ -14,7 +16,6 @@ import jade.proto.ContractNetResponder;
 import java.io.IOException;
 import machines.real.commons.ContractNetContent;
 import machines.real.warehouse.DbInterface;
-import machines.real.warehouse.WarehouseAgent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
@@ -29,19 +30,25 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 public class RawContractNetResponder extends ContractNetResponder {
 
+  private static MessageTemplate mt = MessageTemplate.and(
+      MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.CFP),
+          MessageTemplate.MatchProtocol(InteractionProtocol.FIPA_CONTRACT_NET)),
+      MessageTemplate.MatchLanguage("RAW")
+  );
   private int exportBuffer = -3;
   private DbInterface db;
+
+  public void setDb(DbInterface db) {
+    this.db = db;
+  }
 
   /**
    * 原料应标行为.
    *
-   * @param warehouseAgent 仓库agent
-   * @param mt             消息模板
+   * @param a 仓库agent
    */
-  public RawContractNetResponder(WarehouseAgent warehouseAgent, MessageTemplate mt) {
-    super(warehouseAgent, mt);
-    ApplicationContext ac = new FileSystemXmlApplicationContext("./resources/sql.xml");
-    db = ac.getBean("db", DbInterface.class);
+  public RawContractNetResponder(Agent a) {
+    super(a, mt);
   }
 
   /**

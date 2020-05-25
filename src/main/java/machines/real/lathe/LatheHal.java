@@ -1,26 +1,14 @@
 package machines.real.lathe;
 
-import machines.real.commons.hal.MachineHal;
-
 /**
- * 车床Hal接口.
+ * 车床hal.
  *
- * @author junfeng
+ * @author <a href="mailto:junfeng_pan96@qq.com">junfeng</a>
+ * @version 1.0.0.0
+ * @since 1.8
  */
+public interface LatheHal {
 
-public interface LatheHal extends MachineHal {
-
-  /**
-   * 夹取工件.
-   *
-   * @return 成功true 失败false
-   */
-  boolean grabItem();
-
-  /**
-   * 松开工件.
-   *
-   * @return 成功true, 失败false
-   */
-  boolean releaseItem();
+  String CMD_GRAB_ITEM = "grab_item";
+  String CMD_RELEASE_ITEM = "release_item";
 }

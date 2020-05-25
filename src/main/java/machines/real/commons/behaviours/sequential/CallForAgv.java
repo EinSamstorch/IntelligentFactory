@@ -1,4 +1,4 @@
-package machines.real.commons.behaviours.sequantial;
+package machines.real.commons.behaviours.sequential;
 
 import commons.tools.DfServiceType;
 import commons.tools.DfUtils;

@@ -6,6 +6,6 @@
   xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
           http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
   <context:property-placeholder ignore-resource-not-found="true"
-    ignore-unresolvable="true" location="./resources/settings.properties"/>
-  <util:properties id="settings" location="./resources/settings.properties"/>
+    ignore-unresolvable="true" location="resources/settings.properties"/>
+  <util:properties id="settings" location="resources/settings.properties"/>
 </beans>

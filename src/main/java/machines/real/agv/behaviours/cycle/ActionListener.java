@@ -1,13 +1,15 @@
 package machines.real.agv.behaviours.cycle;
 
 import commons.tools.LoggerUtil;
+import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.domain.FIPANames.InteractionProtocol;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import java.io.IOException;
 import machines.real.commons.actions.MachineAction;
+import machines.real.commons.behaviours.simple.ActionExecutor;
 import machines.real.commons.hal.MiddleHal;
 
 /**
@@ -19,6 +21,7 @@ import machines.real.commons.hal.MiddleHal;
  */
 public class ActionListener extends CyclicBehaviour {
 
+  private ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
   private MiddleHal hal;
   private MessageTemplate mt = MessageTemplate.and(
       MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
@@ -45,21 +48,12 @@ public class ActionListener extends CyclicBehaviour {
           + e.getLocalizedMessage());
       return;
     }
-    LoggerUtil.agent.debug("Action: " + action.getCmd() + ", extra: " + action.getExtra());
-    while (!hal.executeAction(action)) {
-      block(3000);
+
+    Behaviour b = tbf.wrap(new ActionExecutor(action, hal, receive));
+    myAgent.addBehaviour(b);
+    while (!b.done()) {
+      block(1000);
     }
-    LoggerUtil.agent.debug("Action done!");
-    ACLMessage reply = receive.createReply();
-    reply.setPerformative(ACLMessage.INFORM);
-    reply.setLanguage("done");
-    try {
-      reply.setContentObject(hal.getExtra());
-    } catch (IOException e) {
-      LoggerUtil.agent.error("Serialization failed!" + e.getLocalizedMessage());
-      reply.setContent("");
-    }
-    myAgent.send(reply);
   }
 
 }

@@ -4,7 +4,7 @@
   xmlns="http://www.springframework.org/schema/beans"
   xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
-  <bean class="machines.virtual.VirtualAgent" id="agent">
+  <bean class="machines.agent.VirtualAgentTemplate" id="agent">
     <property name="serviceType">
       <util:constant static-field="commons.tools.DfServiceType.CLOUD_UPDATE"/>
     </property>
@@ -32,6 +32,6 @@
 
   <!-- 注入网址 -->
   <bean class="java.util.concurrent.LinkedBlockingQueue" id="orderInfoQueue"/>
-  <import resource="../settings.xml"/>
+  <import resource="../constant/settings.xml"/>
 </beans>
 

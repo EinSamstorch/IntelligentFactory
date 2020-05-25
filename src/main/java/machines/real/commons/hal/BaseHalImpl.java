@@ -2,6 +2,7 @@ package machines.real.commons.hal;
 
 import com.alibaba.fastjson.JSONObject;
 import commons.tools.JsonTool;
+import commons.tools.LoggerUtil;
 import java.util.Map;
 import java.util.Objects;
 import machines.real.commons.hal.socket.SocketListener;
@@ -118,7 +119,7 @@ public class BaseHalImpl implements BaseHal {
 
     JSONObject response = getResponse(taskNo, timeoutMills);
     if (response == null) {
-      extraInfo = "Hal timeout.";
+      LoggerUtil.hal.warn("Hal timeout. Task no: " + taskNo);
       return false;
     }
     if (!Objects.equals(SocketMessage.RESULT_SUCCESS,
@@ -151,6 +152,6 @@ public class BaseHalImpl implements BaseHal {
 
   @Override
   public String getExtraInfo() {
-    return extraInfo;
+    return extraInfo == null ? "" : extraInfo;
   }
 }

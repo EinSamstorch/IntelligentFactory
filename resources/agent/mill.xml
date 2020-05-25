@@ -3,7 +3,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://www.springframework.org/schema/beans"
   xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
-  <bean class="machines.real.commons.RealMachineAgent" id="agent">
+  <bean class="machines.agent.RealMachineAgent" id="agent">
     <property name="armPwd" value="${arm.password}"/>
     <property name="hal" ref="hal"/>
     <property name="bufferManger" ref="bufferManager"/>
@@ -28,19 +28,18 @@
         <bean class="machines.real.commons.behaviours.cycle.LoadItemBehaviour">
           <constructor-arg name="machineAgent" ref="agent"/>
           <constructor-arg name="processItem">
-            <bean class="machines.real.mill.behaviours.simple.MillProcessItem"/>
+            <bean class="machines.real.commons.behaviours.sequential.SimpleProcessItem"/>
           </constructor-arg>
         </bean>
         <!-- 铣床服务应标 -->
         <bean class="machines.real.commons.behaviours.cycle.ProcessContractNetResponder">
           <constructor-arg name="machineAgent" ref="agent"/>
-          <constructor-arg name="mt" ref="matchProtocol"/>
           <property name="hal" ref="hal"/>
         </bean>
       </list>
     </property>
   </bean>
-  <bean class="machines.real.mill.MillHalImpl" id="hal">
+  <bean class="machines.real.commons.hal.MiddleHalImpl" id="hal">
     <constructor-arg name="port" value="${hal.port}"/>
   </bean>
 
@@ -49,24 +48,6 @@
     <constructor-arg name="indexesStr" value="${machine.buffers}"/>
   </bean>
   <bean class="machines.real.commons.MachineState" id="machineState"/>
-  <bean class="jade.lang.acl.MessageTemplate" factory-method="and" id="matchProtocol">
-    <!-- match Contract Net -->
-    <constructor-arg name="op1">
-      <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchProtocol">
-        <constructor-arg type="java.lang.String">
-          <util:constant
-            static-field="jade.domain.FIPANames.InteractionProtocol.FIPA_CONTRACT_NET"/>
-        </constructor-arg>
-      </bean>
-    </constructor-arg>
-    <!-- match CFP -->
-    <constructor-arg name="op2">
-      <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchPerformative">
-        <constructor-arg name="value">
-          <util:constant static-field="jade.lang.acl.ACLMessage.CFP"/>
-        </constructor-arg>
-      </bean>
-    </constructor-arg>
-  </bean>
-  <import resource="../settings.xml"/>
+
+  <import resource="../constant/settings.xml"/>
 </beans>

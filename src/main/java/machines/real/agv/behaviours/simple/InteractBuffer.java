@@ -68,7 +68,7 @@ public class InteractBuffer extends SimpleBehaviour {
     if (receive == null) {
       return;
     }
-    done = "done".equalsIgnoreCase(receive.getContent());
+    done = true;
   }
 
   @Override

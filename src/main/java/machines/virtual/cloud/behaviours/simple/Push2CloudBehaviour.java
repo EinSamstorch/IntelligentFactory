@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import commons.tools.HttpRequest;
 import commons.tools.LoggerUtil;
 import jade.core.behaviours.SimpleBehaviour;
-import machines.virtual.cloud.CloudAgent;
 
 
 /**
@@ -30,7 +29,6 @@ public class Push2CloudBehaviour extends SimpleBehaviour {
    * 最大重试次数.
    */
   private static final int RETRY_MAX = 3;
-  private CloudAgent cagent;
   /**
    * 对应api网址. http://{website}/ks/FactoryAction_updateJobState.action?
    * http://{website}/ks/FactoryAction_updateJobMachine.action?
@@ -41,10 +39,6 @@ public class Push2CloudBehaviour extends SimpleBehaviour {
    * jobId=003004003010&machine=C001&process=2
    */
   private String param;
-  /**
-   * 选择API.
-   */
-  private int choice;
   /**
    * 云端更新flag.
    */
@@ -61,22 +55,17 @@ public class Push2CloudBehaviour extends SimpleBehaviour {
   /**
    * 构造器.
    *
-   * @param ca     cloud{@link CloudAgent}
    * @param param  API对应参数
    * @param choice 选择API
    */
-  public Push2CloudBehaviour(CloudAgent ca, String param, int choice) {
-    this.cagent = ca;
+  public Push2CloudBehaviour(String website, String param, int choice) {
     this.param = param;
-    this.choice = choice;
     switch (choice) {
       case UPDATE_STATE:
-        url = String
-            .format("http://%s/ks/FactoryAction_updateJobState.action?", cagent.getWebsite());
+        url = String.format("http://%s/ks/FactoryAction_updateJobState.action?", website);
         break;
       case UPDATE_POSITION:
-        url = String
-            .format("http://%s/ks/FactoryAction_updateJobMachine.action?", cagent.getWebsite());
+        url = String.format("http://%s/ks/FactoryAction_updateJobMachine.action?", website);
         break;
       default:
     }

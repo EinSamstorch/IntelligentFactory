@@ -9,7 +9,6 @@
     <property name="posIn" ref="posIn"/>
     <!-- 出库口 -->
     <property name="posOut" ref="posOut"/>
-    <property name="hal" ref="hal"/>
     <property name="serviceType">
       <util:constant static-field="commons.tools.DfServiceType.WAREHOUSE"/>
     </property>
@@ -34,13 +33,13 @@
         </bean>
         <!-- 原料应标 -->
         <bean class="machines.real.warehouse.behaviours.cycle.RawContractNetResponder">
-          <constructor-arg name="warehouseAgent" ref="agent"/>
-          <constructor-arg name="mt" ref="rawMessageTemplate"/>
+          <constructor-arg name="a" ref="agent"/>
+          <property name="db" ref="db"/>
         </bean>
         <!-- 成品应标 -->
         <bean class="machines.real.warehouse.behaviours.cycle.ProductContractNetResponder">
-          <constructor-arg name="warehouseAgent" ref="agent"/>
-          <constructor-arg name="mt" ref="productMessageTemplate"/>
+          <constructor-arg name="a" ref="agent"/>
+          <property name="db" ref="db"/>
         </bean>
       </list>
     </property>
@@ -53,51 +52,12 @@
   <bean class="java.lang.Integer" id="posOut">
     <constructor-arg name="value" value="${warehouse.pos.out}"/>
   </bean>
-  <bean class="machines.real.warehouse.WarehouseHalImpl" id="hal">
+  <bean class="machines.real.commons.hal.MiddleHalImpl" id="hal">
     <!-- socket server监听端口 -->
     <constructor-arg name="port" value="${hal.port}"/>
   </bean>
-  <bean class="jade.lang.acl.MessageTemplate" factory-method="and" id="matchProtocol">
-    <!-- match Contract Net -->
-    <constructor-arg name="op1">
-      <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchProtocol">
-        <constructor-arg type="java.lang.String">
-          <util:constant
-            static-field="jade.domain.FIPANames.InteractionProtocol.FIPA_CONTRACT_NET"/>
-        </constructor-arg>
-      </bean>
-    </constructor-arg>
-    <!-- match CFP -->
-    <constructor-arg name="op2">
-      <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchPerformative">
-        <constructor-arg name="value">
-          <util:constant static-field="jade.lang.acl.ACLMessage.CFP"/>
-        </constructor-arg>
-      </bean>
-    </constructor-arg>
-  </bean>
 
-  <!-- 配置 hal -->
-  <bean class="jade.lang.acl.MessageTemplate" factory-method="and" id="rawMessageTemplate">
-    <constructor-arg name="op1" ref="matchProtocol"/>
-    <constructor-arg name="op2">
-      <!-- 匹配 RAW -->
-      <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchLanguage">
-        <constructor-arg type="java.lang.String" value="RAW"/>
-      </bean>
-    </constructor-arg>
-  </bean>
-
-  <bean class="jade.lang.acl.MessageTemplate" factory-method="and" id="productMessageTemplate">
-    <constructor-arg name="op1" ref="matchProtocol"/>
-    <constructor-arg name="op2">
-      <!-- 匹配 RAW -->
-      <bean class="jade.lang.acl.MessageTemplate" factory-method="MatchLanguage">
-        <constructor-arg type="java.lang.String" value="PRODUCT"/>
-      </bean>
-    </constructor-arg>
-  </bean>
-
-  <import resource="../settings.xml"/>
+  <import resource="../constant/settings.xml"/>
+  <import resource="../constant/sql.xml"/>
 </beans>
 
