@@ -28,7 +28,7 @@
         <bean class="machines.real.commons.behaviours.cycle.LoadItemBehaviour">
           <constructor-arg name="machineAgent" ref="agent"/>
           <constructor-arg name="processItem">
-            <bean class="machines.real.vision.behaviours.sequential.VisionProcessItem"/>
+            <bean class="machines.real.commons.behaviours.sequantial.SimpleProcessItem"/>
           </constructor-arg>
         </bean>
         <!-- 检测仪服务应标 -->

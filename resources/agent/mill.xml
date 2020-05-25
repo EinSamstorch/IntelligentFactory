@@ -28,7 +28,7 @@
         <bean class="machines.real.commons.behaviours.cycle.LoadItemBehaviour">
           <constructor-arg name="machineAgent" ref="agent"/>
           <constructor-arg name="processItem">
-            <bean class="machines.real.mill.behaviours.simple.MillProcessItem"/>
+            <bean class="machines.real.commons.behaviours.sequantial.SimpleProcessItem"/>
           </constructor-arg>
         </bean>
         <!-- 铣床服务应标 -->
