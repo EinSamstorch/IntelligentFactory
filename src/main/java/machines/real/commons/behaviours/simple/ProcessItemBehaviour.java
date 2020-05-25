@@ -12,11 +12,11 @@ import machines.real.commons.hal.MiddleHal;
  * @version 1.0.0.0
  * @since 1.8
  */
-public class ProcessItemBehaviour2 extends ActionExecutor {
+public class ProcessItemBehaviour extends ActionExecutor {
 
   private Buffer buffer;
 
-  public ProcessItemBehaviour2(MiddleHal hal, Buffer buffer) {
+  public ProcessItemBehaviour(MiddleHal hal, Buffer buffer) {
     super(new ProcessAction(buffer.getWpInfo()), hal);
     this.buffer = buffer;
   }

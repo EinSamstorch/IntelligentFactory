@@ -5,7 +5,7 @@ import jade.core.behaviours.SequentialBehaviour;
 import machines.real.commons.ProcessItem;
 import machines.real.commons.RealMachineAgent;
 import machines.real.commons.behaviours.simple.ProcessFinishedBehaviour;
-import machines.real.commons.behaviours.simple.ProcessItemBehaviour2;
+import machines.real.commons.behaviours.simple.ProcessItemBehaviour;
 import machines.real.commons.buffer.Buffer;
 import machines.real.commons.hal.MiddleHal;
 import machines.real.commons.request.ArmRequest;
@@ -46,7 +46,7 @@ public abstract class ProcessItemTemplate implements ProcessItem {
   }
 
   protected void processItem(SequentialBehaviour s, MiddleHal hal, Buffer buffer) {
-    s.addSubBehaviour(new ProcessItemBehaviour2(hal, buffer));
+    s.addSubBehaviour(new ProcessItemBehaviour(hal, buffer));
   }
 
   protected void finishedProcess(SequentialBehaviour s, RealMachineAgent realAgent, Buffer buffer) {
