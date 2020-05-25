@@ -1,4 +1,4 @@
-package machines;
+package machines.agent;
 
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;

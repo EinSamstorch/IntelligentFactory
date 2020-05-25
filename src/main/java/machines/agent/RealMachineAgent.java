@@ -1,4 +1,4 @@
-package machines;
+package machines.agent;
 
 import machines.real.commons.MachineState;
 import machines.real.commons.buffer.BufferManger;

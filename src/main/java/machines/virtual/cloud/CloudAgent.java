@@ -6,7 +6,7 @@ import jade.core.behaviours.ThreadedBehaviourFactory;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Vector;
-import machines.BaseAgent;
+import machines.agent.BaseAgent;
 
 /**
  * cloud，负责与云端交互. 1. 定时尝试获取新订单. 2. 定时检测是否有新消息需要推送. 3. 对新订单解析，并向仓库发起招标

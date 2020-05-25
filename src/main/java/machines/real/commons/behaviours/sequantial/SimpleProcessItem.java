@@ -2,7 +2,7 @@ package machines.real.commons.behaviours.sequantial;
 
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.SequentialBehaviour;
-import machines.RealMachineAgent;
+import machines.agent.RealMachineAgent;
 import machines.real.commons.buffer.Buffer;
 import machines.real.commons.hal.MiddleHal;
 import machines.real.commons.request.ArmRequest;

@@ -2,7 +2,7 @@ package machines.real.arm;
 
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
-import machines.BaseAgent;
+import machines.agent.BaseAgent;
 
 /**
  * arm robot agent.

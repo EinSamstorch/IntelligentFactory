@@ -1,4 +1,4 @@
-package machines;
+package machines.agent;
 
 import commons.tools.LoggerUtil;
 import jade.core.Agent;
