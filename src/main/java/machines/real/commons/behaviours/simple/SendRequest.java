@@ -18,7 +18,7 @@ import java.io.Serializable;
 public class SendRequest extends OneShotBehaviour {
 
   private String conversationId;
-  private ACLMessage msg = null;
+  private ACLMessage msg;
 
   /**
    * 向其他agent发送任务请求.
@@ -42,18 +42,6 @@ public class SendRequest extends OneShotBehaviour {
     }
     this.msg = msg;
   }
-
-  /**
-   * 向其他agent发送消息.
-   *
-   * @param msg            消息
-   * @param conversationId 会话id
-   */
-  public SendRequest(ACLMessage msg, String conversationId) {
-    this.msg = msg;
-    this.conversationId = conversationId;
-  }
-
 
   @Override
   public void action() {

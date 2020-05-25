@@ -2,7 +2,7 @@ package machines.real.commons.behaviours.sequantial;
 
 import jade.core.behaviours.SequentialBehaviour;
 import java.util.Random;
-import machines.real.commons.behaviours.simple.SendRequstToArm;
+import machines.real.commons.behaviours.simple.SendRequestToArm;
 import machines.real.commons.behaviours.simple.WaitResponse;
 import machines.real.commons.request.ArmRequest;
 
@@ -25,7 +25,7 @@ public class SequentialCallForArm extends SequentialBehaviour {
    */
   public SequentialCallForArm(ArmRequest request, String password, String infoStr) {
     String conversationId = String.format("CALL_FOR_ARM_%d", new Random().nextInt());
-    addSubBehaviour(new SendRequstToArm(request, password, conversationId, infoStr));
+    addSubBehaviour(new SendRequestToArm(request, password, conversationId, infoStr));
     addSubBehaviour(new WaitResponse(conversationId));
   }
 }

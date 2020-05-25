@@ -15,7 +15,7 @@ import machines.real.commons.request.ArmRequest;
  * @since 1.8
  */
 
-public class SendRequstToArm extends OneShotBehaviour {
+public class SendRequestToArm extends OneShotBehaviour {
 
   private ArmRequest request;
   private String password;
@@ -30,7 +30,7 @@ public class SendRequstToArm extends OneShotBehaviour {
    * @param conversationId 会话id,用于匹配回信
    * @param infoString     消息字符串,用于日志输出
    */
-  public SendRequstToArm(ArmRequest request, String password, String conversationId,
+  public SendRequestToArm(ArmRequest request, String password, String conversationId,
       String infoString) {
     this.request = request;
     this.password = password;

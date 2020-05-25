@@ -34,7 +34,8 @@ public abstract class ProcessItemTemplate implements ProcessItem {
    * @param armPwd 机械手密码
    * @return 组装好的加工行为
    */
-  protected abstract Behaviour processBehaviour(RealMachineAgent realAgent, Buffer buffer, String armPwd);
+  protected abstract Behaviour processBehaviour(
+      RealMachineAgent realAgent, Buffer buffer, String armPwd);
 
   protected void armMoveItem(SequentialBehaviour s, ArmRequest request, String armPwd) {
     s.addSubBehaviour(new SequentialCallForArm(request, armPwd,
@@ -51,6 +52,4 @@ public abstract class ProcessItemTemplate implements ProcessItem {
   protected void finishedProcess(SequentialBehaviour s, RealMachineAgent realAgent, Buffer buffer) {
     s.addSubBehaviour(new ProcessFinishedBehaviour(realAgent, buffer));
   }
-
-
 }
