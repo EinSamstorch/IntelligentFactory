@@ -36,6 +36,10 @@ public class ProductContractNetResponder extends ContractNetResponder {
   private int importBuffer = -2;
   private DbInterface db;
 
+  public void setDb(DbInterface db) {
+    this.db = db;
+  }
+
   /**
    * 成品库应标行为.
    *
@@ -43,8 +47,6 @@ public class ProductContractNetResponder extends ContractNetResponder {
    */
   public ProductContractNetResponder(Agent a) {
     super(a, mt);
-    ApplicationContext ac = new FileSystemXmlApplicationContext("./resources/sql.xml");
-    db = ac.getBean("db", DbInterface.class);
   }
 
   @Override

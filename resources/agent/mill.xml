@@ -49,5 +49,5 @@
   </bean>
   <bean class="machines.real.commons.MachineState" id="machineState"/>
 
-  <import resource="../settings.xml"/>
+  <import resource="../constant/settings.xml"/>
 </beans>

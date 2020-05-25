@@ -38,6 +38,10 @@ public class RawContractNetResponder extends ContractNetResponder {
   private int exportBuffer = -3;
   private DbInterface db;
 
+  public void setDb(DbInterface db) {
+    this.db = db;
+  }
+
   /**
    * 原料应标行为.
    *
@@ -45,8 +49,6 @@ public class RawContractNetResponder extends ContractNetResponder {
    */
   public RawContractNetResponder(Agent a) {
     super(a, mt);
-    ApplicationContext ac = new FileSystemXmlApplicationContext("./resources/sql.xml");
-    db = ac.getBean("db", DbInterface.class);
   }
 
   /**

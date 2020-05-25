@@ -23,6 +23,6 @@
   <bean class="java.lang.Integer" id="detectRatio">
     <constructor-arg name="value" value="${worker.ratio}"/>
   </bean>
-  <import resource="../settings.xml"/>
+  <import resource="../constant/settings.xml"/>
 </beans>
 

@@ -57,7 +57,7 @@ public class LaserAgvRoutePlan implements AgvRoutePlan {
   }
 
   private static void initBufferLocation() throws IOException {
-    File txt = new File("./resources/buffer_map.txt");
+    File txt = new File("./resources/constant/buffer_map.txt");
 
     BufferedReader reader = new BufferedReader(
         new InputStreamReader(new FileInputStream(txt)));

@@ -34,10 +34,12 @@
         <!-- 原料应标 -->
         <bean class="machines.real.warehouse.behaviours.cycle.RawContractNetResponder">
           <constructor-arg name="a" ref="agent"/>
+          <property name="db" ref="db"/>
         </bean>
         <!-- 成品应标 -->
         <bean class="machines.real.warehouse.behaviours.cycle.ProductContractNetResponder">
           <constructor-arg name="a" ref="agent"/>
+          <property name="db" ref="db"/>
         </bean>
       </list>
     </property>
@@ -55,6 +57,7 @@
     <constructor-arg name="port" value="${hal.port}"/>
   </bean>
 
-  <import resource="../settings.xml"/>
+  <import resource="../constant/settings.xml"/>
+  <import resource="../constant/sql.xml"/>
 </beans>
 

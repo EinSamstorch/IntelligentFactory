@@ -31,6 +31,6 @@
   </bean>
   <!-- 获取配置文件 -->
   <!-- 配置 hal -->
-  <import resource="../settings.xml"/>
+  <import resource="../constant/settings.xml"/>
 </beans>
 
