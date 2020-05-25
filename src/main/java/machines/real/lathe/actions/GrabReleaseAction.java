@@ -1,7 +1,7 @@
 package machines.real.lathe.actions;
 
 import machines.real.commons.actions.AbstractMachineAction;
-import machines.real.lathe.LatheHal2;
+import machines.real.lathe.LatheHal;
 
 /**
  * 抓取/释放工件动作.
@@ -20,7 +20,7 @@ public class GrabReleaseAction extends AbstractMachineAction {
 
   @Override
   public String getCmd() {
-    return grab ? LatheHal2.CMD_GRAB_ITEM : LatheHal2.CMD_RELEASE_ITEM;
+    return grab ? LatheHal.CMD_GRAB_ITEM : LatheHal.CMD_RELEASE_ITEM;
   }
 
   @Override

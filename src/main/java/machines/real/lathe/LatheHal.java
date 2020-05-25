@@ -7,7 +7,7 @@ package machines.real.lathe;
  * @version 1.0.0.0
  * @since 1.8
  */
-public interface LatheHal2 {
+public interface LatheHal {
 
   String CMD_GRAB_ITEM = "grab_item";
   String CMD_RELEASE_ITEM = "release_item";
