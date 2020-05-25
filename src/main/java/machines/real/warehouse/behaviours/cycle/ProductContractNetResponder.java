@@ -12,7 +12,7 @@ import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetResponder;
 import java.io.IOException;
 import machines.real.commons.ContractNetContent;
-import machines.real.commons.behaviours.sequantial.CallForAgv;
+import machines.real.commons.behaviours.sequential.CallForAgv;
 import machines.real.commons.request.AgvRequest;
 import machines.real.warehouse.DbInterface;
 import org.springframework.context.ApplicationContext;

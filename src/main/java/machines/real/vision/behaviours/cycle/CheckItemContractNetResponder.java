@@ -12,7 +12,7 @@ import jade.proto.ContractNetResponder;
 import java.io.IOException;
 import machines.agent.RealMachineAgent;
 import machines.real.commons.ContractNetContent;
-import machines.real.commons.behaviours.sequantial.CallForAgv;
+import machines.real.commons.behaviours.sequential.CallForAgv;
 import machines.real.commons.buffer.Buffer;
 import machines.real.commons.request.AgvRequest;
 

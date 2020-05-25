@@ -17,7 +17,7 @@ import machines.agent.RealMachineAgent;
 import machines.real.commons.ContractNetContent;
 import machines.real.commons.actions.EvaluateAction;
 import machines.real.commons.actions.MachineAction;
-import machines.real.commons.behaviours.sequantial.CallForAgv;
+import machines.real.commons.behaviours.sequential.CallForAgv;
 import machines.real.commons.behaviours.simple.ActionExecutor;
 import machines.real.commons.buffer.Buffer;
 import machines.real.commons.buffer.BufferState;

@@ -1,4 +1,4 @@
-package machines.real.commons.behaviours.sequantial;
+package machines.real.commons.behaviours.sequential;
 
 import jade.core.behaviours.SequentialBehaviour;
 import java.util.Random;
