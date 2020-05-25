@@ -1,8 +1,8 @@
 package machines.real.warehouse;
 
-import commons.BaseAgent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
+import machines.BaseAgent;
 
 
 /**

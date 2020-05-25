@@ -1,8 +1,8 @@
 package machines.virtual.worker;
 
-import commons.BaseAgent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
+import machines.BaseAgent;
 
 /**
  * 专门负责招投标任务.

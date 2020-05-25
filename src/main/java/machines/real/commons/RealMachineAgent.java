@@ -1,8 +1,8 @@
 package machines.real.commons;
 
-import commons.BaseAgent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
+import machines.BaseAgent;
 import machines.real.commons.buffer.BufferManger;
 import machines.real.commons.hal.MiddleHal;
 

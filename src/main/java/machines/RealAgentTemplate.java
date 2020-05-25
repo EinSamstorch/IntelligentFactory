@@ -1,4 +1,4 @@
-package commons;
+package machines;
 
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;

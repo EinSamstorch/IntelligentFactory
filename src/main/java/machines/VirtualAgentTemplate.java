@@ -1,4 +1,4 @@
-package commons;
+package machines;
 
 /**
  * 无Hal的Agent模板. 与带hal的agent模板的差别是： 带hal的模板，一般会配备checkHalOnline行为，改行为控制agent注册自身服务
