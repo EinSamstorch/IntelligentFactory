@@ -49,6 +49,8 @@ public class ActionExecutor extends OneShotBehaviour {
       block(3000);
     }
     LoggerUtil.hal.debug("Action done!");
+    // 储存hal 返回消息
+    action.setResultExtra(hal.getExtra());
     if (requestMsg != null) {
       ACLMessage reply = requestMsg.createReply();
       reply.setPerformative(ACLMessage.INFORM);
