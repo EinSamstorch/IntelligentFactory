@@ -1,5 +1,6 @@
 package machines.real.agv.actions;
 
+import com.alibaba.fastjson.JSONObject;
 import machines.real.agv.MultiAgvHal;
 import machines.real.commons.actions.AbstractMachineAction;
 
@@ -12,7 +13,7 @@ import machines.real.commons.actions.AbstractMachineAction;
  */
 public class MoveAction extends AbstractMachineAction {
 
-  private String path;
+  private JSONObject extra;
 
   /**
    * 构造移动动作.
@@ -20,7 +21,8 @@ public class MoveAction extends AbstractMachineAction {
    * @param path 路径
    */
   public MoveAction(String path) {
-    this.path = path;
+    extra = new JSONObject();
+    extra.put("path", path);
   }
 
   @Override
@@ -30,6 +32,6 @@ public class MoveAction extends AbstractMachineAction {
 
   @Override
   public Object getExtra() {
-    return path;
+    return extra;
   }
 }
