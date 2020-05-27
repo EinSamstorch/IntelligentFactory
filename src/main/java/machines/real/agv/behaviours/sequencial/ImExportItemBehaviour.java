@@ -1,7 +1,7 @@
 package machines.real.agv.behaviours.sequencial;
 
 import jade.core.behaviours.Behaviour;
-import jade.core.behaviours.SequentialBehaviour;
+import jade.core.behaviours.ParallelBehaviour;
 import machines.real.agv.behaviours.simple.ActionCaller;
 
 /**
@@ -11,23 +11,17 @@ import machines.real.agv.behaviours.simple.ActionCaller;
  * @version 1.0.0.0
  * @since 1.8
  */
-public class ImExportItemBehaviour extends SequentialBehaviour {
+public class ImExportItemBehaviour extends ParallelBehaviour {
 
   /**
    * AGV出入物料动作组合.
    *
-   * @param importMode     接收/输出物料
    * @param imExAction     agv接收输出物料动作
-   * @param interactBuffer 对应工位台动作相应
+   * @param interactOther 对应工位台动作相应/对应仓库传送带相应动作
    */
-  public ImExportItemBehaviour(boolean importMode, ActionCaller imExAction,
-      Behaviour interactBuffer) {
-    if (importMode) {
-      addSubBehaviour(imExAction);
-      addSubBehaviour(interactBuffer);
-    } else {
-      addSubBehaviour(interactBuffer);
-      addSubBehaviour(imExAction);
-    }
+  public ImExportItemBehaviour(ActionCaller imExAction, Behaviour interactOther) {
+    addSubBehaviour(interactOther);
+    addSubBehaviour(imExAction);
   }
+
 }

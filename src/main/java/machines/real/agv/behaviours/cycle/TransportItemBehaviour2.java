@@ -162,19 +162,23 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
   private void interactWarehouse(boolean agvImport, AID agv, int warehousePos) {
     // agv从仓库取货
     // 1. 仓库移动货物到出口
-    // 2. agv启动收货模式
-    // 3. 仓库传送带启动出货模式
+    // 2. agv启动收货模式 & 仓库传送带启动出货模式
+
     // agv送货入仓库
-    // 1. 仓库传送带启动入货模式
-    // 2. agv启动出货模式
-    // 3. 仓库移动货物到指定位置
-    Behaviour[] bs = new Behaviour[3];
-    bs[agvImport ? 0 : 2] = new CallWarehouseMoveItem(
+    // 1. 仓库传送带启动入货模式 & agv启动出货模式
+    // 2. 仓库移动货物到指定位置
+
+    Behaviour whMove = new CallWarehouseMoveItem(
         new WarehouseItemMoveRequest(warehousePos, !agvImport));
-    bs[1] = new ActionCaller(agv, new InExportAction(agvImport));
-    bs[agvImport ? 2 : 0] = new CallWarehouseConveyor(new WarehouseConveyorRequest(!agvImport));
-    for (Behaviour b : bs) {
-      waitBehaviourDone(b);
+    Behaviour agvAndConveyor = new ImExportItemBehaviour(
+        new ActionCaller(agv, new InExportAction(agvImport)),
+        new CallWarehouseConveyor(new WarehouseConveyorRequest(!agvImport)));
+    if (agvImport) {
+      waitBehaviourDone(whMove);
+      waitBehaviourDone(agvAndConveyor);
+    } else {
+      waitBehaviourDone(agvAndConveyor);
+      waitBehaviourDone(whMove);
     }
   }
 
@@ -184,7 +188,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     // 交互agv货仓
     ActionCaller imExCaller = new ActionCaller(agv, new InExportAction(agvImport));
     // 组装行为
-    Behaviour outBehaviour = new ImExportItemBehaviour(agvImport, imExCaller, interactBuffer);
+    Behaviour outBehaviour = new ImExportItemBehaviour(imExCaller, interactBuffer);
     // 等待完成
     waitBehaviourDone(outBehaviour);
   }
