@@ -44,7 +44,7 @@ public class AgvMapUtils {
    * @param aid id
    * @param pos 位置
    */
-  public static void setNodeMap(AID aid, int pos) {
+  public static void setAgvLoc(AID aid, int pos) {
     Integer oldLoc = locationMap.get(aid);
     if (oldLoc != null) {
       nodeMap[oldLoc] = false;
@@ -109,7 +109,7 @@ public class AgvMapUtils {
    * @param bufferLocation 工位台对应的地图点信息数组
    * @return 工位台编号， -1表示未找到
    */
-  public static int getBufferNo(int mapNode, int[] bufferLocation) {
+  public static int getBufferIndex(int mapNode, int[] bufferLocation) {
     for (int i = 1; i < bufferLocation.length; i++) {
       if (mapNode == bufferLocation[i]) {
         return i;
@@ -124,7 +124,7 @@ public class AgvMapUtils {
    * @param bufferNo 工位台编号，规定：仓库入库出库口为特殊工位台，编号为 地图点索引 的相反值， 如-2, -1等
    * @return 地图点位置
    */
-  public static int getBufferMap(int bufferNo, AgvRoutePlan plan) {
+  public static int getBufferLoc(int bufferNo, AgvRoutePlan plan) {
     if (bufferNo < 0) {
       return -bufferNo;
     }

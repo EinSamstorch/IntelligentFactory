@@ -71,7 +71,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     }
     // 取货点
     int fromBuffer = request.getFromBuffer();
-    int fromLoc = AgvMapUtils.getBufferMap(fromBuffer, plan);
+    int fromLoc = AgvMapUtils.getBufferLoc(fromBuffer, plan);
     AID choose = null;
     int distance = Integer.MAX_VALUE;
     for (AID agv : checkInMap.keySet()) {
@@ -87,7 +87,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     if (choose == null) {
       return;
     }
-    LoggerUtil.agent.debug("Choose agv: " + choose.getLocalName());
+    LoggerUtil.agent.info("Choose agv: " + choose.getLocalName());
     // 3. agv前往取货点
     agvMove(fromBuffer, choose);
     // 4. AGV入料
@@ -195,7 +195,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
 
   private void agvMove(int bufferNo, AID agv) {
 
-    int toLoc = AgvMapUtils.getBufferMap(bufferNo, plan);
+    int toLoc = AgvMapUtils.getBufferLoc(bufferNo, plan);
     int fromLoc = AgvMapUtils.getLocationMap().get(agv);
 
     String movePath = plan.getRoute(fromLoc, toLoc);
@@ -212,5 +212,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     // 移动agv
     MachineAction moveAction = new MoveAction(plan.getRoute(fromLoc, toLoc));
     waitCallerDone(agv, moveAction);
+    // 更新agv位置
+    AgvMapUtils.setAgvLoc(agv, toLoc);
   }
 }

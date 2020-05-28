@@ -17,25 +17,18 @@ import machines.real.agv.algorithm.AgvMapUtils;
  */
 public class PositionReceiver extends CyclicBehaviour {
 
-  private Map<AID, Long> checkInMap;
-
-  public void setCheckInMap(Map<AID, Long> checkInMap) {
-    this.checkInMap = checkInMap;
-  }
-
   @Override
   public void action() {
     MessageTemplate template = MessageTemplate
         .and(MessageTemplate.MatchPerformative(ACLMessage.INFORM),
-            MessageTemplate.MatchLanguage("HB"));
+            MessageTemplate.MatchLanguage("init"));
     ACLMessage receive = myAgent.receive(template);
     if (receive == null) {
       return;
     }
     AID sender = receive.getSender();
-    checkInMap.put(sender, System.currentTimeMillis());
     int pos = Integer.parseInt(receive.getContent());
-    LoggerUtil.agent.debug("HB: " + sender.getLocalName() + ", pos: " + pos);
-    AgvMapUtils.setNodeMap(receive.getSender(), pos);
+    LoggerUtil.agent.info("Agv init: " + sender.getLocalName() + ", pos: " + pos);
+    AgvMapUtils.setAgvLoc(receive.getSender(), pos);
   }
 }
