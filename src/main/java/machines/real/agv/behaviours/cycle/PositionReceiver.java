@@ -24,6 +24,7 @@ public class PositionReceiver extends CyclicBehaviour {
             MessageTemplate.MatchLanguage("init"));
     ACLMessage receive = myAgent.receive(template);
     if (receive == null) {
+      block();
       return;
     }
     AID sender = receive.getSender();

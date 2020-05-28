@@ -41,6 +41,7 @@ public class ActionCaller extends SequentialBehaviour {
         );
         ACLMessage receive = myAgent.receive(mt);
         if (receive == null) {
+          block();
           return;
         }
         done = true;
