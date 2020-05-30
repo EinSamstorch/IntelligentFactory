@@ -9,6 +9,7 @@ import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
+import jade.util.leap.Iterator;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Map;
@@ -70,7 +71,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
       return;
     }
     // 取货点
-    int fromBuffer = request.getFromBuffer();
+    final int fromBuffer = request.getFromBuffer();
     int fromLoc = AgvMapUtils.getBufferLoc(fromBuffer, plan);
     AID choose = null;
     int distance = Integer.MAX_VALUE;
@@ -109,6 +110,21 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     ACLMessage reply = msg.createReply();
     reply.setPerformative(ACLMessage.INFORM);
     myAgent.send(reply);
+
+    // 通知上道工序设备 货物已经取走
+    if (fromBuffer > 0) {
+      AID me = myAgent.getAID();
+      AID preOwner = new AID(request.getWpInfo().getPreOwnerId(), false);
+      Iterator allAddresses = me.getAllAddresses();
+      while (allAddresses.hasNext()) {
+        preOwner.addAddresses((String) allAddresses.next());
+      }
+      ACLMessage inform = new ACLMessage(ACLMessage.INFORM);
+      inform.addReceiver(preOwner);
+      inform.setLanguage("BUFFER_INDEX");
+      inform.setContent(Integer.toString(fromBuffer));
+      myAgent.send(inform);
+    }
   }
 
   private void solveConflict(int conflict) {
