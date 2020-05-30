@@ -52,7 +52,11 @@ public class ActionListener extends CyclicBehaviour {
     Behaviour b = tbf.wrap(new ActionExecutor(action, hal, receive));
     myAgent.addBehaviour(b);
     while (!b.done()) {
-      block(1000);
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
     }
   }
 

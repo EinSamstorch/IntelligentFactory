@@ -44,9 +44,12 @@ public class ActionExecutor extends OneShotBehaviour {
 
   @Override
   public void action() {
-    LoggerUtil.hal.info("Action: " + action.getCmd() + ", extra: " + action.getExtra().toString());
     while (!hal.executeAction(action)) {
-      block(3000);
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
     }
     LoggerUtil.hal.debug("Action done!");
     // 储存hal 返回消息

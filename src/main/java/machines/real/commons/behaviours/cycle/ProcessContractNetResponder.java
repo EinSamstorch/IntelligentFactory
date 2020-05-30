@@ -117,7 +117,7 @@ public class ProcessContractNetResponder extends ContractNetResponder {
     buffer.setEvaluateTime(evaluateTime);
     // call for agv
     AgvRequest request = new AgvRequest(from, to, wpInfo);
-    machineAgent.addBehaviour(new CallForAgv(request, buffer));
+    machineAgent.addBehaviour(tbf.wrap(new CallForAgv(request, buffer)));
     // 完成本次招标动作
     ACLMessage inform = accept.createReply();
     inform.setPerformative(ACLMessage.INFORM);
@@ -126,11 +126,13 @@ public class ProcessContractNetResponder extends ContractNetResponder {
 
   private int evaluate(WorkpieceStatus wpInfo) {
     MachineAction action = new EvaluateAction(wpInfo);
-    Behaviour b = tbf.wrap(new ActionExecutor(action, hal));
-    myAgent.addBehaviour(b);
-    while (!b.done()) {
-      block(500);
+    while (!hal.executeAction(action)) {
+      try {
+        Thread.sleep(100);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
     }
-    return (int) Float.parseFloat((String) action.getResultExtra());
+    return (int) Float.parseFloat((String) hal.getExtra());
   }
 }
