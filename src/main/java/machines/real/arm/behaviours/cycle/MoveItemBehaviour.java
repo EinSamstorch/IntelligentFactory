@@ -100,10 +100,13 @@ public final class MoveItemBehaviour extends CyclicBehaviour {
   }
 
   private void executeTask(ArmRequest request) {
-    Behaviour b = tbf.wrap(new ActionExecutor(new MoveItemAction(request), hal));
-    myAgent.addBehaviour(b);
-    while (!b.done()) {
-      block(3000);
+    MoveItemAction action = new MoveItemAction(request);
+    while (!hal.executeAction(action)) {
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
     }
   }
 

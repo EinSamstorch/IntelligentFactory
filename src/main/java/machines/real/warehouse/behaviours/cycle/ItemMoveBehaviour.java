@@ -69,7 +69,11 @@ public class ItemMoveBehaviour extends CyclicBehaviour {
     Behaviour b = tbf.wrap(new ActionExecutor(new MoveItemAction(from, to), hal, msg));
     myAgent.addBehaviour(b);
     while (!b.done()) {
-      block(1000);
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
     }
   }
 }

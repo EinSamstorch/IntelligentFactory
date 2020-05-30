@@ -126,11 +126,13 @@ public class ProcessContractNetResponder extends ContractNetResponder {
 
   private int evaluate(WorkpieceStatus wpInfo) {
     MachineAction action = new EvaluateAction(wpInfo);
-    Behaviour b = tbf.wrap(new ActionExecutor(action, hal));
-    myAgent.addBehaviour(b);
-    while (!b.done()) {
-      block(500);
+    while (!hal.executeAction(action)) {
+      try {
+        Thread.sleep(100);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
     }
-    return (int) Float.parseFloat((String) action.getResultExtra());
+    return (int) Float.parseFloat((String) hal.getExtra());
   }
 }
