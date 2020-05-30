@@ -117,7 +117,7 @@ public class ProcessContractNetResponder extends ContractNetResponder {
     buffer.setEvaluateTime(evaluateTime);
     // call for agv
     AgvRequest request = new AgvRequest(from, to, wpInfo);
-    machineAgent.addBehaviour(new CallForAgv(request, buffer));
+    machineAgent.addBehaviour(tbf.wrap(new CallForAgv(request, buffer)));
     // 完成本次招标动作
     ACLMessage inform = accept.createReply();
     inform.setPerformative(ACLMessage.INFORM);

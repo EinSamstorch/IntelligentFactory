@@ -3,6 +3,7 @@ package machines.real.warehouse.behaviours.cycle;
 import commons.order.WorkpieceStatus;
 import commons.tools.LoggerUtil;
 import jade.core.Agent;
+import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPANames.InteractionProtocol;
@@ -35,6 +36,7 @@ public class ProductContractNetResponder extends ContractNetResponder {
   );
   private int importBuffer = -2;
   private DbInterface db;
+  private ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
 
   public void setDb(DbInterface db) {
     this.db = db;
@@ -89,7 +91,7 @@ public class ProductContractNetResponder extends ContractNetResponder {
       wpInfo.setBufferPos(importBuffer);
       // call for agv
       AgvRequest request = new AgvRequest(oldBuffer, importBuffer, wpInfo);
-      myAgent.addBehaviour(new CallForAgv(request));
+      myAgent.addBehaviour(tbf.wrap(new CallForAgv(request)));
 
       ACLMessage inform = accept.createReply();
       inform.setPerformative(ACLMessage.INFORM);
