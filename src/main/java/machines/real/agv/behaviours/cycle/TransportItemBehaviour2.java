@@ -12,6 +12,7 @@ import jade.lang.acl.UnreadableException;
 import jade.util.leap.Iterator;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import machines.real.agv.actions.InExportAction;
@@ -127,17 +128,22 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     }
   }
 
-  private void solveConflict(int conflict) {
-    if (conflict == -1) {
+  private void solveConflict(List<Integer> conflict) {
+    if (conflict.size() == 0) {
       return;
     }
-    AID conflictAid = AgvMapUtils.getConflictAid(conflict);
-    if (conflictAid != null) {
-      LoggerUtil.agent.info(
-          "Route plan conflict! Pos: " + conflict + ", agent: " + conflictAid.getLocalName());
-      int newLoc = AgvMapUtils.getFreeEdgeNode(plan.getEdgeNodes(), 4);
-      MoveAction moveConflict = new MoveAction(plan.getRoute(conflict, newLoc));
-      waitCallerDone(conflictAid, moveConflict);
+    for (int conf : conflict) {
+      AID conflictAid = AgvMapUtils.getConflictAid(conf);
+      if (conflictAid != null) {
+        LoggerUtil.agent.info(
+            "Route plan conflict! Pos: " + conf + ", agent: " + conflictAid.getLocalName());
+        // 获取不冲突位置
+        int newLoc = AgvMapUtils.getFreeEdgeNode(plan.getEdgeNodes(), 4);
+        MoveAction moveConflict = new MoveAction(plan.getRoute(conf, newLoc));
+        waitCallerDone(conflictAid, moveConflict);
+        // 更新解决冲突后,agv的位置
+        AgvMapUtils.setAgvLoc(conflictAid, newLoc);
+      }
     }
   }
 
@@ -223,10 +229,10 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
       // 无需移动
       return;
     }
+    LoggerUtil.agent.info("Move path: " + movePath);
     // 计算冲突
-    int conflict = AgvMapUtils
-        .conflictNode(
-            Arrays.stream(movePath.split(",")).mapToInt(Integer::parseInt).toArray());
+    List<Integer> conflict = AgvMapUtils.conflictNode(
+        Arrays.stream(movePath.split(",")).mapToInt(Integer::parseInt).toArray(), 4);
     // 解决冲突
     solveConflict(conflict);
     // 移动agv

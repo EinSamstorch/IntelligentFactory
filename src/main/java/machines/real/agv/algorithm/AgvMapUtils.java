@@ -1,9 +1,12 @@
 package machines.real.agv.algorithm;
 
 import jade.core.AID;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 /**
  * Agv地图工具集合.
@@ -77,9 +80,12 @@ public class AgvMapUtils {
    */
   public static int getFreeEdgeNode(int[] edgeNodes, int neighbourSize) {
     for (int node : edgeNodes) {
+      // 该点被占/相邻被占/隔两个相邻被占，均不可用
       if (nodeMap[node]
           || (node - neighbourSize >= 0 && nodeMap[node - neighbourSize])
-          || (node + neighbourSize < nodeMap.length && nodeMap[node + neighbourSize])) {
+          || (node + neighbourSize < nodeMap.length && nodeMap[node + neighbourSize])
+          || (node - 2 * neighbourSize) >= 0 && nodeMap[node - 2 * neighbourSize]
+          || (node + 2 * neighbourSize) < nodeMap.length && nodeMap[node + 2 * neighbourSize]) {
         continue;
       }
       return node;
@@ -91,15 +97,30 @@ public class AgvMapUtils {
    * 当前路径是否有冲突.
    *
    * @param path 路径点
-   * @return -1代表无冲突， 返回第一个有冲突的坐标
+   * @return 返回有冲突的坐标点数组
    */
-  public static int conflictNode(int[] path) {
+  public static List<Integer> conflictNode(int[] path, int mcol) {
+    List<Integer> conflict = new ArrayList<>();
     for (int i = 1; i < path.length; i++) {
       if (nodeMap[path[i]]) {
-        return path[i];
+        conflict.add(path[i]);
       }
     }
-    return -1;
+    int start = path[0];
+    Consumer<Integer> consumer = (node) -> {
+      // 非起点/且该点被占
+      if (node >= 0 && node < nodeMap.length
+          && node != start && nodeMap[node]) {
+        conflict.add(node);
+      }
+    };
+    int end = path[path.length - 1];
+    consumer.accept(end - mcol);
+    consumer.accept(end - 2 * mcol);
+    consumer.accept(end + mcol);
+    consumer.accept(end + 2 * mcol);
+
+    return conflict;
   }
 
   /**
