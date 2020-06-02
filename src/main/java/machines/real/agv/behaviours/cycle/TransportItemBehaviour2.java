@@ -128,17 +128,19 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     }
   }
 
-  private void solveConflict(List<Integer> conflict) {
+  private void solveConflict(List<Integer> conflict, String movePath) {
     if (conflict.size() == 0) {
       return;
     }
+    String[] split = movePath.split(",");
+    int target = Integer.parseInt(split[split.length - 1]);
     for (int conf : conflict) {
       AID conflictAid = AgvMapUtils.getConflictAid(conf);
       if (conflictAid != null) {
         LoggerUtil.agent.info(
             "Route plan conflict! Pos: " + conf + ", agent: " + conflictAid.getLocalName());
         // 获取不冲突位置
-        int newLoc = AgvMapUtils.getFreeEdgeNode(plan.getEdgeNodes(), 4);
+        int newLoc = AgvMapUtils.getFreeEdgeNode(plan.getEdgeNodes(), 4, target);
         MoveAction moveConflict = new MoveAction(plan.getRoute(conf, newLoc));
         waitCallerDone(conflictAid, moveConflict);
         // 更新解决冲突后,agv的位置
@@ -234,7 +236,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     List<Integer> conflict = AgvMapUtils.conflictNode(
         Arrays.stream(movePath.split(",")).mapToInt(Integer::parseInt).toArray(), 4);
     // 解决冲突
-    solveConflict(conflict);
+    solveConflict(conflict, movePath);
     // 移动agv
     MachineAction moveAction = new MoveAction(plan.getRoute(fromLoc, toLoc));
     waitCallerDone(agv, moveAction);

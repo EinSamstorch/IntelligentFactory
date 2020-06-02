@@ -76,16 +76,19 @@ public class AgvMapUtils {
    *
    * @param edgeNodes     边界点坐标
    * @param neighbourSize 相领位置坐标差
+   * @param target 目的地地点
    * @return 空边界点位置
    */
-  public static int getFreeEdgeNode(int[] edgeNodes, int neighbourSize) {
+  public static int getFreeEdgeNode(int[] edgeNodes, int neighbourSize, int target) {
+    int val;
     for (int node : edgeNodes) {
-      // 该点被占/相邻被占/隔两个相邻被占，均不可用
+      // 该点被占/该点是目标地点/相邻或相邻2位是目标点/相邻被占/隔两个相邻被占，均不可用
       if (nodeMap[node]
-          || (node - neighbourSize >= 0 && nodeMap[node - neighbourSize])
-          || (node + neighbourSize < nodeMap.length && nodeMap[node + neighbourSize])
-          || (node - 2 * neighbourSize) >= 0 && nodeMap[node - 2 * neighbourSize]
-          || (node + 2 * neighbourSize) < nodeMap.length && nodeMap[node + 2 * neighbourSize]) {
+          || node == target
+          || ((val = node - neighbourSize) >= 0 && val != target && nodeMap[val])
+          || ((val = node + neighbourSize) < nodeMap.length && val != target && nodeMap[val])
+          || ((val = node - 2 * neighbourSize) >= 0 && val != target && nodeMap[val])
+          || ((val = node + 2 * neighbourSize) < nodeMap.length && val != target && nodeMap[val])) {
         continue;
       }
       return node;
