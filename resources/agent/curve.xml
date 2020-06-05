@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+  <bean class="machines.agent.RealMachineAgent" id="agent">
+    <property name="armPwd" value="${arm.password}"/>
+    <property name="hal" ref="hal"/>
+    <property name="bufferManger" ref="bufferManager"/>
+    <property name="machineState" ref="machineState"/>
+    <property name="serviceType">
+      <util:constant static-field="commons.tools.DfServiceType.CURVE"/>
+    </property>
+    <!-- agent 动作集 -->
+    <property name="behaviours">
+      <list>
+        <!-- agent状态管理 -->
+        <bean class="machines.real.commons.behaviours.cycle.CheckHalState">
+          <constructor-arg name="a" ref="agent"/>
+          <constructor-arg name="period" value="5000"/>
+          <constructor-arg name="hal" ref="hal"/>
+        </bean>
+        <!-- buffer管理行为 -->
+        <bean class="machines.real.commons.behaviours.cycle.MaintainBufferBehaviour">
+          <property name="bufferManger" ref="bufferManager"/>
+        </bean>
+        <!-- 上料行为 -->
+        <bean class="machines.real.commons.behaviours.cycle.LoadItemBehaviour">
+          <constructor-arg name="machineAgent" ref="agent"/>
+          <constructor-arg name="processItem">
+            <bean class="machines.real.commons.behaviours.sequential.SimpleProcessItem"/>
+          </constructor-arg>
+        </bean>
+        <!-- 雕刻机服务应标 -->
+        <bean class="machines.real.commons.behaviours.cycle.ProcessContractNetResponder">
+          <constructor-arg name="machineAgent" ref="agent"/>
+          <property name="hal" ref="hal"/>
+        </bean>
+      </list>
+    </property>
+  </bean>
+  <bean class="machines.real.commons.hal.MiddleHalImpl" id="hal">
+    <constructor-arg name="port" value="${hal.port}"/>
+  </bean>
+
+  <!-- 配置Agent -->
+  <bean class="machines.real.commons.buffer.BufferManger" id="bufferManager">
+    <constructor-arg name="indexesStr" value="${machine.buffers}"/>
+  </bean>
+  <bean class="machines.real.commons.MachineState" id="machineState"/>
+
+  <import resource="../constant/settings.xml"/>
+</beans>
