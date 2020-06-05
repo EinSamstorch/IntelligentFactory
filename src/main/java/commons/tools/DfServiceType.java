@@ -22,5 +22,6 @@ public class DfServiceType {
   public static final String ARM = "arm";
   public static final String PRODUCT = "product";
   public static final String BUFFER = "buffer";
+  public static final String RAW = "raw";
   public static final String CURVE = "curve";
 }

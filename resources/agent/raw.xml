@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+  <bean class="machines.agent.RealMachineAgent" id="agent">
+    <property name="serviceType">
+      <util:constant static-field="commons.tools.DfServiceType.RAW"/>
+    </property>
+    <!-- 仓库agent 行为集-->
+    <property name="behaviours">
+      <list>
+        <!-- agent状态管理 -->
+        <bean class="machines.real.commons.behaviours.cycle.CheckHalState">
+          <constructor-arg name="a" ref="agent"/>
+          <constructor-arg name="period" value="5000"/>
+          <constructor-arg name="hal" ref="hal"/>
+        </bean>
+        <!-- 传送带管理 -->
+        <bean class="machines.real.warehouse.behaviours.cycle.ConveyorControlBehaviour">
+          <property name="hal" ref="hal"/>
+        </bean>
+        <!-- 货物管理 -->
+        <bean class="machines.real.warehouse.behaviours.cycle.ItemMoveBehaviour">
+          <property name="hal" ref="hal"/>
+          <property name="posOut" ref="posOut"/>
+          <property name="posIn" value="0"/>
+        </bean>
+        <!-- 原料应标 -->
+        <bean class="machines.real.warehouse.behaviours.cycle.RawContractNetResponder">
+          <constructor-arg name="a" ref="agent"/>
+          <property name="db" ref="db"/>
+          <property name="exportBufferIndex" value="${warehouse.buffer.export}"/>
+        </bean>
+      </list>
+    </property>
+  </bean>
+
+  <!-- 配置仓库Agent -->
+  <bean class="java.lang.Integer" id="posOut">
+    <constructor-arg name="value" value="${warehouse.pos.out}"/>
+  </bean>
+  <bean class="machines.real.commons.hal.MiddleHalImpl" id="hal">
+    <!-- socket server监听端口 -->
+    <constructor-arg name="port" value="${hal.port}"/>
+  </bean>
+
+  <import resource="../constant/settings.xml"/>
+  <import resource="../constant/sql.xml"/>
+</beans>
+

@@ -6,7 +6,6 @@ import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
 import jade.core.Agent;
 import jade.domain.FIPAAgentManagement.FailureException;
-import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPANames.InteractionProtocol;
 import jade.lang.acl.ACLMessage;
@@ -16,8 +15,6 @@ import jade.proto.ContractNetResponder;
 import java.io.IOException;
 import machines.real.commons.ContractNetContent;
 import machines.real.warehouse.DbInterface;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 /**
  * 原材料 合同网 招标回应方.
@@ -31,12 +28,14 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 public class RawContractNetResponder extends ContractNetResponder {
 
   private static MessageTemplate mt = MessageTemplate.and(
-      MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.CFP),
-          MessageTemplate.MatchProtocol(InteractionProtocol.FIPA_CONTRACT_NET)),
-      MessageTemplate.MatchLanguage("RAW")
-  );
-  private int exportBuffer = -3;
+      MessageTemplate.MatchPerformative(ACLMessage.CFP),
+      MessageTemplate.MatchProtocol(InteractionProtocol.FIPA_CONTRACT_NET));
+  private int exportBufferIndex = -3;
   private DbInterface db;
+
+  public void setExportBufferIndex(int exportBufferIndex) {
+    this.exportBufferIndex = exportBufferIndex;
+  }
 
   public void setDb(DbInterface db) {
     this.db = db;
@@ -58,8 +57,7 @@ public class RawContractNetResponder extends ContractNetResponder {
    * @return ACLMessage content: String quantity
    */
   @Override
-  protected ACLMessage handleCfp(ACLMessage cfp)
-      throws RefuseException, FailureException, NotUnderstoodException {
+  protected ACLMessage handleCfp(ACLMessage cfp) throws RefuseException {
     LoggerUtil.agent.debug(String.format("CFP received from: %s.", cfp.getSender().getName()));
     // cfp 内容: WorkpieceInfo
     String goodsid = null;
@@ -94,7 +92,6 @@ public class RawContractNetResponder extends ContractNetResponder {
   protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept)
       throws FailureException {
     LoggerUtil.agent.info("Proposal accepted: " + accept.getSender().getName());
-    int quantity = Integer.parseInt(accept.getContent());
 
     try {
       // 对 workpieceInfo 添加 warehousePosition
@@ -106,7 +103,7 @@ public class RawContractNetResponder extends ContractNetResponder {
       wpInfo.setProviderId(myAgent.getLocalName());
       wpInfo.setCurOwnerId(myAgent.getLocalName());
       // map location for exporter of warehouse
-      wpInfo.setBufferPos(exportBuffer);
+      wpInfo.setBufferPos(exportBufferIndex);
 
       // 发送至Worker 进行下一轮招标
       ACLMessage msg = DfUtils.createRequestMsg(wpInfo);
