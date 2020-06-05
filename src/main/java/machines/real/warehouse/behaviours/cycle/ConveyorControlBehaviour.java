@@ -1,13 +1,10 @@
 package machines.real.warehouse.behaviours.cycle;
 
 import commons.tools.LoggerUtil;
-import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
-import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import machines.real.commons.behaviours.simple.ActionExecutor;
 import machines.real.commons.hal.MiddleHal;
 import machines.real.commons.request.WarehouseConveyorRequest;
 import machines.real.warehouse.actions.ImExportItemAction;
@@ -22,10 +19,9 @@ import machines.real.warehouse.actions.ImExportItemAction;
 public class ConveyorControlBehaviour extends CyclicBehaviour {
 
   private MiddleHal hal;
-  private MessageTemplate mt = MessageTemplate
-      .and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
-          MessageTemplate.MatchLanguage(WarehouseConveyorRequest.LANGUAGE));
-  private ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
+  private MessageTemplate mt = MessageTemplate.and(
+      MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
+      MessageTemplate.MatchLanguage(WarehouseConveyorRequest.LANGUAGE));
 
   public void setHal(MiddleHal hal) {
     this.hal = hal;
@@ -47,17 +43,16 @@ public class ConveyorControlBehaviour extends CyclicBehaviour {
           .warn("Deserialization Error in WarehouseConveyorRequest. " + e.getLocalizedMessage());
       return;
     }
-
-    Behaviour b = tbf.wrap(
-        new ActionExecutor(
-            new ImExportItemAction(request.isImportMode()), hal, receive));
-    myAgent.addBehaviour(b);
-    while (!b.done()) {
+    ImExportItemAction action = new ImExportItemAction(request.isImportMode());
+    while (hal.executeAction(action)) {
       try {
         Thread.sleep(1000);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
     }
+    ACLMessage reply = receive.createReply();
+    reply.setPerformative(ACLMessage.INFORM);
+    myAgent.send(reply);
   }
 }
