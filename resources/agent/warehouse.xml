@@ -4,11 +4,7 @@
   xmlns="http://www.springframework.org/schema/beans"
   xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
-  <bean class="machines.real.warehouse.WarehouseAgent" id="agent">
-    <!-- 入库口 -->
-    <property name="posIn" ref="posIn"/>
-    <!-- 出库口 -->
-    <property name="posOut" ref="posOut"/>
+  <bean class="machines.agent.RealMachineAgent" id="agent">
     <property name="serviceType">
       <util:constant static-field="commons.tools.DfServiceType.WAREHOUSE"/>
     </property>
