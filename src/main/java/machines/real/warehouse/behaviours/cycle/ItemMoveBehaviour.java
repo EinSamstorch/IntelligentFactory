@@ -1,13 +1,10 @@
 package machines.real.warehouse.behaviours.cycle;
 
 import commons.tools.LoggerUtil;
-import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
-import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import machines.real.commons.behaviours.simple.ActionExecutor;
 import machines.real.commons.hal.MiddleHal;
 import machines.real.commons.request.WarehouseItemMoveRequest;
 import machines.real.warehouse.actions.MoveItemAction;
@@ -25,7 +22,6 @@ public class ItemMoveBehaviour extends CyclicBehaviour {
   private MiddleHal hal;
   private int posOut;
   private int posIn;
-  private ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
 
   public ItemMoveBehaviour() {
     super();
@@ -66,14 +62,16 @@ public class ItemMoveBehaviour extends CyclicBehaviour {
     int itemPosition = request.getItemPosition();
     int from = request.isIn() ? posIn : itemPosition;
     int to = request.isIn() ? itemPosition : posOut;
-    Behaviour b = tbf.wrap(new ActionExecutor(new MoveItemAction(from, to), hal, msg));
-    myAgent.addBehaviour(b);
-    while (!b.done()) {
+    MoveItemAction action = new MoveItemAction(from, to);
+    while (hal.executeAction(action)) {
       try {
         Thread.sleep(1000);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
     }
+    ACLMessage reply = msg.createReply();
+    reply.setPerformative(ACLMessage.INFORM);
+    myAgent.send(reply);
   }
 }
