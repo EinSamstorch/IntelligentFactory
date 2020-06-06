@@ -16,8 +16,6 @@ import machines.real.commons.ContractNetContent;
 import machines.real.commons.behaviours.sequential.CallForAgv;
 import machines.real.commons.request.AgvRequest;
 import machines.real.warehouse.DbInterface;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 /**
  * .
@@ -30,16 +28,18 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 public class ProductContractNetResponder extends ContractNetResponder {
 
   private static MessageTemplate mt = MessageTemplate.and(
-      MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.CFP),
-          MessageTemplate.MatchProtocol(InteractionProtocol.FIPA_CONTRACT_NET)),
-      MessageTemplate.MatchLanguage("PRODUCT")
-  );
-  private int importBuffer = -2;
+      MessageTemplate.MatchPerformative(ACLMessage.CFP),
+      MessageTemplate.MatchProtocol(InteractionProtocol.FIPA_CONTRACT_NET));
+  private int importBufferIndex;
   private DbInterface db;
   private ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
 
   public void setDb(DbInterface db) {
     this.db = db;
+  }
+
+  public void setImportBufferIndex(int importBufferIndex) {
+    this.importBufferIndex = importBufferIndex;
   }
 
   /**
@@ -88,9 +88,9 @@ public class ProductContractNetResponder extends ContractNetResponder {
       wpInfo.setCurOwnerId(myAgent.getLocalName());
       int oldBuffer = wpInfo.getBufferPos();
       // 入库口
-      wpInfo.setBufferPos(importBuffer);
+      wpInfo.setBufferPos(importBufferIndex);
       // call for agv
-      AgvRequest request = new AgvRequest(oldBuffer, importBuffer, wpInfo);
+      AgvRequest request = new AgvRequest(oldBuffer, importBufferIndex, wpInfo);
       myAgent.addBehaviour(tbf.wrap(new CallForAgv(request)));
 
       ACLMessage inform = accept.createReply();
