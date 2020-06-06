@@ -74,7 +74,7 @@ public class MyContractNetInitiator extends ContractNetInitiator {
       }
     }
     int strategy;
-    if (serviceType.equals(DfServiceType.WAREHOUSE) || serviceType.equals(DfServiceType.PRODUCT)) {
+    if (serviceType.equals(DfServiceType.RAW) || serviceType.equals(DfServiceType.PRODUCT)) {
       strategy = BestPrice.HIGHEST;
     } else {
       strategy = BestPrice.LOWEST;

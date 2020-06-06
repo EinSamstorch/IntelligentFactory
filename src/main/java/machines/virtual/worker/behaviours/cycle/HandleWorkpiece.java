@@ -88,7 +88,7 @@ public class HandleWorkpiece extends CyclicBehaviour {
     }
 
     String process = processPlan.get(processIndex);
-    if (process.equals(DfServiceType.WAREHOUSE)) {
+    if (process.equals(DfServiceType.RAW)) {
       addVisionProcess(wpInfo);
     }
     processOn(wpInfo, process);
@@ -103,15 +103,7 @@ public class HandleWorkpiece extends CyclicBehaviour {
   private void processOn(WorkpieceStatus wpInfo, String serviceType) {
     try {
       ACLMessage msg = DfUtils.createCfpMsg(wpInfo);
-      if (DfServiceType.PRODUCT.equals(serviceType)) {
-        DfUtils.searchDf(myAgent, msg, DfServiceType.WAREHOUSE);
-        msg.setLanguage("PRODUCT");
-      } else if (DfServiceType.WAREHOUSE.equals(serviceType)) {
-        DfUtils.searchDf(myAgent, msg, serviceType);
-        msg.setLanguage("RAW");
-      } else {
-        DfUtils.searchDf(myAgent, msg, serviceType);
-      }
+      DfUtils.searchDf(myAgent, msg, serviceType);
 
       Behaviour b = new MyContractNetInitiator(myAgent, msg, serviceType, retryQueue);
       myAgent.addBehaviour(b);

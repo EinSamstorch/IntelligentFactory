@@ -30,7 +30,7 @@ public class ProcessPlan {
 
     List<String> flangeProcessPlan = new ArrayList<String>() {
       {
-        add(DfServiceType.WAREHOUSE);
+        add(DfServiceType.RAW);
         add(DfServiceType.MILL);
         add(DfServiceType.LATHE);
         add(DfServiceType.CURVE);
@@ -40,7 +40,7 @@ public class ProcessPlan {
 
     List<String> axisProcessPlan = new ArrayList<String>() {
       {
-        add(DfServiceType.WAREHOUSE);
+        add(DfServiceType.RAW);
         add(DfServiceType.LATHE);
         add(DfServiceType.MILL);
       }
@@ -49,7 +49,7 @@ public class ProcessPlan {
 
     List<String> plainProcessPlan = new ArrayList<String>() {
       {
-        add(DfServiceType.WAREHOUSE);
+        add(DfServiceType.RAW);
         add(DfServiceType.CURVE);
         add(DfServiceType.MILL);
       }

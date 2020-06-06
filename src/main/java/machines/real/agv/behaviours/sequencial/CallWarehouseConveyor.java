@@ -1,8 +1,8 @@
 package machines.real.agv.behaviours.sequencial;
 
-import commons.tools.DfServiceType;
 import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
+import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.SequentialBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -24,14 +24,14 @@ public class CallWarehouseConveyor extends SequentialBehaviour {
    *
    * @param request 传送带控制请求
    */
-  public CallWarehouseConveyor(WarehouseConveyorRequest request) {
+  public CallWarehouseConveyor(WarehouseConveyorRequest request, AID warehouse) {
     String conversationId = "CALL_FOR_WAREHOUSE_CONVEYOR_" + new Random().nextInt();
     addSubBehaviour(new OneShotBehaviour() {
       @Override
       public void action() {
         try {
           ACLMessage msg = DfUtils.createRequestMsg(request);
-          DfUtils.searchDf(myAgent, msg, DfServiceType.WAREHOUSE);
+          msg.addReceiver(warehouse);
           msg.setConversationId(conversationId);
           msg.setLanguage(WarehouseConveyorRequest.LANGUAGE);
           myAgent.send(msg);
