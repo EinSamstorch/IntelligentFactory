@@ -1,5 +1,6 @@
 package machines.real.agv.behaviours.cycle;
 
+import commons.order.WorkpieceStatus;
 import commons.tools.LoggerUtil;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
@@ -94,7 +95,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     agvMove(fromBuffer, choose);
     // 4. AGV入料
     if (fromBuffer < 0) {
-      interactWarehouse(true, choose, request.getWpInfo().getWarehousePosition());
+      interactWarehouse(true, choose, request);
     } else {
       interactBuffer(true, choose, fromBuffer);
     }
@@ -103,7 +104,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     agvMove(toBuffer, choose);
     // 6. AGV送料
     if (toBuffer < 0) {
-      interactWarehouse(false, choose, request.getWpInfo().getWarehousePosition());
+      interactWarehouse(false, choose, request);
     } else {
       interactBuffer(false, choose, toBuffer);
     }
@@ -187,7 +188,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     }
   }
 
-  private void interactWarehouse(boolean agvImport, AID agv, int warehousePos) {
+  private void interactWarehouse(boolean agvImport, AID agv, AgvRequest request) {
     // agv从仓库取货
     // 1. 仓库移动货物到出口
     // 2. agv启动收货模式 & 仓库传送带启动出货模式
@@ -195,12 +196,14 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     // agv送货入仓库
     // 1. 仓库传送带启动入货模式 & agv启动出货模式
     // 2. 仓库移动货物到指定位置
-
+    WorkpieceStatus wpInfo = request.getWpInfo();
+    AID warehouse = agvImport ? wpInfo.getRawProviderId() : wpInfo.getProductProviderId();
+    int warehousePos = wpInfo.getWarehousePosition();
     Behaviour whMove = new CallWarehouseMoveItem(
-        new WarehouseItemMoveRequest(warehousePos, !agvImport));
+        new WarehouseItemMoveRequest(warehousePos, !agvImport), warehouse);
     Behaviour agvAndConveyor = new ImExportItemBehaviour(
         new ActionCaller(agv, new InExportAction(agvImport)),
-        new CallWarehouseConveyor(new WarehouseConveyorRequest(!agvImport)));
+        new CallWarehouseConveyor(new WarehouseConveyorRequest(!agvImport), warehouse));
     if (agvImport) {
       waitBehaviourDone(whMove);
       waitBehaviourDone(agvAndConveyor);

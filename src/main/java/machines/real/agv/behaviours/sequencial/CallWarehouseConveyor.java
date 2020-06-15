@@ -29,15 +29,17 @@ public class CallWarehouseConveyor extends SequentialBehaviour {
     addSubBehaviour(new OneShotBehaviour() {
       @Override
       public void action() {
+        ACLMessage msg;
         try {
-          ACLMessage msg = DfUtils.createRequestMsg(request);
-          msg.addReceiver(warehouse);
-          msg.setConversationId(conversationId);
-          msg.setLanguage(WarehouseConveyorRequest.LANGUAGE);
-          myAgent.send(msg);
+          msg = DfUtils.createRequestMsg(request);
         } catch (Exception e) {
           e.printStackTrace();
+          return;
         }
+        msg.addReceiver(warehouse);
+        msg.setConversationId(conversationId);
+        msg.setLanguage(WarehouseConveyorRequest.LANGUAGE);
+        myAgent.send(msg);
       }
     });
 

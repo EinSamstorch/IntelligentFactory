@@ -1,6 +1,7 @@
 package commons.order;
 
 import com.alibaba.fastjson.JSONObject;
+import jade.core.AID;
 import java.io.Serializable;
 import java.util.List;
 
@@ -19,7 +20,8 @@ public class WorkpieceStatus implements Serializable {
   private String workpieceId;
   private String goodsId;
   private String detailSize;
-  private String providerId;
+  private AID rawProviderId;
+  private AID productProviderId;
   private String preOwnerId;
   private String curOwnerId;
   private String lastAgvId;
@@ -48,11 +50,12 @@ public class WorkpieceStatus implements Serializable {
 
     // 加载工艺路线
     processPlan = ProcessPlan.getProcessPlan(goodsId);
-    initParamters();
+    initParameters();
   }
 
-  private void initParamters() {
-    providerId = "";
+  private void initParameters() {
+    rawProviderId = null;
+    productProviderId = null;
     preOwnerId = "";
     curOwnerId = "";
     lastAgvId = "";
@@ -77,12 +80,12 @@ public class WorkpieceStatus implements Serializable {
     return detailSize;
   }
 
-  public String getProviderId() {
-    return providerId;
+  public AID getRawProviderId() {
+    return rawProviderId;
   }
 
-  public void setProviderId(String providerId) {
-    this.providerId = providerId;
+  public void setRawProviderId(AID rawProviderId) {
+    this.rawProviderId = rawProviderId;
   }
 
   public String getPreOwnerId() {
@@ -154,6 +157,14 @@ public class WorkpieceStatus implements Serializable {
 
   public void setNextProcessStep() {
     this.processStep += 1;
+  }
+
+  public AID getProductProviderId() {
+    return productProviderId;
+  }
+
+  public void setProductProviderId(AID productProviderId) {
+    this.productProviderId = productProviderId;
   }
 
   @Override

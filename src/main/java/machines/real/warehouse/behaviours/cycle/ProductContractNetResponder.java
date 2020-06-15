@@ -85,6 +85,7 @@ public class ProductContractNetResponder extends ContractNetResponder {
       int position = db.getProduct(wpInfo);
       wpInfo.setWarehousePosition(position);
       // 更新 wpInfo
+      wpInfo.setProductProviderId(myAgent.getAID());
       wpInfo.setCurOwnerId(myAgent.getLocalName());
       int oldBuffer = wpInfo.getBufferPos();
       // 入库口

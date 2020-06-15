@@ -23,22 +23,25 @@ public class CallWarehouseMoveItem extends SequentialBehaviour {
   /**
    * 请求仓库移动货物.
    *
-   * @param request 移动货物请求
+   * @param request   移动货物请求
+   * @param warehouse AID用于联系agent
    */
   public CallWarehouseMoveItem(WarehouseItemMoveRequest request, AID warehouse) {
     String conversationId = "CALL_FOR_WH_" + new Random().nextInt();
     addSubBehaviour(new OneShotBehaviour() {
       @Override
       public void action() {
+        ACLMessage msg;
         try {
-          ACLMessage msg = DfUtils.createRequestMsg(request);
-          msg.addReceiver(warehouse);
-          msg.setConversationId(conversationId);
-          msg.setLanguage(WarehouseItemMoveRequest.LANGUAGE);
-          myAgent.send(msg);
+          msg = DfUtils.createRequestMsg(request);
         } catch (Exception e) {
           e.printStackTrace();
+          return;
         }
+        msg.addReceiver(warehouse);
+        msg.setConversationId(conversationId);
+        msg.setLanguage(WarehouseItemMoveRequest.LANGUAGE);
+        myAgent.send(msg);
       }
     });
     addSubBehaviour(new SimpleBehaviour() {

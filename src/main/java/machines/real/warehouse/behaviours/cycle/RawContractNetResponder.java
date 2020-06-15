@@ -100,7 +100,7 @@ public class RawContractNetResponder extends ContractNetResponder {
       Integer position = db.getRaw(goodsid);
       wpInfo.setWarehousePosition(position);
       // 更新 wpInfo
-      wpInfo.setProviderId(myAgent.getLocalName());
+      wpInfo.setRawProviderId(myAgent.getAID());
       wpInfo.setCurOwnerId(myAgent.getLocalName());
       // map location for exporter of warehouse
       wpInfo.setBufferPos(exportBufferIndex);
