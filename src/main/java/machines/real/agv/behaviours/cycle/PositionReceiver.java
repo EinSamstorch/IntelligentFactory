@@ -1,6 +1,5 @@
 package machines.real.agv.behaviours.cycle;
 
-import commons.tools.LoggerUtil;
 import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -17,19 +16,25 @@ import machines.real.agv.algorithm.AgvMapUtils;
  */
 public class PositionReceiver extends CyclicBehaviour {
 
+  private static MessageTemplate mt = MessageTemplate.and(
+      MessageTemplate.MatchPerformative(ACLMessage.INFORM),
+      MessageTemplate.MatchLanguage("HB"));
+  private Map<AID, Long> checkInMap;
+
+  public void setCheckInMap(Map<AID, Long> checkInMap) {
+    this.checkInMap = checkInMap;
+  }
+
   @Override
   public void action() {
-    MessageTemplate template = MessageTemplate
-        .and(MessageTemplate.MatchPerformative(ACLMessage.INFORM),
-            MessageTemplate.MatchLanguage("init"));
-    ACLMessage receive = myAgent.receive(template);
+    ACLMessage receive = myAgent.receive(mt);
     if (receive == null) {
       block();
       return;
     }
-    AID sender = receive.getSender();
     int pos = Integer.parseInt(receive.getContent());
-    LoggerUtil.agent.info("Agv init: " + sender.getLocalName() + ", pos: " + pos);
     AgvMapUtils.setAgvLoc(receive.getSender(), pos);
+
+    checkInMap.put(receive.getSender(), System.currentTimeMillis());
   }
 }

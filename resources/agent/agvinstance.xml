@@ -17,14 +17,11 @@
           <constructor-arg name="period" value="5000"/>
           <constructor-arg name="hal" ref="hal"/>
         </bean>
-        <!-- 心跳包发送 -->
-        <bean class="machines.real.agv.behaviours.cycle.HeartBeatSender">
+        <!-- 位置发送 -->
+        <bean class="machines.real.agv.behaviours.cycle.PositionSender">
           <constructor-arg name="a" ref="agent"/>
-          <constructor-arg name="period" value="1000"/>
-        </bean>
-        <!-- 初始位置发送 -->
-        <bean class="machines.real.agv.behaviours.simple.InitPositionSender">
-          <constructor-arg name="initPos" value="${agv.initpos}"/>
+          <constructor-arg name="period" value="3000"/>
+          <property name="hal" ref="hal"/>
         </bean>
         <!-- 监听任务 -->
         <bean class="machines.real.agv.behaviours.cycle.ActionListener">
