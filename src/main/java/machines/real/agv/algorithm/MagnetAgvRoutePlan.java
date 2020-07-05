@@ -53,16 +53,6 @@ public class MagnetAgvRoutePlan implements AgvRoutePlan {
   }
 
   @Override
-  public int[] getEdgeNodes() {
-    return new int[0];
-  }
-
-  @Override
-  public int[] getBufferLocation() {
-    return new int[0];
-  }
-
-  @Override
   public boolean isBuffer(int loc) {
     for (int v : bufferLocArray) {
       if (v == loc) {
@@ -87,8 +77,4 @@ public class MagnetAgvRoutePlan implements AgvRoutePlan {
     return bufferLocArray[bufferNo - 1];
   }
 
-  @Override
-  public int getBufferMap(int bufferNo) {
-    return 0;
-  }
 }

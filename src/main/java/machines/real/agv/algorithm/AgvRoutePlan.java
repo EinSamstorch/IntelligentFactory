@@ -37,20 +37,6 @@ public interface AgvRoutePlan {
   int getDistance(int from, int to);
 
   /**
-   * 获取边界点坐标数组.
-   *
-   * @return 边界点坐标数组
-   */
-  int[] getEdgeNodes();
-
-  /**
-   * 获取工位台在地图点里坐标位置.
-   *
-   * @return 工位台标号为数组索引，数组值为所在地图点，工位台标号从1开始
-   */
-  int[] getBufferLocation();
-
-  /**
    * 判断该点是否是工位台.
    *
    * @param loc 地图点
@@ -74,11 +60,4 @@ public interface AgvRoutePlan {
    */
   int getBufferLoc(int bufferNo);
 
-  /**
-   * 定义工位台在地图中的位置.
-   *
-   * @param bufferNo 工位台索引
-   * @return 工位台的地图索引
-   */
-  int getBufferMap(int bufferNo);
 }
