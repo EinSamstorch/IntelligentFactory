@@ -140,6 +140,13 @@
       <artifactId>spring-test</artifactId>
       <version>5.1.9.RELEASE</version>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/edu.princeton.cs/algs4 -->
+    <dependency>
+      <groupId>edu.princeton.cs</groupId>
+      <artifactId>algs4</artifactId>
+      <version>1.0.3</version>
+    </dependency>
   </dependencies>
   <groupId>cn.edu.nuaa</groupId>
   <modelVersion>4.0.0</modelVersion>
@@ -160,6 +167,6 @@
     </repository>
   </repositories>
 
-  <version>DUAL-AGV-1.1-SNAPSHOT</version>
+  <version>WX-1.0-SNAPSHOT</version>
 
 </project>

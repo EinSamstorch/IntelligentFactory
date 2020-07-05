@@ -5,7 +5,8 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import java.util.Map;
-import machines.real.agv.algorithm.AgvMapUtils;
+import machines.real.agv.algorithm.AgvMapUtils2;
+import machines.real.agv.algorithm.AgvMapUtils2.AgvState;
 
 /**
  * 位置信息接收者.
@@ -33,8 +34,13 @@ public class PositionReceiver extends CyclicBehaviour {
       return;
     }
     int pos = Integer.parseInt(receive.getContent());
-    AgvMapUtils.setAgvLoc(receive.getSender(), pos);
+    AID agv = receive.getSender();
+    AgvMapUtils2.updateAgvLoc(agv, pos);
+    Map<AID, AgvState> map = AgvMapUtils2.getAgvStateMap();
+    if (!map.containsKey(agv) || map.get(agv) == AgvState.OFFLINE) {
+      AgvMapUtils2.updateAgvState(agv, AgvState.FREE);
+    }
 
-    checkInMap.put(receive.getSender(), System.currentTimeMillis());
+    checkInMap.put(agv, System.currentTimeMillis());
   }
 }

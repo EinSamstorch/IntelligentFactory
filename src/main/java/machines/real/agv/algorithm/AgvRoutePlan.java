@@ -16,7 +16,16 @@ public interface AgvRoutePlan {
    * @param to   终点
    * @return 以逗号分割的路径点
    */
-  String getRoute(int from, int to);
+  String getRouteString(int from, int to);
+
+  /**
+   * 计算AGV路径.
+   *
+   * @param from 起点
+   * @param to   终点
+   * @return 路径数组
+   */
+  int[] getRouteArray(int from, int to);
 
   /**
    * 获取两个点的距离.
@@ -40,6 +49,30 @@ public interface AgvRoutePlan {
    * @return 工位台标号为数组索引，数组值为所在地图点，工位台标号从1开始
    */
   int[] getBufferLocation();
+
+  /**
+   * 判断该点是否是工位台.
+   *
+   * @param loc 地图点
+   * @return 是否工位台
+   */
+  boolean isBuffer(int loc);
+
+  /**
+   * 获取工位台编号.
+   *
+   * @param loc 工位台位置
+   * @return 工位台编号, 从1开始
+   */
+  int getBufferNo(int loc);
+
+  /**
+   * 获取工位台位置.
+   *
+   * @param bufferNo 工位台编号, 从1开始
+   * @return 工位台位置
+   */
+  int getBufferLoc(int bufferNo);
 
   /**
    * 定义工位台在地图中的位置.

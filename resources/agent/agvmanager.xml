@@ -22,9 +22,8 @@
           <property name="checkInMap" ref="checkInMap"/>
         </bean>
         <!-- 提供运输服务 -->
-        <bean class="machines.real.agv.behaviours.cycle.TransportItemBehaviour2">
+        <bean class="machines.real.agv.behaviours.cycle.TransportItemBehaviour3">
           <property name="plan" ref="plan"/>
-          <property name="checkInMap" ref="checkInMap"/>
         </bean>
       </list>
     </property>

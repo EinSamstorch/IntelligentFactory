@@ -3,5 +3,5 @@
   xmlns="http://www.springframework.org/schema/beans"
   xsi:schemaLocation="http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd">
-  <bean id="plan" class="machines.real.agv.algorithm.LaserAgvRoutePlan"/>
+  <bean id="plan" class="machines.real.agv.algorithm.MagnetAgvRoutePlan"/>
 </beans>

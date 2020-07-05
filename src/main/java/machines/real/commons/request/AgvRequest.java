@@ -17,7 +17,7 @@ public class AgvRequest implements Serializable {
    * 从from地点取货 放置到 to 地点.
    *
    * <p>
-   * 定义：工位台buffer 从1~24, 具体地图位置需要通过{@link machines.real.agv.algorithm.AgvMapUtils}
+   * 定义：工位台buffer 从1~12, 具体地图位置需要通过{@link machines.real.agv.algorithm.AgvMapUtils2}
    * 若工位台编号为负数，则代表它是仓库的入/出口
    * </p>
    */
