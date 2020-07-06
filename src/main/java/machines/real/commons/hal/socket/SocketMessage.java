@@ -37,4 +37,7 @@ public final class SocketMessage {
 
   public static final String ACTION_REGISTER = "register";
   public static final String ACTION_CHECK = "check";
+
+  public static final String FIELD_ORDER_ID = "order_id";
+  public static final String FIELD_WORKPIECE_ID = "workpiece_id";
 }

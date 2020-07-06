@@ -58,6 +58,8 @@ public class BaseHalImpl implements BaseHal {
     JSONObject message = new JSONObject();
     message.put(SocketMessage.FIELD_TASK_NO, ++taskNo);
     message.put(SocketMessage.FIELD_CMD, cmd);
+    message.put(SocketMessage.FIELD_ORDER_ID, "");
+    message.put(SocketMessage.FIELD_WORKPIECE_ID, "");
     message.put(SocketMessage.FIELD_EXTRA, extra);
 
     sender.sendMessageToMachine(message);
