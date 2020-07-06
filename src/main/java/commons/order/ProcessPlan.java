@@ -31,9 +31,9 @@ public class ProcessPlan {
     List<String> flangeProcessPlan = new ArrayList<String>() {
       {
         add(DfServiceType.RAW);
-        add(DfServiceType.MILL);
-        add(DfServiceType.LATHE);
         add(DfServiceType.CURVE);
+        add(DfServiceType.LATHE);
+        add(DfServiceType.MILL);
       }
     };
     processPlan.put(goodsidList.get(0), flangeProcessPlan);
@@ -50,8 +50,8 @@ public class ProcessPlan {
     List<String> plainProcessPlan = new ArrayList<String>() {
       {
         add(DfServiceType.RAW);
-        add(DfServiceType.CURVE);
         add(DfServiceType.MILL);
+        add(DfServiceType.CURVE);
       }
     };
     processPlan.put(goodsidList.get(2), plainProcessPlan);
