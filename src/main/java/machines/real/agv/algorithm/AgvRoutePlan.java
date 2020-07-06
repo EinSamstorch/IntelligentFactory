@@ -53,7 +53,9 @@ public interface AgvRoutePlan {
   int getBufferNo(int loc);
 
   /**
-   * 获取工位台位置.
+   * 获取工位台/仓库位置.
+   *
+   * <p>根据工位台编号寻找工位台在地图中的位置，仓库的工位台编号是负数，表明仓库出入口在地图的位置.
    *
    * @param bufferNo 工位台编号, 从1开始
    * @return 工位台位置

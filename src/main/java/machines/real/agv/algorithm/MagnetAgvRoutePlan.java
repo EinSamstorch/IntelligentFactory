@@ -74,6 +74,9 @@ public class MagnetAgvRoutePlan implements AgvRoutePlan {
 
   @Override
   public int getBufferLoc(int bufferNo) {
+    if (bufferNo < 0) {
+      return -bufferNo;
+    }
     return bufferLocArray[bufferNo - 1];
   }
 
