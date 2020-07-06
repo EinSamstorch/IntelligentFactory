@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class HttpRequest {
 
-  private static String API_GETORDER = "http://%s/ks/FactoryAction_getOrder.action?";
+  private static String API_GETORDER = "http://%s/wx/FactoryAction_getOrder.action?";
 
   /**
    * 向特定网址发送get请求.
