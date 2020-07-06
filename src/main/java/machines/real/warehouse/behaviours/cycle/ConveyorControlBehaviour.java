@@ -44,7 +44,7 @@ public class ConveyorControlBehaviour extends CyclicBehaviour {
       return;
     }
     ImExportItemAction action = new ImExportItemAction(request.isImportMode());
-    while (hal.executeAction(action)) {
+    while (!hal.executeAction(action)) {
       try {
         Thread.sleep(1000);
       } catch (InterruptedException e) {
