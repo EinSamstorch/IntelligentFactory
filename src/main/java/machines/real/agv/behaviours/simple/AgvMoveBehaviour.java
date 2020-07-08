@@ -99,6 +99,10 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
 
   @Override
   public boolean done() {
+    if (done) {
+      // 强制更新AGV位置
+      AgvMapUtils2.updateAgvLoc(agv, path[path.length - 1]);
+    }
     return done;
   }
 }
