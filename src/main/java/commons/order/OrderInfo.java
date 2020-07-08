@@ -135,7 +135,7 @@ public class OrderInfo {
         // 获取零件数量
         int nums = jo.getIntValue("jobNum");
         for (int i = 0; i < nums; i++) {
-          WorkpieceStatus wpInfo = new WorkpieceStatus(orderId, String.format("%3d", ++wpCnt),
+          WorkpieceStatus wpInfo = new WorkpieceStatus(orderId, String.format("%03d", ++wpCnt),
               jo.getString("goodsId"), jo.getString("jobDes"));
           wpInfoList.add(wpInfo);
         }
