@@ -25,6 +25,8 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
   private final AgvRoutePlan plan;
   private final int to;
   private int[] path = null;
+  private Behaviour caller = null;
+  private boolean reachEnd = false;
 
   /**
    * AGV移动行为.
@@ -47,40 +49,52 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
       path = plan.getRouteArray(curLoc, to);
     }
     // 获取AGV当前位于执行路径的哪个位置
-    int curIndex = 0;
-    for (int i = 0; i < path.length; i++) {
-      if (path[i] == curLoc) {
-        curIndex = i;
-        break;
-      }
-    }
+    int curIndex = findPathIndex(path, curLoc);
     // 解锁已经行驶过的路径
     AgvMapUtils2.unlockPath(path, agv, curIndex);
-    // 加锁未行驶的路径
-    int endIndex = AgvMapUtils2.lockPath(path, agv, curIndex);
+
+    if (caller != null) {
+      // 已有运行任务，则检查是否完成
+      if (caller.done()) {
+        caller = null;
+        done = reachEnd;
+      }
+    } else {
+      // 加锁未行驶的路径
+      int endIndex = AgvMapUtils2.lockPath(path, agv, curIndex);
+      // 是否获取到终点
+      if (endIndex == path.length - 1) {
+        reachEnd = true;
+      }
+      // 构建可行驶路径字符串
+      String pathStr = getPathString(path, curIndex, endIndex);
+      // 执行移动
+      MachineAction action = new MoveAction(pathStr);
+      caller = tbf.wrap(new ActionCaller(agv, action));
+      myAgent.addBehaviour(caller);
+      LoggerUtil.agent.info("Call " + agv.getLocalName() + " move: " + pathStr);
+    }
+    block(500);
+  }
+
+  private int findPathIndex(int[] path, int loc) {
+    // 获取AGV当前位于执行路径的哪个位置
+    for (int i = 0; i < path.length; i++) {
+      if (path[i] == loc) {
+        return i;
+      }
+    }
+    return 0;
+  }
+
+  private String getPathString(int[] path, int start, int end) {
     // 构建可行驶路径字符串
     StringBuilder sb = new StringBuilder();
-    for (int i = curIndex; i <= endIndex; i++) {
+    for (int i = start; i <= end; i++) {
       sb.append(path[i]);
       sb.append(",");
     }
-    String pathStr = sb.substring(0, sb.length() - 1);
-    // 执行移动
-    MachineAction action = new MoveAction(pathStr);
-    Behaviour b = tbf.wrap(new ActionCaller(agv, action));
-    myAgent.addBehaviour(b);
-    LoggerUtil.agent.info("Call " + agv.getLocalName() + " move: " + pathStr);
-    while (!b.done()) {
-      try {
-        Thread.sleep(1000);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    }
-    // 是否完成任务段
-    if (endIndex == path.length - 1) {
-      done = true;
-    }
+    return sb.substring(0, sb.length() - 1);
   }
 
   @Override
