@@ -1,5 +1,6 @@
 package machines.real.agv.behaviours.simple;
 
+import commons.tools.LoggerUtil;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.SimpleBehaviour;
@@ -68,6 +69,7 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
     MachineAction action = new MoveAction(pathStr);
     Behaviour b = tbf.wrap(new ActionCaller(agv, action));
     myAgent.addBehaviour(b);
+    LoggerUtil.agent.info("Call " + agv.getLocalName() + " move: " + pathStr);
     while (!b.done()) {
       try {
         Thread.sleep(1000);
