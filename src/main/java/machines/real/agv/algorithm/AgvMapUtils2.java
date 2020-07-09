@@ -25,6 +25,9 @@ public class AgvMapUtils2 {
   // 自由停车点位置
   private static int[] freeStops = {28, 29, 30, 31, 32};
 
+  // 不可停车点
+  private static int[] nonStops = {1, 3, 5, 8, 10, 13, 16, 19, 22, 25};
+
   private static Map<AID, int[]> agvDirection = new ConcurrentHashMap<>();
 
   public static Map<AID, AgvState> getAgvStateMap() {
@@ -63,7 +66,7 @@ public class AgvMapUtils2 {
     for (int i = index; i < path.length; i++) {
       int node = path[i];
       if (map[node] != null && map[node] != locker) {
-        return i - 1;
+        return isNonStop(path[i - 1]) ? i - 2 : i - 1;
       }
       map[node] = locker;
     }
@@ -165,5 +168,14 @@ public class AgvMapUtils2 {
    */
   public static int[] getDirection(AID agv) {
     return agvDirection.get(agv);
+  }
+
+  private static boolean isNonStop(int loc) {
+    for (int nonStop : nonStops) {
+      if (nonStop == loc) {
+        return true;
+      }
+    }
+    return false;
   }
 }
