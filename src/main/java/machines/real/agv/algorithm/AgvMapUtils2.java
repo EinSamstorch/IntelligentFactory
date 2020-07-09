@@ -59,7 +59,7 @@ public class AgvMapUtils2 {
    * @param index  路径点数组加锁起点(包括)
    * @return 路径点数组的索引, 表示上锁到数组内的某个部分
    */
-  public static int lockPath(int[] path, AID locker, int index) {
+  public static synchronized int lockPath(int[] path, AID locker, int index) {
     for (int i = index; i < path.length; i++) {
       int node = path[i];
       if (map[node] != null && map[node] != locker) {
@@ -79,7 +79,7 @@ public class AgvMapUtils2 {
    * @param locker 加锁人
    * @param index  解锁范围（不包括）
    */
-  public static void unlockPath(int[] path, AID locker, int index) {
+  public static synchronized void unlockPath(int[] path, AID locker, int index) {
     for (int i = 0; i < path.length && i < index; i++) {
       int node = path[i];
       if (map[node] == locker) {

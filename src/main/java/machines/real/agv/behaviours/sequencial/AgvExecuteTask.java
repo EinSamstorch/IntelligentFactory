@@ -55,8 +55,8 @@ public class AgvExecuteTask extends SequentialBehaviour {
    */
   public AgvExecuteTask(int from, int to, AgvRoutePlan plan, AID agv, WorkpieceStatus wpInfo,
       ACLMessage message) {
-
-    int[] path = plan.getRouteArray(from, to);
+    // 更新AGV状态
+    AgvMapUtils2.updateAgvState(agv, AgvState.BUSY);
     // 1. 前往取货点
     addSubBehaviour(new AgvMoveBehaviour(agv, plan, from));
     // 2. 与仓库/工位台交互

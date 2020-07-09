@@ -40,8 +40,6 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
     this.agv = agv;
     this.plan = plan;
     this.to = to;
-    // 更新AGV状态
-    AgvMapUtils2.updateAgvState(agv, AgvState.BUSY);
   }
 
   @Override
@@ -54,6 +52,9 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
     } else {
       path = plan.getRouteArray(curLoc, to);
     }
+    LoggerUtil.agent.debug(
+        String.format("%s in %d to %d, path: %s",
+            agv.getLocalName(), curLoc, to, getPathString(path, 0, path.length - 1)));
   }
 
   @Override
@@ -64,6 +65,7 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
     if (AgvMapUtils2.isFreeStop(path[path.length - 1])) {
       AgvMapUtils2.saveDirection(agv, new int[]{path[path.length - 1], path[path.length - 2]});
     }
+    AgvMapUtils2.unlockPath(path, agv, path.length - 1);
     return super.onEnd();
   }
 
@@ -93,17 +95,36 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
         // 存在并发释放，所以再次检查occupy != null
         if (occupy != null && AgvMapUtils2.getAgvStateMap().get(occupy).equals(AgvState.FREE)) {
           int freeStop = AgvMapUtils2.getFreeStop(AgvMapUtils2.getAgvLoc(occupy), path, plan);
-          Behaviour b = tbf.wrap(new AgvMoveBehaviour(occupy, plan, freeStop));
+          Behaviour b = tbf.wrap(new AgvMoveBehaviour(occupy, plan, freeStop) {
+            @Override
+            public void onStart() {
+              super.onStart();
+              AgvMapUtils2.updateAgvState(occupy, AgvState.BUSY);
+            }
+
+            @Override
+            public int onEnd() {
+              AgvMapUtils2.updateAgvState(occupy, AgvState.FREE);
+              return super.onEnd();
+            }
+          });
           myAgent.addBehaviour(b);
         }
       }
-      // 构建可行驶路径字符串
-      String pathStr = getPathString(path, curIndex, endIndex);
-      // 执行移动
-      MachineAction action = new MoveAction(pathStr);
-      caller = tbf.wrap(new ActionCaller(agv, action));
-      myAgent.addBehaviour(caller);
-      LoggerUtil.agent.info("Call " + agv.getLocalName() + " move: " + pathStr);
+      // curIndex == endIndex 表示原地等待，无需移动
+      if (curIndex < endIndex) {
+        // 构建可行驶路径字符串
+        String pathStr = getPathString(path, curIndex, endIndex);
+        // 执行移动
+        MachineAction action = new MoveAction(pathStr);
+        caller = tbf.wrap(new ActionCaller(agv, action));
+        myAgent.addBehaviour(caller);
+        LoggerUtil.agent.info("Call " + agv.getLocalName() + " move: " + pathStr);
+      } else if (curIndex == path.length - 1) {
+        // 当前已经位于最后一个点，无需运行
+        done = true;
+        return;
+      }
     }
     block(500);
   }
