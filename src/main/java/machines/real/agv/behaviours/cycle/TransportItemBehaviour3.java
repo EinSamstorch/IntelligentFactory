@@ -68,7 +68,6 @@ public class TransportItemBehaviour3 extends CyclicBehaviour {
       queue.poll();
       Behaviour b = tbf.wrap(new AgvExecuteTask(request, plan, agv, receive));
       myAgent.addBehaviour(b);
-      AgvMapUtils2.updateAgvState(agv, AgvState.BUSY);
       LoggerUtil.agent.info(String
           .format("Choose: %s to transport from buffer %d to %d.", agv.getLocalName(),
               request.getFromBuffer(), request.getToBuffer()));

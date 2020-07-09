@@ -7,6 +7,7 @@ import jade.core.behaviours.SimpleBehaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import machines.real.agv.actions.MoveAction;
 import machines.real.agv.algorithm.AgvMapUtils2;
+import machines.real.agv.algorithm.AgvMapUtils2.AgvState;
 import machines.real.agv.algorithm.AgvRoutePlan;
 import machines.real.commons.actions.MachineAction;
 
@@ -39,15 +40,36 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
     this.agv = agv;
     this.plan = plan;
     this.to = to;
+    // 更新AGV状态
+    AgvMapUtils2.updateAgvState(agv, AgvState.BUSY);
+  }
+
+  @Override
+  public void onStart() {
+    int curLoc = AgvMapUtils2.getAgvLoc(agv);
+    // 判断起点是否在自由停车位，若是则需要删边计算路径
+    if (AgvMapUtils2.isFreeStop(curLoc)) {
+      int[] dir = AgvMapUtils2.getDirection(agv);
+      path = plan.getRouteArray(curLoc, to, dir[0], dir[1]);
+    } else {
+      path = plan.getRouteArray(curLoc, to);
+    }
+  }
+
+  @Override
+  public int onEnd() {
+    // 强制更新AGV位置
+    AgvMapUtils2.updateAgvLoc(agv, path[path.length - 1]);
+    // 判断终点是否在自由停车位
+    if (AgvMapUtils2.isFreeStop(path[path.length - 1])) {
+      AgvMapUtils2.saveDirection(agv, new int[]{path[path.length - 1], path[path.length - 2]});
+    }
+    return super.onEnd();
   }
 
   @Override
   public void action() {
     int curLoc = AgvMapUtils2.getAgvLoc(agv);
-    // 初始化, 计算路径
-    if (path == null) {
-      path = plan.getRouteArray(curLoc, to);
-    }
     // 获取AGV当前位于执行路径的哪个位置
     int curIndex = findPathIndex(path, curLoc);
     // 解锁已经行驶过的路径
@@ -65,6 +87,15 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
       // 是否获取到终点
       if (endIndex == path.length - 1) {
         reachEnd = true;
+      } else {
+        // 检查被占用点AGV是否处于空闲态，若是则调度其离开
+        AID occupy = AgvMapUtils2.getLocationOccupy(path[endIndex + 1]);
+        // 存在并发释放，所以再次检查occupy != null
+        if (occupy != null && AgvMapUtils2.getAgvStateMap().get(occupy).equals(AgvState.FREE)) {
+          int freeStop = AgvMapUtils2.getFreeStop(AgvMapUtils2.getAgvLoc(occupy), path, plan);
+          Behaviour b = tbf.wrap(new AgvMoveBehaviour(occupy, plan, freeStop));
+          myAgent.addBehaviour(b);
+        }
       }
       // 构建可行驶路径字符串
       String pathStr = getPathString(path, curIndex, endIndex);
@@ -99,10 +130,6 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
 
   @Override
   public boolean done() {
-    if (done) {
-      // 强制更新AGV位置
-      AgvMapUtils2.updateAgvLoc(agv, path[path.length - 1]);
-    }
     return done;
   }
 }

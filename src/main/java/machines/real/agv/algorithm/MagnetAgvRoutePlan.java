@@ -47,6 +47,15 @@ public class MagnetAgvRoutePlan implements AgvRoutePlan {
   }
 
   @Override
+  public int[] getRouteArray(int from, int to, int delFrom, int delTo) {
+    graph.deleteEdge(delFrom, delTo);
+    DijkstraSP sp = new DijkstraSP(graph, from);
+    int[] ans = sp.getPathIntArray(to);
+    graph.restoreEdge(delFrom, delTo);
+    return ans;
+  }
+
+  @Override
   public int getDistance(int from, int to) {
     DijkstraSP sp = new DijkstraSP(graph, from);
     return (int) sp.distTo(to);

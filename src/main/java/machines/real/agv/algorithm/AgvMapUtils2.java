@@ -22,6 +22,10 @@ public class AgvMapUtils2 {
   // 记录AGV运行状态
   private static Map<AID, AgvState> agvStateMap = new ConcurrentHashMap<>();
 
+  // 自由停车点位置
+  private static int[] freeStops = {28, 29, 30, 31, 32};
+
+  private static Map<AID, int[]> agvDirection = new ConcurrentHashMap<>();
 
   public static Map<AID, AgvState> getAgvStateMap() {
     return agvStateMap;
@@ -82,5 +86,84 @@ public class AgvMapUtils2 {
         map[node] = null;
       }
     }
+  }
+
+  /**
+   * 获取地图点被谁占有.
+   *
+   * @param loc 地图点
+   * @return 占有人，无人则NULL
+   */
+  public static AID getLocationOccupy(int loc) {
+    if (loc < 0 || loc >= map.length) {
+      return null;
+    }
+    return map[loc];
+  }
+
+  /**
+   * 获得一个最近的空位点.
+   *
+   * @param avoid 避开点数组
+   * @return 空位点，-1表示没有
+   */
+  public static int getFreeStop(int cur, int[] avoid, AgvRoutePlan plan) {
+    int distance = Integer.MAX_VALUE;
+    int choice = -1;
+    for (int stop : freeStops) {
+      if (map[stop] != null) {
+        continue;
+      }
+      boolean conflict = false;
+      for (int a : avoid) {
+        if (a == stop) {
+          conflict = true;
+          break;
+        }
+      }
+      if (!conflict) {
+        int dist = plan.getDistance(cur, stop);
+        if (dist < distance) {
+          choice = stop;
+          distance = dist;
+        }
+      }
+    }
+    return choice;
+  }
+
+  /**
+   * 检查是否是自由停车点.
+   *
+   * @param loc 位置点
+   * @return 是否自由停车点
+   */
+  public static boolean isFreeStop(int loc) {
+    for (int f : freeStops) {
+      if (f == loc) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * 储存agv方位.
+   *
+   * @param agv       agv
+   * @param direction {end, pre_end} pre_end表示行经停车点的前一个位置
+   */
+  public static void saveDirection(AID agv, int[] direction) {
+    agvDirection.put(agv, direction);
+  }
+
+  /**
+   * 获取AGV方向.
+   *
+   * @param agv agv
+   * @return {end, pre_end} pre_end表示行经停车点的前一个位置
+   */
+  public static int[] getDirection(AID agv) {
+    return agvDirection.get(agv);
   }
 }
