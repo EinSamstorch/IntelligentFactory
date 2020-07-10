@@ -91,7 +91,7 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
         reachEnd = true;
       } else {
         // 检查被占用点AGV是否处于空闲态，若是则调度其离开
-        AID occupy = AgvMapUtils2.getLocationOccupy(path[endIndex + 1]);
+        AID occupy = AgvMapUtils2.getLocationOccupy(path, endIndex + 1);
         // 存在并发释放，所以再次检查occupy != null
         if (occupy != null && AgvMapUtils2.getAgvStateMap().get(occupy).equals(AgvState.FREE)) {
           int freeStop = AgvMapUtils2.getFreeStop(AgvMapUtils2.getAgvLoc(occupy), path, plan);

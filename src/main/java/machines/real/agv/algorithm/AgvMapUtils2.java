@@ -53,6 +53,22 @@ public class AgvMapUtils2 {
   }
 
   /**
+   * 寻找地图点占有者.
+   *
+   * @param path  路径点数组
+   * @param index 搜索起点
+   * @return 占有者，null表示无人占有
+   */
+  public static AID getLocationOccupy(int[] path, int index) {
+    for (int i = index; i < path.length; i++) {
+      int node = path[index];
+      if (map[node] != null) {
+        return map[node];
+      }
+    }
+    return null;
+  }
+  /**
    * 锁住路径.
    *
    * <p>尝试一个一个点进行加锁，如果当前点加锁失败，则返回当前索引-1，以表示路径点数组[index, i-1]均上锁完成
@@ -91,18 +107,6 @@ public class AgvMapUtils2 {
     }
   }
 
-  /**
-   * 获取地图点被谁占有.
-   *
-   * @param loc 地图点
-   * @return 占有人，无人则NULL
-   */
-  public static AID getLocationOccupy(int loc) {
-    if (loc < 0 || loc >= map.length) {
-      return null;
-    }
-    return map[loc];
-  }
 
   /**
    * 获得一个最近的空位点.
