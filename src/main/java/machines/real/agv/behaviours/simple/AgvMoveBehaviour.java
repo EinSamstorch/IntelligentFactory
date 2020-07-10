@@ -126,7 +126,7 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
         return;
       }
     }
-    block(500);
+    block(1500);
   }
 
   private int findPathIndex(int[] path, int loc) {
