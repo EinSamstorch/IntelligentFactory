@@ -19,6 +19,9 @@ public class AgvMapUtils2 {
   // 记录AGV实时位置
   private static Map<AID, OptionalInt> agvLocations = new ConcurrentHashMap<>();
 
+  // 记录AGV逻辑位置，避免实时位置的更新延迟导致路径规划错误
+  private static Map<AID, OptionalInt> agvLocationsLogic = new ConcurrentHashMap<>();
+
   // 记录AGV运行状态
   private static Map<AID, AgvState> agvStateMap = new ConcurrentHashMap<>();
 
@@ -52,6 +55,14 @@ public class AgvMapUtils2 {
     OFFLINE
   }
 
+  public static int getAgvLocLogic(AID agv) {
+    return agvLocationsLogic.get(agv).orElse(-1);
+  }
+
+  public static void updateAgvLocLogic(AID agv, int loc) {
+    agvLocationsLogic.put(agv, OptionalInt.of(loc));
+  }
+
   /**
    * 寻找地图点占有者.
    *
@@ -68,6 +79,19 @@ public class AgvMapUtils2 {
     }
     return null;
   }
+
+  /**
+   * 初始化AGV逻辑位置.
+   *
+   * @param agv AGV
+   * @param loc 位置点
+   */
+  public static void initAgvLocLogic(AID agv, int loc) {
+    if (!agvLocationsLogic.containsKey(agv)) {
+      agvLocationsLogic.put(agv, OptionalInt.of(loc));
+    }
+  }
+
   /**
    * 锁住路径.
    *

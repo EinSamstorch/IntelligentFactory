@@ -44,7 +44,7 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
 
   @Override
   public void onStart() {
-    int curLoc = AgvMapUtils2.getAgvLoc(agv);
+    int curLoc = AgvMapUtils2.getAgvLocLogic(agv);
     // 判断起点是否在自由停车位，若是则需要删边计算路径
     if (AgvMapUtils2.isFreeStop(curLoc)) {
       int[] dir = AgvMapUtils2.getDirection(agv);
@@ -59,8 +59,8 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
 
   @Override
   public int onEnd() {
-    // 强制更新AGV位置
-    AgvMapUtils2.updateAgvLoc(agv, path[path.length - 1]);
+    // 更新AGV逻辑位置
+    AgvMapUtils2.updateAgvLocLogic(agv, path[path.length - 1]);
     // 判断终点是否在自由停车位
     if (AgvMapUtils2.isFreeStop(path[path.length - 1])) {
       AgvMapUtils2.saveDirection(agv, new int[]{path[path.length - 1], path[path.length - 2]});
