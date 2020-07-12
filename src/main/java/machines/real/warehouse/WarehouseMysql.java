@@ -40,7 +40,7 @@ public class WarehouseMysql extends MysqlJdbc implements DbInterface {
       while (rs.next()) {
         position = rs.getInt(1);
       }
-      cmd = String.format("UPDATE raw SET goodsid=null WHERE position='%s'", position);
+      cmd = String.format("UPDATE raw SET goodsid='000' WHERE position='%s'", position);
       int rst = stmt.executeUpdate(cmd);
       if (rst != 1) {
         LoggerUtil.db.error(cmd);

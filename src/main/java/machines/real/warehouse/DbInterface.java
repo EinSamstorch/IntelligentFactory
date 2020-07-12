@@ -5,7 +5,7 @@ import commons.order.WorkpieceStatus;
 public interface DbInterface {
 
   /**
-   * 获得一个原料, 同时从raw table中删去库存.
+   * 获得一个原料, 同时在raw table中设置其goodsId='000' 表示已使用.
    *
    * @param goodsid 原料种类
    * @return int positon,  0表示失败
