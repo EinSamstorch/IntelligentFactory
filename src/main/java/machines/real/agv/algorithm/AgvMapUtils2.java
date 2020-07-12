@@ -72,7 +72,7 @@ public class AgvMapUtils2 {
    */
   public static AID getLocationOccupy(int[] path, int index) {
     for (int i = index; i < path.length; i++) {
-      int node = path[index];
+      int node = path[i];
       if (map[node] != null) {
         return map[node];
       }
