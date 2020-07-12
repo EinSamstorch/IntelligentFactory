@@ -53,12 +53,12 @@ public class AgvMapUtils2 {
 
   static {
     // combines two buffers of the same machine
-    combines.put(12, 11);
-    combines.put(15, 14);
-    combines.put(18, 17);
-    combines.put(21, 22);
-    combines.put(24, 23);
-    combines.put(27, 26);
+    combines.put(11, 12);
+    combines.put(14, 15);
+    combines.put(17, 18);
+    combines.put(20, 21);
+    combines.put(23, 24);
+    combines.put(26, 27);
   }
 
   /**
@@ -68,10 +68,7 @@ public class AgvMapUtils2 {
    * @return 如果无绑定关系，返回自身；如果有绑定关系，返回绑定地图点
    */
   private static int getCombination(int loc) {
-    if (combines.containsKey(loc)) {
-      return combines.get(loc);
-    }
-    return loc;
+    return combines.getOrDefault(loc, loc);
   }
 
   public enum AgvState {
@@ -151,7 +148,7 @@ public class AgvMapUtils2 {
   public static synchronized void unlockPath(int[] path, AID locker, int index) {
     for (int i = 0; i < path.length && i < index; i++) {
       int node = getCombination(path[i]);
-      if (map[node] == locker) {
+      if (node == path[i] && map[node] == locker) {
         map[node] = null;
       }
     }
