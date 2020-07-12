@@ -28,6 +28,7 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
   private int[] path = null;
   private Behaviour caller = null;
   private boolean reachEnd = false;
+  private int lastRunPos;
 
   /**
    * AGV移动行为.
@@ -61,6 +62,7 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
   public int onEnd() {
     // 更新AGV逻辑位置
     AgvMapUtils2.updateAgvLocLogic(agv, path[path.length - 1]);
+    AgvMapUtils2.updateAgvLoc(agv, path[path.length - 1]);
     // 判断终点是否在自由停车位
     if (AgvMapUtils2.isFreeStop(path[path.length - 1])) {
       AgvMapUtils2.saveDirection(agv, new int[]{path[path.length - 1], path[path.length - 2]});
@@ -82,6 +84,8 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
       if (caller.done()) {
         caller = null;
         done = reachEnd;
+        // 强制刷新一下位置
+        AgvMapUtils2.updateAgvLoc(agv, lastRunPos);
       }
     } else {
       // 加锁未行驶的路径
@@ -119,6 +123,8 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
         MachineAction action = new MoveAction(pathStr);
         caller = tbf.wrap(new ActionCaller(agv, action));
         myAgent.addBehaviour(caller);
+        // 记录上一次行进终点，待移动结束强制刷新位置
+        lastRunPos = path[endIndex];
         LoggerUtil.agent.info("Call " + agv.getLocalName() + " move: " + pathStr);
       } else if (curIndex == path.length - 1) {
         // 当前已经位于最后一个点，无需运行
