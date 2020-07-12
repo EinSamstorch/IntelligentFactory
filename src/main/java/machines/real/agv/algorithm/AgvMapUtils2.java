@@ -64,16 +64,17 @@ public class AgvMapUtils2 {
   }
 
   /**
-   * 寻找地图点占有者.
+   * 寻找地图点占有者，且非当前搜索者.
    *
    * @param path  路径点数组
+   * @param agv   当前搜索者
    * @param index 搜索起点
    * @return 占有者，null表示无人占有
    */
-  public static AID getLocationOccupy(int[] path, int index) {
+  public static AID getLocationOccupy(int[] path, AID agv, int index) {
     for (int i = index; i < path.length; i++) {
       int node = path[i];
-      if (map[node] != null) {
+      if (map[node] != null && map[node] != agv) {
         return map[node];
       }
     }
