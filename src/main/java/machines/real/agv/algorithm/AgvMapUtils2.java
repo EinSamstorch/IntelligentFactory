@@ -49,6 +49,31 @@ public class AgvMapUtils2 {
     agvStateMap.put(agv, state);
   }
 
+  private static Map<Integer, Integer> combines = new ConcurrentHashMap<>();
+
+  static {
+    // combines two buffers of the same machine
+    combines.put(12, 11);
+    combines.put(15, 14);
+    combines.put(18, 17);
+    combines.put(21, 22);
+    combines.put(24, 23);
+    combines.put(27, 26);
+  }
+
+  /**
+   * 获取到共用地图点.
+   *
+   * @param loc 地图点
+   * @return 如果无绑定关系，返回自身；如果有绑定关系，返回绑定地图点
+   */
+  private static int getCombination(int loc) {
+    if (combines.containsKey(loc)) {
+      return combines.get(loc);
+    }
+    return loc;
+  }
+
   public enum AgvState {
     FREE,
     BUSY,
@@ -73,7 +98,7 @@ public class AgvMapUtils2 {
    */
   public static AID getLocationOccupy(int[] path, AID agv, int index) {
     for (int i = index; i < path.length; i++) {
-      int node = path[i];
+      int node = getCombination(path[i]);
       if (map[node] != null && map[node] != agv) {
         return map[node];
       }
@@ -105,7 +130,7 @@ public class AgvMapUtils2 {
    */
   public static synchronized int lockPath(int[] path, AID locker, int index) {
     for (int i = index; i < path.length; i++) {
-      int node = path[i];
+      int node = getCombination(path[i]);
       if (map[node] != null && map[node] != locker) {
         return isNonStop(path[i - 1]) ? i - 2 : i - 1;
       }
@@ -125,7 +150,7 @@ public class AgvMapUtils2 {
    */
   public static synchronized void unlockPath(int[] path, AID locker, int index) {
     for (int i = 0; i < path.length && i < index; i++) {
-      int node = path[i];
+      int node = getCombination(path[i]);
       if (map[node] == locker) {
         map[node] = null;
       }
