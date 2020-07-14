@@ -63,14 +63,14 @@ public class AgvExecuteTask extends SequentialBehaviour {
     boolean fromWarehouse = !plan.isBuffer(from);
     addSubBehaviour(fromWarehouse
         ? interactWarehouse(agv, true, wpInfo)
-        : interactBuffer(agv, plan.getBufferNo(from), true));
+        : interactBuffer(agv, plan.getBufferNo(from), true, wpInfo));
     // 3. 前往送货点
     addSubBehaviour(new AgvMoveBehaviour(agv, plan, to));
     // 4. 与仓库/工位台交互
     boolean toWarehouse = !plan.isBuffer(to);
     addSubBehaviour(toWarehouse
         ? interactWarehouse(agv, false, wpInfo)
-        : interactBuffer(agv, plan.getBufferNo(to), false));
+        : interactBuffer(agv, plan.getBufferNo(to), false, wpInfo));
     // 5. 提示上个设备，工件已取走
     if (!fromWarehouse) {
       addSubBehaviour(new OneShotBehaviour() {
@@ -112,8 +112,9 @@ public class AgvExecuteTask extends SequentialBehaviour {
    * @param agvImport AGV入料
    * @return 组装好的行为
    */
-  private Behaviour interactBuffer(AID agv, int bufferNo, boolean agvImport) {
-    Behaviour bufferBehaviour = new InteractBuffer(new BufferRequest(bufferNo, !agvImport));
+  private Behaviour interactBuffer(AID agv, int bufferNo, boolean agvImport,
+      WorkpieceStatus wpInfo) {
+    Behaviour bufferBehaviour = new InteractBuffer(new BufferRequest(bufferNo, !agvImport, wpInfo));
     Behaviour agvBehaviour = new ActionCaller(agv, new InExportAction(agvImport));
     ParallelBehaviour pb = new ParallelBehaviour();
     pb.addSubBehaviour(bufferBehaviour);
@@ -138,7 +139,7 @@ public class AgvExecuteTask extends SequentialBehaviour {
         new WarehouseItemMoveRequest(warehousePos, !agvImport), warehouse);
     Behaviour agvAndConveyor = new ImExportItemBehaviour(
         new ActionCaller(agv, new InExportAction(agvImport)),
-        new CallWarehouseConveyor(new WarehouseConveyorRequest(!agvImport), warehouse));
+        new CallWarehouseConveyor(new WarehouseConveyorRequest(!agvImport, wpInfo), warehouse));
     SequentialBehaviour sb = new SequentialBehaviour();
     if (agvImport) {
       sb.addSubBehaviour(whMove);
