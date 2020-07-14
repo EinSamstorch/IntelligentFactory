@@ -38,4 +38,18 @@ public interface MachineAction extends Serializable {
    * @return extra信息
    */
   Object getResultExtra();
+
+  /**
+   * 获取工件号.
+   *
+   * @return 工件号
+   */
+  String getWorkpieceId();
+
+  /**
+   * 获取订单号.
+   *
+   * @return 订单号
+   */
+  String getOrderId();
 }
