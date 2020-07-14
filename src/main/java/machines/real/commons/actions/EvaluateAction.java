@@ -14,8 +14,15 @@ public class EvaluateAction extends AbstractMachineAction {
 
   private WorkpieceStatus wpInfo;
 
+  /**
+   * 预估时间动作.
+   *
+   * @param wpInfo 工件信息
+   */
   public EvaluateAction(WorkpieceStatus wpInfo) {
     this.wpInfo = wpInfo;
+    this.orderId = wpInfo.getOrderId();
+    this.workpieceId = wpInfo.getWorkpieceId();
   }
 
   @Override
