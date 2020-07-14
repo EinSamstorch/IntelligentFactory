@@ -43,7 +43,7 @@ public class ConveyorControlBehaviour extends CyclicBehaviour {
           .warn("Deserialization Error in WarehouseConveyorRequest. " + e.getLocalizedMessage());
       return;
     }
-    ImExportItemAction action = new ImExportItemAction(request.isImportMode());
+    ImExportItemAction action = new ImExportItemAction(request);
     while (!hal.executeAction(action)) {
       try {
         Thread.sleep(1000);
