@@ -23,7 +23,7 @@ public class SimpleProcessItem extends ProcessItemTemplate {
     ArmRequest request = new ArmRequest(
         String.valueOf(buffer.getIndex()),
         realAgent.getLocalName(),
-        buffer.getWpInfo().getGoodsId()
+        buffer.getWpInfo()
     );
 
     SequentialBehaviour s = new SequentialBehaviour();
