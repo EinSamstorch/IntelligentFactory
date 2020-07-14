@@ -40,8 +40,7 @@ public class ItemManageBehaviour extends CyclicBehaviour {
       LoggerUtil.agent.warn("Deserialization Error in BufferRequest.");
       return;
     }
-    ImExportAction action = new ImExportAction(request.isImportMode(),
-        request.getBufferNo());
+    ImExportAction action = new ImExportAction(request);
 
     myAgent.addBehaviour(tbf.wrap(new ActionExecutor(action, hal, msg)));
   }
