@@ -30,7 +30,7 @@ public class LatheProcessItem extends ProcessItemTemplate {
     ArmRequest request = new ArmRequest(
         String.valueOf(buffer.getIndex()),
         realAgent.getLocalName(),
-        buffer.getWpInfo().getGoodsId()
+        buffer.getWpInfo()
     );
     MiddleHal hal = realAgent.getHal();
     // 上料加工1
