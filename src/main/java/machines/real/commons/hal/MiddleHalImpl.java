@@ -23,7 +23,8 @@ public class MiddleHalImpl extends BaseHalImpl implements MiddleHal {
   @Override
   public boolean executeAction(MachineAction action) {
     LoggerUtil.hal.info("Action: " + action.getCmd() + ", extra: " + action.getExtra().toString());
-    return executeCmd(action.getCmd(), action.getExtra());
+    return executeCmd(action.getCmd(), action.getExtra(),
+        action.getOrderId(), action.getWorkpieceId());
   }
 
   @Override

@@ -54,12 +54,12 @@ public class BaseHalImpl implements BaseHal {
    * @param extra 额外内容
    * @return 任务号
    */
-  protected int sendMessageToMachine(String cmd, Object extra) {
+  protected int sendMessageToMachine(String cmd, Object extra, String orderId, String wpId) {
     JSONObject message = new JSONObject();
     message.put(SocketMessage.FIELD_TASK_NO, ++taskNo);
     message.put(SocketMessage.FIELD_CMD, cmd);
-    message.put(SocketMessage.FIELD_ORDER_ID, "0");
-    message.put(SocketMessage.FIELD_WORKPIECE_ID, "0");
+    message.put(SocketMessage.FIELD_ORDER_ID, orderId);
+    message.put(SocketMessage.FIELD_WORKPIECE_ID, wpId);
     message.put(SocketMessage.FIELD_EXTRA, extra);
 
     sender.sendMessageToMachine(message);
@@ -105,19 +105,20 @@ public class BaseHalImpl implements BaseHal {
   }
 
 
-  protected boolean executeCmd(String cmd) {
-    return executeCmd(cmd, "", 0);
+  protected boolean executeCmd(String cmd, String orderId, String wpId) {
+    return executeCmd(cmd, "", 0, orderId, wpId);
   }
 
-  protected boolean executeCmd(String cmd, Object extra) {
-    return executeCmd(cmd, extra, 0);
+  protected boolean executeCmd(String cmd, Object extra, String orderId, String wpId) {
+    return executeCmd(cmd, extra, 0, orderId, wpId);
   }
 
-  protected boolean executeCmd(String cmd, Object extra, long timeoutMills) {
+  protected boolean executeCmd(String cmd, Object extra, long timeoutMills,
+      String orderId, String wpId) {
     if (!checkHalOnline()) {
       return false;
     }
-    int taskNo = sendMessageToMachine(cmd, extra);
+    int taskNo = sendMessageToMachine(cmd, extra, orderId, wpId);
 
     JSONObject response = getResponse(taskNo, timeoutMills);
     if (response == null) {
