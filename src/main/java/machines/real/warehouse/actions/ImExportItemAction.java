@@ -1,6 +1,7 @@
 package machines.real.warehouse.actions;
 
 import machines.real.commons.actions.AbstractMachineAction;
+import machines.real.commons.request.WarehouseConveyorRequest;
 import machines.real.warehouse.WarehouseHal;
 
 /**
@@ -14,8 +15,15 @@ public class ImExportItemAction extends AbstractMachineAction {
 
   private boolean importMode;
 
-  public ImExportItemAction(boolean importMode) {
-    this.importMode = importMode;
+  /**
+   * 仓库传送带进出货控制.
+   *
+   * @param request 进出货请求
+   */
+  public ImExportItemAction(WarehouseConveyorRequest request) {
+    this.importMode = request.isImportMode();
+    this.orderId = request.getOrderId();
+    this.workpieceId = request.getWorkpieceId();
   }
 
   @Override
