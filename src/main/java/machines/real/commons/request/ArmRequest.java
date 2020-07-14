@@ -1,5 +1,6 @@
 package machines.real.commons.request;
 
+import commons.order.WorkpieceStatus;
 import java.io.Serializable;
 
 /**
@@ -16,6 +17,8 @@ public class ArmRequest implements Serializable {
   private final String to;
   private final String goodsId;
   private final Integer step;
+  private final String orderId;
+  private final String workpieceId;
 
   /**
    * 机械手搬运请求.
@@ -25,15 +28,22 @@ public class ArmRequest implements Serializable {
    * @param goodsId 货物类型
    * @param step    搬运步骤, 铣床与检测仪该参数均为0, 车床该参数与具体装夹过程相关, 为-1时代表一组装夹动作完成
    */
-  public ArmRequest(String from, String to, String goodsId, Integer step) {
+  public ArmRequest(String from, String to, String goodsId, Integer step, String orderId,
+      String workpieceId) {
     this.from = from;
     this.to = to;
     this.goodsId = goodsId;
     this.step = step;
+    this.workpieceId = workpieceId;
+    this.orderId = orderId;
   }
 
-  public ArmRequest(String from, String to, String goodsId) {
-    this(from, to, goodsId, 0);
+  public ArmRequest(String from, String to, int step, WorkpieceStatus wpInfo) {
+    this(from, to, wpInfo.getGoodsId(), step, wpInfo.getOrderId(), wpInfo.getWorkpieceId());
+  }
+
+  public ArmRequest(String from, String to, WorkpieceStatus wpInfo) {
+    this(from, to, 0, wpInfo);
   }
 
   /**
@@ -47,7 +57,9 @@ public class ArmRequest implements Serializable {
         request.to,
         request.from,
         request.goodsId,
-        0);
+        0,
+        request.orderId,
+        request.workpieceId);
   }
 
   /**
@@ -61,7 +73,9 @@ public class ArmRequest implements Serializable {
         request.to,
         request.to,
         request.goodsId,
-        0);
+        0,
+        request.orderId,
+        request.workpieceId);
   }
 
   /**
@@ -75,7 +89,9 @@ public class ArmRequest implements Serializable {
         request.from,
         request.to,
         request.goodsId,
-        request.step + 1);
+        request.step + 1,
+        request.orderId,
+        request.workpieceId);
   }
 
   /**
@@ -89,17 +105,9 @@ public class ArmRequest implements Serializable {
         request.from,
         request.to,
         request.goodsId,
-        -1
-    );
-  }
-
-  /**
-   * 复制一个新的请求.
-   *
-   * @param request 待复制请求
-   */
-  public ArmRequest copyOf(ArmRequest request) {
-    return new ArmRequest(request.from, request.to, request.goodsId, request.step);
+        -1,
+        request.orderId,
+        request.workpieceId);
   }
 
   public String getFrom() {
@@ -116,6 +124,14 @@ public class ArmRequest implements Serializable {
 
   public Integer getStep() {
     return step;
+  }
+
+  public String getOrderId() {
+    return orderId;
+  }
+
+  public String getWorkpieceId() {
+    return workpieceId;
   }
 
   @Override
