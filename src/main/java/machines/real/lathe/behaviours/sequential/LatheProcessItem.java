@@ -35,9 +35,13 @@ public class LatheProcessItem extends ProcessItemTemplate {
     MiddleHal hal = realAgent.getHal();
     // 上料加工1
     s.addSubBehaviour(loadAndProcess(request, buffer, hal, armPwd));
-    // 掉头装夹加工
-    ArmRequest reverseRequest = ArmRequest.reverseRequest(request);
-    s.addSubBehaviour(reverseAndProcess(reverseRequest, buffer, hal, armPwd));
+
+    if ("002".equals(request.getGoodsId())) {
+      // 掉头装夹加工
+      ArmRequest reverseRequest = ArmRequest.reverseRequest(request);
+      s.addSubBehaviour(reverseAndProcess(reverseRequest, buffer, hal, armPwd));
+    }
+
     // 卸料
     ArmRequest unloadRequest = ArmRequest.unloadRequest(request);
     s.addSubBehaviour(unload(unloadRequest, hal, armPwd));
