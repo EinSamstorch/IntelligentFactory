@@ -14,8 +14,15 @@ public class ProcessAction extends AbstractMachineAction {
 
   private WorkpieceStatus wpInfo;
 
+  /**
+   * 加工行为.
+   *
+   * @param wpInfo 工件信息
+   */
   public ProcessAction(WorkpieceStatus wpInfo) {
     this.wpInfo = wpInfo;
+    this.orderId = wpInfo.getOrderId();
+    this.workpieceId = wpInfo.getWorkpieceId();
   }
 
   @Override
