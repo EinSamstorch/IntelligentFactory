@@ -62,7 +62,7 @@ public class ItemMoveBehaviour extends CyclicBehaviour {
     int itemPosition = request.getItemPosition();
     int from = request.isIn() ? posIn : itemPosition;
     int to = request.isIn() ? itemPosition : posOut;
-    MoveItemAction action = new MoveItemAction(from, to);
+    MoveItemAction action = new MoveItemAction(from, to, request);
     while (!hal.executeAction(action)) {
       try {
         Thread.sleep(1000);

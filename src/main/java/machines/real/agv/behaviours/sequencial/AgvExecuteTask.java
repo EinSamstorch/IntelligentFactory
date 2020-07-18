@@ -136,7 +136,7 @@ public class AgvExecuteTask extends SequentialBehaviour {
     AID warehouse = agvImport ? wpInfo.getRawProviderId() : wpInfo.getProductProviderId();
     int warehousePos = wpInfo.getWarehousePosition();
     Behaviour whMove = new CallWarehouseMoveItem(
-        new WarehouseItemMoveRequest(warehousePos, !agvImport), warehouse);
+        new WarehouseItemMoveRequest(warehousePos, !agvImport, wpInfo), warehouse);
     Behaviour agvAndConveyor = new ImExportItemBehaviour(
         new ActionCaller(agv, new InExportAction(agvImport)),
         new CallWarehouseConveyor(new WarehouseConveyorRequest(!agvImport, wpInfo), warehouse));
