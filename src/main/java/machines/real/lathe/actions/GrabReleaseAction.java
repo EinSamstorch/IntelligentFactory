@@ -1,6 +1,7 @@
 package machines.real.lathe.actions;
 
 import machines.real.commons.actions.AbstractMachineAction;
+import machines.real.commons.request.LatheRequest;
 import machines.real.lathe.LatheHal;
 
 /**
@@ -12,10 +13,12 @@ import machines.real.lathe.LatheHal;
  */
 public class GrabReleaseAction extends AbstractMachineAction {
 
-  private boolean grab;
+  private final boolean grab;
 
-  public GrabReleaseAction(boolean grab) {
-    this.grab = grab;
+  public GrabReleaseAction(LatheRequest latheRequest) {
+    this.grab = latheRequest.isGrab();
+    this.orderId = latheRequest.getOrderId();
+    this.workpieceId = latheRequest.getWorkpieceId();
   }
 
   @Override
