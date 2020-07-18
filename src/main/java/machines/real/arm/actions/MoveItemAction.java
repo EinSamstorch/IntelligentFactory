@@ -56,6 +56,8 @@ public class MoveItemAction extends AbstractMachineAction {
         request.getTo(),
         request.getGoodsId(),
         request.getStep());
+    this.orderId = request.getOrderId();
+    this.workpieceId = request.getWorkpieceId();
   }
 
   @Override
