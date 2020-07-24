@@ -57,7 +57,7 @@
           <configLocation>google_checks.xml</configLocation>
           <consoleOutput>true</consoleOutput>
           <encoding>UTF-8</encoding>
-          <failOnViolation>true</failOnViolation>
+          <failOnViolation>false</failOnViolation>
           <failsOnError>true</failsOnError>
           <linkXRef>false</linkXRef>
           <violationSeverity>warning</violationSeverity>
