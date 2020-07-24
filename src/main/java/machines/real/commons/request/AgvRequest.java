@@ -24,6 +24,8 @@ public class AgvRequest implements Serializable {
   private int fromBuffer;
   private int toBuffer;
   private WorkpieceStatus wpInfo;
+  private final String orderId;
+  private final String workpieceId;
 
   /**
    * AGV搬运请求.
@@ -36,6 +38,8 @@ public class AgvRequest implements Serializable {
     this.fromBuffer = fromBuffer;
     this.toBuffer = toBuffer;
     this.wpInfo = wpInfo;
+    this.orderId = wpInfo.getOrderId();
+    this.workpieceId = wpInfo.getWorkpieceId();
   }
 
   public int getFromBuffer() {

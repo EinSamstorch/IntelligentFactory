@@ -115,7 +115,7 @@ public class AgvExecuteTask extends SequentialBehaviour {
   private Behaviour interactBuffer(AID agv, int bufferNo, boolean agvImport,
       WorkpieceStatus wpInfo) {
     Behaviour bufferBehaviour = new InteractBuffer(new BufferRequest(bufferNo, !agvImport, wpInfo));
-    Behaviour agvBehaviour = new ActionCaller(agv, new InExportAction(agvImport));
+    Behaviour agvBehaviour = new ActionCaller(agv, new InExportAction(agvImport, wpInfo));
     ParallelBehaviour pb = new ParallelBehaviour();
     pb.addSubBehaviour(bufferBehaviour);
     pb.addSubBehaviour(agvBehaviour);
@@ -138,7 +138,7 @@ public class AgvExecuteTask extends SequentialBehaviour {
     Behaviour whMove = new CallWarehouseMoveItem(
         new WarehouseItemMoveRequest(warehousePos, !agvImport, wpInfo), warehouse);
     Behaviour agvAndConveyor = new ImExportItemBehaviour(
-        new ActionCaller(agv, new InExportAction(agvImport)),
+        new ActionCaller(agv, new InExportAction(agvImport, wpInfo)),
         new CallWarehouseConveyor(new WarehouseConveyorRequest(!agvImport, wpInfo), warehouse));
     SequentialBehaviour sb = new SequentialBehaviour();
     if (agvImport) {
