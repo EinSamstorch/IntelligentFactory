@@ -1,6 +1,7 @@
 package machines.real.agv.actions;
 
 import com.alibaba.fastjson.JSONObject;
+import commons.order.WorkpieceStatus;
 import machines.real.agv.MultiAgvHal;
 import machines.real.commons.actions.AbstractMachineAction;
 
@@ -20,6 +21,13 @@ public class MoveAction extends AbstractMachineAction {
    *
    * @param path 路径
    */
+  public MoveAction(String path, WorkpieceStatus wpInfo) {
+    extra = new JSONObject();
+    extra.put("path", path);
+    this.workpieceId = wpInfo.getWorkpieceId();
+    this.orderId = wpInfo.getOrderId();
+  }
+
   public MoveAction(String path) {
     extra = new JSONObject();
     extra.put("path", path);
@@ -33,5 +41,15 @@ public class MoveAction extends AbstractMachineAction {
   @Override
   public Object getExtra() {
     return extra;
+  }
+
+  @Override
+  public String getWorkpieceId() {
+    return workpieceId;
+  }
+
+  @Override
+  public String getOrderId() {
+    return orderId;
   }
 }

@@ -1,5 +1,6 @@
 package machines.real.agv.behaviours.simple;
 
+import commons.order.WorkpieceStatus;
 import commons.tools.LoggerUtil;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
@@ -29,6 +30,7 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
   private Behaviour caller = null;
   private boolean reachEnd = false;
   private int lastRunPos;
+  private final WorkpieceStatus wpInfo;
 
   /**
    * AGV移动行为.
@@ -36,11 +38,13 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
    * @param agv  执行者
    * @param plan 路径规划算法
    * @param to   目的地
+   * @param wpInfo 小车上承载的工件
    */
-  public AgvMoveBehaviour(AID agv, AgvRoutePlan plan, int to) {
+  public AgvMoveBehaviour(AID agv, AgvRoutePlan plan, int to, WorkpieceStatus wpInfo) {
     this.agv = agv;
     this.plan = plan;
     this.to = to;
+    this.wpInfo = wpInfo;
   }
 
   @Override
@@ -99,7 +103,7 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
         // 存在并发释放，所以再次检查occupy != null
         if (occupy != null && AgvMapUtils2.getAgvStateMap().get(occupy).equals(AgvState.FREE)) {
           int freeStop = AgvMapUtils2.getFreeStop(AgvMapUtils2.getAgvLoc(occupy), path, plan);
-          Behaviour b = tbf.wrap(new AgvMoveBehaviour(occupy, plan, freeStop) {
+          Behaviour b = tbf.wrap(new AgvMoveBehaviour(occupy, plan, freeStop, null) {
             @Override
             public void onStart() {
               super.onStart();
@@ -128,8 +132,14 @@ public class AgvMoveBehaviour extends SimpleBehaviour {
       if (curIndex < endIndex) {
         // 构建可行驶路径字符串
         String pathStr = getPathString(path, curIndex, endIndex);
-        // 执行移动
-        MachineAction action = new MoveAction(pathStr);
+        MachineAction action = null;
+        // 构造移动动作，如果agv上有工件，则加入wpInfo
+        if (wpInfo != null) {
+          action = new MoveAction(pathStr, wpInfo);
+        } else {
+          // 如果agv是空跑的，则workpieceId和orderId都写"0"
+          action = new MoveAction(pathStr);
+        }
         caller = tbf.wrap(new ActionCaller(agv, action));
         myAgent.addBehaviour(caller);
         // 记录上一次行进终点，待移动结束强制刷新位置
