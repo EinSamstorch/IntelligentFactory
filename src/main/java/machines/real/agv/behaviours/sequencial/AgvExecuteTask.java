@@ -57,15 +57,15 @@ public class AgvExecuteTask extends SequentialBehaviour {
       ACLMessage message) {
     // 更新AGV状态
     AgvMapUtils2.updateAgvState(agv, AgvState.BUSY);
-    // 1. 前往取货点
-    addSubBehaviour(new AgvMoveBehaviour(agv, plan, from));
+    // 1. 前往取货点，这时候小车上没有工件
+    addSubBehaviour(new AgvMoveBehaviour(agv, plan, from, null));
     // 2. 与仓库/工位台交互
     boolean fromWarehouse = !plan.isBuffer(from);
     addSubBehaviour(fromWarehouse
         ? interactWarehouse(agv, true, wpInfo)
         : interactBuffer(agv, plan.getBufferNo(from), true, wpInfo));
-    // 3. 前往送货点
-    addSubBehaviour(new AgvMoveBehaviour(agv, plan, to));
+    // 3. 前往送货点，这时候小车上有工件
+    addSubBehaviour(new AgvMoveBehaviour(agv, plan, to, wpInfo));
     // 4. 与仓库/工位台交互
     boolean toWarehouse = !plan.isBuffer(to);
     addSubBehaviour(toWarehouse
