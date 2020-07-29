@@ -1,5 +1,6 @@
 package machines.real.agv.algorithm;
 
+import commons.tools.LoggerUtil;
 import jade.core.AID;
 import java.util.Map;
 import java.util.OptionalInt;
@@ -111,6 +112,11 @@ public class AgvMapUtils2 {
    */
   public static void initAgvLocLogic(AID agv, int loc) {
     if (!agvLocationsLogic.containsKey(agv)) {
+      // agv锁路径，获取冲突路径的时候，是用到map这个变量的，
+      // 但是PositionReceiver只更新了agvLocations
+      // 所以在初始化时需要更新map
+      LoggerUtil.commonTools.info(agv.getLocalName() + " init logic pos: " + loc);
+      map[loc] = agv;
       agvLocationsLogic.put(agv, OptionalInt.of(loc));
     }
   }
