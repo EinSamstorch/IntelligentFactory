@@ -113,7 +113,7 @@ public class AgvMapUtils2 {
   public static void initAgvLocLogic(AID agv, int loc) {
     if (!agvLocationsLogic.containsKey(agv)) {
       LoggerUtil.commonTools.info(agv.getLocalName() + " init logic pos: " + loc);
-      map[getCombination(loc)] = agv;
+      map[loc] = agv;
       agvLocationsLogic.put(agv, OptionalInt.of(loc));
     }
   }
