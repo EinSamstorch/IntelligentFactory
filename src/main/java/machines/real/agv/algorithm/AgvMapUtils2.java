@@ -1,5 +1,6 @@
 package machines.real.agv.algorithm;
 
+import commons.tools.LoggerUtil;
 import jade.core.AID;
 import java.util.Map;
 import java.util.OptionalInt;
@@ -111,6 +112,7 @@ public class AgvMapUtils2 {
    */
   public static void initAgvLocLogic(AID agv, int loc) {
     if (!agvLocationsLogic.containsKey(agv)) {
+      LoggerUtil.commonTools.info(agv.getLocalName() + " init logic pos: " + loc);
       agvLocationsLogic.put(agv, OptionalInt.of(loc));
     }
   }
