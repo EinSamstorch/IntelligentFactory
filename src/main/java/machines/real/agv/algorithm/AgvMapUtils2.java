@@ -1,6 +1,5 @@
 package machines.real.agv.algorithm;
 
-import commons.tools.LoggerUtil;
 import jade.core.AID;
 import java.util.Map;
 import java.util.OptionalInt;
