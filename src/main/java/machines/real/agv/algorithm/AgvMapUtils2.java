@@ -116,7 +116,7 @@ public class AgvMapUtils2 {
       // 但是PositionReceiver只更新了agvLocations
       // 所以在初始化时需要更新map
       LoggerUtil.commonTools.info(agv.getLocalName() + " init logic pos: " + loc);
-      map[loc] = agv;
+      map[getCombination(loc)] = agv;
       agvLocationsLogic.put(agv, OptionalInt.of(loc));
     }
   }
