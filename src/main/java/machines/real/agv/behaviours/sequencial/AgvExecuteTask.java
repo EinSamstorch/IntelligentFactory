@@ -55,8 +55,14 @@ public class AgvExecuteTask extends SequentialBehaviour {
    */
   public AgvExecuteTask(int from, int to, AgvRoutePlan plan, AID agv, WorkpieceStatus wpInfo,
       ACLMessage message) {
-    // 更新AGV状态
-    AgvMapUtils2.updateAgvState(agv, AgvState.BUSY);
+    // CAS设置agv忙
+    while (!AgvMapUtils2.tryLockAgvState(agv)) {
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
     // 1. 前往取货点
     addSubBehaviour(new AgvMoveBehaviour(agv, plan, from));
     // 2. 与仓库/工位台交互
