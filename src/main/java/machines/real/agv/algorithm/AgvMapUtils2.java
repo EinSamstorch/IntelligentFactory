@@ -155,6 +155,11 @@ public class AgvMapUtils2 {
         map[node] = null;
       }
     }
+    // 避免下述情况：
+    // 点a 与 点b 绑定，路径为从b->a，
+    // 当到达a时，解锁路径点b。因为a与b绑定，所以解锁b的同时自动解锁a.
+    // 故完成解锁后，对剩下的部分进行重新上锁.
+    lockPath(path, locker, index);
   }
 
 
