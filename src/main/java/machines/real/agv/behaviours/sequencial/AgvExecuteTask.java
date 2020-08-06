@@ -55,22 +55,28 @@ public class AgvExecuteTask extends SequentialBehaviour {
    */
   public AgvExecuteTask(int from, int to, AgvRoutePlan plan, AID agv, WorkpieceStatus wpInfo,
       ACLMessage message) {
-    // 更新AGV状态
-    AgvMapUtils2.updateAgvState(agv, AgvState.BUSY);
-    // 1. 前往取货点，这时候小车上没有工件
-    addSubBehaviour(new AgvMoveBehaviour(agv, plan, from, null));
+    // CAS设置agv忙
+    while (!AgvMapUtils2.tryLockAgvState(agv)) {
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+    // 1. 前往取货点
+    addSubBehaviour(new AgvMoveBehaviour(agv, plan, from));
     // 2. 与仓库/工位台交互
     boolean fromWarehouse = !plan.isBuffer(from);
     addSubBehaviour(fromWarehouse
         ? interactWarehouse(agv, true, wpInfo)
-        : interactBuffer(agv, plan.getBufferNo(from), true, wpInfo));
-    // 3. 前往送货点，这时候小车上有工件
-    addSubBehaviour(new AgvMoveBehaviour(agv, plan, to, wpInfo));
+        : interactBuffer(agv, plan.getBufferNo(from), true));
+    // 3. 前往送货点
+    addSubBehaviour(new AgvMoveBehaviour(agv, plan, to));
     // 4. 与仓库/工位台交互
     boolean toWarehouse = !plan.isBuffer(to);
     addSubBehaviour(toWarehouse
         ? interactWarehouse(agv, false, wpInfo)
-        : interactBuffer(agv, plan.getBufferNo(to), false, wpInfo));
+        : interactBuffer(agv, plan.getBufferNo(to), false));
     // 5. 提示上个设备，工件已取走
     if (!fromWarehouse) {
       addSubBehaviour(new OneShotBehaviour() {
@@ -112,10 +118,9 @@ public class AgvExecuteTask extends SequentialBehaviour {
    * @param agvImport AGV入料
    * @return 组装好的行为
    */
-  private Behaviour interactBuffer(AID agv, int bufferNo, boolean agvImport,
-      WorkpieceStatus wpInfo) {
-    Behaviour bufferBehaviour = new InteractBuffer(new BufferRequest(bufferNo, !agvImport, wpInfo));
-    Behaviour agvBehaviour = new ActionCaller(agv, new InExportAction(agvImport, wpInfo));
+  private Behaviour interactBuffer(AID agv, int bufferNo, boolean agvImport) {
+    Behaviour bufferBehaviour = new InteractBuffer(new BufferRequest(bufferNo, !agvImport));
+    Behaviour agvBehaviour = new ActionCaller(agv, new InExportAction(agvImport));
     ParallelBehaviour pb = new ParallelBehaviour();
     pb.addSubBehaviour(bufferBehaviour);
     pb.addSubBehaviour(agvBehaviour);
@@ -136,10 +141,10 @@ public class AgvExecuteTask extends SequentialBehaviour {
     AID warehouse = agvImport ? wpInfo.getRawProviderId() : wpInfo.getProductProviderId();
     int warehousePos = wpInfo.getWarehousePosition();
     Behaviour whMove = new CallWarehouseMoveItem(
-        new WarehouseItemMoveRequest(warehousePos, !agvImport, wpInfo), warehouse);
+        new WarehouseItemMoveRequest(warehousePos, !agvImport), warehouse);
     Behaviour agvAndConveyor = new ImExportItemBehaviour(
-        new ActionCaller(agv, new InExportAction(agvImport, wpInfo)),
-        new CallWarehouseConveyor(new WarehouseConveyorRequest(!agvImport, wpInfo), warehouse));
+        new ActionCaller(agv, new InExportAction(agvImport)),
+        new CallWarehouseConveyor(new WarehouseConveyorRequest(!agvImport), warehouse));
     SequentialBehaviour sb = new SequentialBehaviour();
     if (agvImport) {
       sb.addSubBehaviour(whMove);

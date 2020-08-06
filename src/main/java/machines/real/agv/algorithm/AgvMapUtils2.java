@@ -78,6 +78,26 @@ public class AgvMapUtils2 {
     OFFLINE
   }
 
+  /**
+   * 尝试设置agv繁忙状态.
+   *
+   * @param agv agv
+   * @return 成功与否
+   */
+  public static boolean tryLockAgvState(AID agv) {
+    if (AgvState.FREE.equals(agvStateMap.get(agv))) {
+      synchronized (agv) {
+        if (AgvState.FREE.equals(agvStateMap.get(agv))) {
+          agvStateMap.put(agv, AgvState.BUSY);
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
+    return false;
+  }
+
   public static int getAgvLocLogic(AID agv) {
     return agvLocationsLogic.get(agv).orElse(-1);
   }
