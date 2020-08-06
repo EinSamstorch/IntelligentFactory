@@ -89,6 +89,7 @@ public class AgvMapUtils2 {
       synchronized (agv) {
         if (AgvState.FREE.equals(agvStateMap.get(agv))) {
           agvStateMap.put(agv, AgvState.BUSY);
+          return true;
         } else {
           return false;
         }
