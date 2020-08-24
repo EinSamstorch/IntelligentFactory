@@ -38,7 +38,7 @@ public class PositionReceiver extends CyclicBehaviour {
     AgvMapUtils2.updateAgvLoc(agv, pos);
     AgvMapUtils2.initAgvLocLogic(agv, pos);
     Map<AID, AgvState> map = AgvMapUtils2.getAgvStateMap();
-    if (!map.containsKey(agv) || map.get(agv) == AgvState.OFFLINE) {
+    if (!map.containsKey(agv)) {
       AgvMapUtils2.updateAgvState(agv, AgvState.FREE);
     }
 
