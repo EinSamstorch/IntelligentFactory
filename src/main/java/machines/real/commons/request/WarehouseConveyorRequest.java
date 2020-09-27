@@ -1,5 +1,6 @@
 package machines.real.commons.request;
 
+import commons.order.WorkpieceStatus;
 import java.io.Serializable;
 
 /**
@@ -13,12 +14,24 @@ public class WarehouseConveyorRequest implements Serializable {
 
   public static final String LANGUAGE = "CONVEYOR";
   private boolean importMode;
+  private String orderId;
+  private String workpieceId;
 
-  public WarehouseConveyorRequest(boolean importMode) {
+  public WarehouseConveyorRequest(boolean importMode, WorkpieceStatus wpInfo) {
     this.importMode = importMode;
+    this.orderId = wpInfo.getOrderId();
+    this.workpieceId = wpInfo.getWorkpieceId();
   }
 
   public boolean isImportMode() {
     return importMode;
+  }
+
+  public String getOrderId() {
+    return orderId;
+  }
+
+  public String getWorkpieceId() {
+    return workpieceId;
   }
 }

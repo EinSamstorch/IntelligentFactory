@@ -1,5 +1,6 @@
 package machines.real.commons.request;
 
+import commons.order.WorkpieceStatus;
 import java.io.Serializable;
 
 /**
@@ -9,31 +10,39 @@ import java.io.Serializable;
  * @version 1.0.0.0
  * @since 1.8
  */
-
 public class ArmRequest implements Serializable {
 
   private final String from;
   private final String to;
   private final String goodsId;
   private final Integer step;
+  private final String orderId;
+  private final String workpieceId;
 
   /**
    * 机械手搬运请求.
    *
-   * @param from    起始位置
-   * @param to      终点位置
+   * @param from 起始位置
+   * @param to 终点位置
    * @param goodsId 货物类型
-   * @param step    搬运步骤, 铣床与检测仪该参数均为0, 车床该参数与具体装夹过程相关, 为-1时代表一组装夹动作完成
+   * @param step 搬运步骤, 铣床与检测仪该参数均为0, 车床该参数与具体装夹过程相关, 为-1时代表一组装夹动作完成
    */
-  public ArmRequest(String from, String to, String goodsId, Integer step) {
+  public ArmRequest(
+      String from, String to, String goodsId, Integer step, String orderId, String workpieceId) {
     this.from = from;
     this.to = to;
     this.goodsId = goodsId;
     this.step = step;
+    this.orderId = orderId;
+    this.workpieceId = workpieceId;
   }
 
-  public ArmRequest(String from, String to, String goodsId) {
-    this(from, to, goodsId, 0);
+  public ArmRequest(String from, String to, int step, WorkpieceStatus wpInfo) {
+    this(from, to, wpInfo.getGoodsId(), step, wpInfo.getOrderId(), wpInfo.getWorkpieceId());
+  }
+
+  public ArmRequest(String from, String to, WorkpieceStatus wpInfo) {
+    this(from, to, 0, wpInfo);
   }
 
   /**
@@ -44,10 +53,7 @@ public class ArmRequest implements Serializable {
    */
   public static ArmRequest unloadRequest(ArmRequest request) {
     return new ArmRequest(
-        request.to,
-        request.from,
-        request.goodsId,
-        0);
+        request.to, request.from, request.goodsId, 0, request.orderId, request.workpieceId);
   }
 
   /**
@@ -58,10 +64,7 @@ public class ArmRequest implements Serializable {
    */
   public static ArmRequest reverseRequest(ArmRequest request) {
     return new ArmRequest(
-        request.to,
-        request.to,
-        request.goodsId,
-        0);
+        request.to, request.to, request.goodsId, 0, request.orderId, request.workpieceId);
   }
 
   /**
@@ -75,7 +78,9 @@ public class ArmRequest implements Serializable {
         request.from,
         request.to,
         request.goodsId,
-        request.step + 1);
+        request.step + 1,
+        request.orderId,
+        request.workpieceId);
   }
 
   /**
@@ -86,11 +91,7 @@ public class ArmRequest implements Serializable {
    */
   public static ArmRequest endStep(ArmRequest request) {
     return new ArmRequest(
-        request.from,
-        request.to,
-        request.goodsId,
-        -1
-    );
+        request.from, request.to, request.goodsId, -1, request.orderId, request.workpieceId);
   }
 
   /**
@@ -99,7 +100,13 @@ public class ArmRequest implements Serializable {
    * @param request 待复制请求
    */
   public ArmRequest copyOf(ArmRequest request) {
-    return new ArmRequest(request.from, request.to, request.goodsId, request.step);
+    return new ArmRequest(
+        request.from,
+        request.to,
+        request.goodsId,
+        request.step,
+        request.orderId,
+        request.workpieceId);
   }
 
   public String getFrom() {
