@@ -10,6 +10,8 @@ package machines.real.commons.actions;
 public abstract class AbstractMachineAction implements MachineAction {
 
   private Object resultExtra;
+  protected String orderId = "0";
+  protected String workpieceId = "0";
 
   @Override
   public void setResultExtra(Object extra) {
@@ -19,5 +21,15 @@ public abstract class AbstractMachineAction implements MachineAction {
   @Override
   public Object getResultExtra() {
     return resultExtra;
+  }
+
+  @Override
+  public String getWorkpieceId() {
+    return workpieceId;
+  }
+
+  @Override
+  public String getOrderId() {
+    return orderId;
   }
 }
