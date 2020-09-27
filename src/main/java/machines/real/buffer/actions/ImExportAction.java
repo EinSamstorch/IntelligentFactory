@@ -3,6 +3,8 @@ package machines.real.buffer.actions;
 import com.alibaba.fastjson.JSONObject;
 import machines.real.buffer.BufferHal;
 import machines.real.commons.actions.AbstractMachineAction;
+import machines.real.commons.buffer.Buffer;
+import machines.real.commons.request.BufferRequest;
 
 /**
  * 进出货动作.
@@ -13,23 +15,28 @@ import machines.real.commons.actions.AbstractMachineAction;
  */
 public class ImExportAction extends AbstractMachineAction {
 
-  private boolean in;
-  private int bufferNo;
+  private final BufferRequest request;
 
-  public ImExportAction(boolean in, int bufferNo) {
-    this.in = in;
-    this.bufferNo = bufferNo;
+  /**
+   * 工位台进出货动作.
+   *
+   * @param request 进出货请求
+   */
+  public ImExportAction(BufferRequest request) {
+    this.orderId = request.getOrderId();
+    this.workpieceId = request.getWorkpieceId();
+    this.request = request;
   }
 
   @Override
   public String getCmd() {
-    return in ? BufferHal.CMD_IMPORT_ITEM : BufferHal.CMD_EXPORT_ITEM;
+    return request.isImportMode() ? BufferHal.CMD_IMPORT_ITEM : BufferHal.CMD_EXPORT_ITEM;
   }
 
   @Override
   public Object getExtra() {
     JSONObject json = new JSONObject();
-    json.put(BufferHal.FIELD_BUFFER_NO, bufferNo);
+    json.put(BufferHal.FIELD_BUFFER_NO, request.getBufferNo());
     return json;
   }
 }
