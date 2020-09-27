@@ -22,10 +22,10 @@ import machines.real.warehouse.actions.ImExportItemAction;
 public class ConveyorControlBehaviour extends CyclicBehaviour {
 
   private MiddleHal hal;
-  private MessageTemplate mt = MessageTemplate
-      .and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
+  private MessageTemplate mt =
+      MessageTemplate.and(
+          MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
           MessageTemplate.MatchLanguage(WarehouseConveyorRequest.LANGUAGE));
-  private ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
 
   public void setHal(MiddleHal hal) {
     this.hal = hal;
@@ -43,21 +43,21 @@ public class ConveyorControlBehaviour extends CyclicBehaviour {
       request = (WarehouseConveyorRequest) receive.getContentObject();
     } catch (UnreadableException e) {
       e.printStackTrace();
-      LoggerUtil.agent
-          .warn("Deserialization Error in WarehouseConveyorRequest. " + e.getLocalizedMessage());
+      LoggerUtil.agent.warn(
+          "Deserialization Error in WarehouseConveyorRequest. " + e.getLocalizedMessage());
       return;
     }
 
-    Behaviour b = tbf.wrap(
-        new ActionExecutor(
-            new ImExportItemAction(request.isImportMode()), hal, receive));
-    myAgent.addBehaviour(b);
-    while (!b.done()) {
+    ImExportItemAction action = new ImExportItemAction(request);
+    while (!hal.executeAction(action)) {
       try {
         Thread.sleep(1000);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
     }
+    ACLMessage reply = receive.createReply();
+    reply.setPerformative(ACLMessage.INFORM);
+    myAgent.send(reply);
   }
 }
