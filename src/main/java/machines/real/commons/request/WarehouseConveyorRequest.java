@@ -17,6 +17,12 @@ public class WarehouseConveyorRequest implements Serializable {
   private String orderId;
   private String workpieceId;
 
+  /**
+   * 仓库传送带控制请求.
+   *
+   * @param importMode 进出货模式
+   * @param wpInfo 工件信息
+   */
   public WarehouseConveyorRequest(boolean importMode, WorkpieceStatus wpInfo) {
     this.importMode = importMode;
     this.orderId = wpInfo.getOrderId();

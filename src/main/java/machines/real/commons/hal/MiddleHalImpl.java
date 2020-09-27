@@ -13,8 +13,7 @@ import machines.real.commons.actions.MachineAction;
  */
 public class MiddleHalImpl extends BaseHalImpl implements MiddleHal {
 
-  public MiddleHalImpl() {
-  }
+  public MiddleHalImpl() {}
 
   public MiddleHalImpl(int port) {
     super(port);
@@ -23,7 +22,8 @@ public class MiddleHalImpl extends BaseHalImpl implements MiddleHal {
   @Override
   public boolean executeAction(MachineAction action) {
     LoggerUtil.hal.info("Action: " + action.getCmd() + ", extra: " + action.getExtra().toString());
-    return executeCmd(action.getCmd(), action.getExtra());
+    return executeCmd(
+        action.getCmd(), action.getExtra(), action.getOrderId(), action.getWorkpieceId());
   }
 
   @Override

@@ -7,7 +7,6 @@ package machines.real.commons.hal.socket;
  * @version 1.0.0.0
  * @since 1.8
  */
-
 public final class SocketMessage {
 
   public static final String HOST = "127.0.0.1";
@@ -17,7 +16,6 @@ public final class SocketMessage {
   public static final String TYPE_AGENT = "agent";
   public static final String TYPE_MACHINE = "machine";
   public static final String TYPE_RFID = "rfid";
-
 
   public static final String FIELD_TASK_NO = "task_no";
   public static final String FIELD_CMD = "cmd";
@@ -37,4 +35,7 @@ public final class SocketMessage {
 
   public static final String ACTION_REGISTER = "register";
   public static final String ACTION_CHECK = "check";
+
+  public static final String FIELD_ORDER_ID = "order_id";
+  public static final String FIELD_WORKPIECE_ID = "workpiece_id";
 }

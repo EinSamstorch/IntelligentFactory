@@ -16,7 +16,6 @@ import machines.real.commons.hal.socket.SocketSender;
  * @version 1.0.0.0
  * @since 1.8
  */
-
 public class BaseHalImpl implements BaseHal {
 
   public static final String HAL_ONLINE = "online";
@@ -25,9 +24,7 @@ public class BaseHalImpl implements BaseHal {
   private SocketListener listener;
   private String extraInfo;
 
-  /**
-   * 最底层的hal 封装共同的特征,使用默认端口5656生成sender与listener.
-   */
+  /** 最底层的hal 封装共同的特征,使用默认端口5656生成sender与listener. */
   public BaseHalImpl() {
     sender = new SocketSender();
     listener = new SocketListener();
@@ -50,14 +47,16 @@ public class BaseHalImpl implements BaseHal {
   /**
    * 向SocketServer发送命令.
    *
-   * @param cmd   命令
+   * @param cmd 命令
    * @param extra 额外内容
    * @return 任务号
    */
-  protected int sendMessageToMachine(String cmd, Object extra) {
+  protected int sendMessageToMachine(String cmd, Object extra, String orderID, String wpId) {
     JSONObject message = new JSONObject();
     message.put(SocketMessage.FIELD_TASK_NO, ++taskNo);
     message.put(SocketMessage.FIELD_CMD, cmd);
+    message.put(SocketMessage.FIELD_ORDER_ID, orderID);
+    message.put(SocketMessage.FIELD_WORKPIECE_ID, wpId);
     message.put(SocketMessage.FIELD_EXTRA, extra);
 
     sender.sendMessageToMachine(message);
@@ -71,7 +70,7 @@ public class BaseHalImpl implements BaseHal {
   /**
    * 获得response.
    *
-   * @param taskNo       任务号
+   * @param taskNo 任务号
    * @param timeoutMills 超时时间 毫秒
    * @return response, 超时返回null
    */
@@ -86,8 +85,7 @@ public class BaseHalImpl implements BaseHal {
       if (response != null) {
         return response;
       }
-      if (currentTimestamp > 0
-          && System.currentTimeMillis() > currentTimestamp + timeoutMills) {
+      if (currentTimestamp > 0 && System.currentTimeMillis() > currentTimestamp + timeoutMills) {
         return null;
       }
       sleep(500);
@@ -102,28 +100,28 @@ public class BaseHalImpl implements BaseHal {
     }
   }
 
-
-  protected boolean executeCmd(String cmd) {
-    return executeCmd(cmd, "", 0);
+  protected boolean executeCmd(String cmd, String orderId, String wpId) {
+    return executeCmd(cmd, "", 0, orderId, wpId);
   }
 
-  protected boolean executeCmd(String cmd, Object extra) {
-    return executeCmd(cmd, extra, 0);
+  protected boolean executeCmd(String cmd, Object extra, String orderId, String wpId) {
+    return executeCmd(cmd, extra, 0, orderId, wpId);
   }
 
-  protected boolean executeCmd(String cmd, Object extra, long timeoutMills) {
+  protected boolean executeCmd(
+      String cmd, Object extra, long timeoutMills, String orderId, String wpId) {
     if (!checkHalOnline()) {
       return false;
     }
-    int taskNo = sendMessageToMachine(cmd, extra);
+    int taskNo = sendMessageToMachine(cmd, extra, orderId, wpId);
 
     JSONObject response = getResponse(taskNo, timeoutMills);
     if (response == null) {
       LoggerUtil.hal.warn("Hal timeout. Task no: " + taskNo);
       return false;
     }
-    if (!Objects.equals(SocketMessage.RESULT_SUCCESS,
-        response.getString(SocketMessage.FIELD_RESULT))) {
+    if (!Objects.equals(
+        SocketMessage.RESULT_SUCCESS, response.getString(SocketMessage.FIELD_RESULT))) {
       return false;
     }
     extraInfo = response.getString(SocketMessage.FIELD_EXTRA);
