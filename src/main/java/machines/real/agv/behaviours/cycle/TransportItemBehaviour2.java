@@ -202,7 +202,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
         new CallWarehouseMoveItem(new WarehouseItemMoveRequest(warehousePos, !agvImport, wpInfo));
     Behaviour agvAndConveyor =
         new ImExportItemBehaviour(
-            new ActionCaller(agv, new InExportAction(agvImport)),
+            new ActionCaller(agv, new InExportAction(agvImport, wpInfo)),
             new CallWarehouseConveyor(new WarehouseConveyorRequest(!agvImport, wpInfo)));
     if (agvImport) {
       waitBehaviourDone(whMove);
@@ -218,7 +218,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     InteractBuffer interactBuffer =
         new InteractBuffer(new BufferRequest(bufferNo, !agvImport, wpInfo));
     // 交互agv货仓
-    ActionCaller imExCaller = new ActionCaller(agv, new InExportAction(agvImport));
+    ActionCaller imExCaller = new ActionCaller(agv, new InExportAction(agvImport, wpInfo));
     // 组装行为
     Behaviour outBehaviour = new ImExportItemBehaviour(imExCaller, interactBuffer);
     // 等待完成

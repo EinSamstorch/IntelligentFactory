@@ -1,5 +1,6 @@
 package machines.real.agv.actions;
 
+import commons.order.WorkpieceStatus;
 import machines.real.agv.MultiAgvHal;
 import machines.real.commons.actions.AbstractMachineAction;
 
@@ -14,8 +15,16 @@ public class InExportAction extends AbstractMachineAction {
 
   private boolean in;
 
-  public InExportAction(boolean in) {
+  /**
+   * agv进出货物行为.
+   *
+   * @param in true，agv进货； false agv出货。
+   * @param wpInfo 工件信息
+   */
+  public InExportAction(boolean in, WorkpieceStatus wpInfo) {
     this.in = in;
+    this.orderId = wpInfo.getOrderId();
+    this.workpieceId = wpInfo.getWorkpieceId();
   }
 
   @Override
