@@ -91,17 +91,17 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
       return;
     }
     LoggerUtil.agent.info("Choose agv: " + choose.getLocalName());
-    // 3. agv前往取货点
-    agvMove(fromBuffer, choose);
+    // 3. agv前往取货点, 这时候小车上没有工件
+    agvMove(fromBuffer, choose, null);
     // 4. AGV入料
     if (fromBuffer < 0) {
       interactWarehouse(true, choose, request.getWpInfo());
     } else {
       interactBuffer(true, choose, fromBuffer, request.getWpInfo());
     }
-    // 5. agv前往送货点
+    // 5. agv前往送货点，这时候小车上有工件
     int toBuffer = request.getToBuffer();
-    agvMove(toBuffer, choose);
+    agvMove(toBuffer, choose, request.getWpInfo());
     // 6. AGV送料
     if (toBuffer < 0) {
       interactWarehouse(false, choose, request.getWpInfo());
@@ -129,7 +129,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     }
   }
 
-  private void solveConflict(List<Integer> conflict, String movePath) {
+  private void solveConflict(List<Integer> conflict, String movePath, WorkpieceStatus wpInfo) {
     if (conflict.size() == 0) {
       return;
     }
@@ -140,9 +140,9 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
       if (conflictAid != null) {
         LoggerUtil.agent.info(
             "Route plan conflict! Pos: " + conf + ", agent: " + conflictAid.getLocalName());
-        // 获取不冲突位置
+        // 获取不冲突位置,这时候小车上没有工件
         int newLoc = AgvMapUtils.getFreeEdgeNode(plan.getEdgeNodes(), 4, target);
-        MoveAction moveConflict = new MoveAction(plan.getRoute(conf, newLoc));
+        MoveAction moveConflict = new MoveAction(plan.getRoute(conf, newLoc), wpInfo);
         waitCallerDone(conflictAid, moveConflict);
         // 更新解决冲突后,agv的位置
         AgvMapUtils.setAgvLoc(conflictAid, newLoc);
@@ -225,7 +225,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     waitBehaviourDone(outBehaviour);
   }
 
-  private void agvMove(int bufferNo, AID agv) {
+  private void agvMove(int bufferNo, AID agv, WorkpieceStatus wpInfo) {
 
     int toLoc = AgvMapUtils.getBufferLoc(bufferNo, plan);
     int fromLoc = AgvMapUtils.getLocationMap().get(agv);
@@ -240,10 +240,10 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     List<Integer> conflict =
         AgvMapUtils.conflictNode(
             Arrays.stream(movePath.split(",")).mapToInt(Integer::parseInt).toArray(), 4);
-    // 解决冲突
-    solveConflict(conflict, movePath);
+    // 解决冲突, 避障的那个小车上肯定没有工件
+    solveConflict(conflict, movePath, null);
     // 移动agv
-    MachineAction moveAction = new MoveAction(plan.getRoute(fromLoc, toLoc));
+    MachineAction moveAction = new MoveAction(plan.getRoute(fromLoc, toLoc), wpInfo);
     waitCallerDone(agv, moveAction);
     // 更新agv位置
     AgvMapUtils.setAgvLoc(agv, toLoc);
