@@ -8,6 +8,7 @@ import machines.real.commons.behaviours.simple.ActionExecutor;
 import machines.real.commons.buffer.Buffer;
 import machines.real.commons.hal.MiddleHal;
 import machines.real.commons.request.ArmRequest;
+import machines.real.commons.request.LatheRequest;
 import machines.real.lathe.actions.GrabReleaseAction;
 
 /**
@@ -37,7 +38,7 @@ public class LatheProcessItem extends ProcessItemTemplate {
     s.addSubBehaviour(reverseAndProcess(reverseRequest, buffer, hal, armPwd));
     // 卸料
     ArmRequest unloadRequest = ArmRequest.unloadRequest(request);
-    s.addSubBehaviour(unload(unloadRequest, hal, armPwd));
+    s.addSubBehaviour(unload(unloadRequest, buffer, hal, armPwd));
     // 完成后续动作
     finishedProcess(s, realAgent, buffer);
     return s;
@@ -50,7 +51,8 @@ public class LatheProcessItem extends ProcessItemTemplate {
     // step1 机械手送料到车床
     armMoveItem(s, step1, armPwd);
     // 车床夹紧
-    latheGrabItem(s, hal, true);
+    LatheRequest latheRequest = new LatheRequest(true, buffer.getWpInfo());
+    latheGrabItem(s, hal, latheRequest);
     // step2 机械手松手离开
     ArmRequest step2 = ArmRequest.nextStep(step1);
     armMoveItem(s, step2, armPwd);
@@ -68,12 +70,14 @@ public class LatheProcessItem extends ProcessItemTemplate {
     ArmRequest step1 = ArmRequest.nextStep(step0);
     armMoveItem(s, step1, armPwd);
     // 车床松开
-    latheGrabItem(s, hal, false);
+    LatheRequest latheRequest = new LatheRequest(false, buffer.getWpInfo());
+    latheGrabItem(s, hal, latheRequest);
     // 掉头装夹
     ArmRequest step2 = ArmRequest.nextStep(step1);
     armMoveItem(s, step2, armPwd);
     // 车床夹紧
-    latheGrabItem(s, hal, true);
+    LatheRequest latheRequest2 = new LatheRequest(true, buffer.getWpInfo());
+    latheGrabItem(s, hal, latheRequest2);
     // 机械手离开
     ArmRequest step3 = ArmRequest.nextStep(step2);
     armMoveItem(s, step3, armPwd);
@@ -84,13 +88,14 @@ public class LatheProcessItem extends ProcessItemTemplate {
     return s;
   }
 
-  private Behaviour unload(ArmRequest step0, MiddleHal hal, String armPwd) {
+  private Behaviour unload(ArmRequest step0, Buffer buffer, MiddleHal hal, String armPwd) {
     SequentialBehaviour s = new SequentialBehaviour();
     // 抓住工件
     ArmRequest step1 = ArmRequest.nextStep(step0);
     armMoveItem(s, step1, armPwd);
     // 车床松开
-    latheGrabItem(s, hal, false);
+    LatheRequest latheRequest = new LatheRequest(false, buffer.getWpInfo());
+    latheGrabItem(s, hal, latheRequest);
     // 放回工位台
     ArmRequest step2 = ArmRequest.nextStep(step1);
     armMoveItem(s, step2, armPwd);
@@ -99,7 +104,7 @@ public class LatheProcessItem extends ProcessItemTemplate {
     return s;
   }
 
-  private void latheGrabItem(SequentialBehaviour s, MiddleHal hal, boolean grab) {
-    s.addSubBehaviour(new ActionExecutor(new GrabReleaseAction(grab), hal));
+  private void latheGrabItem(SequentialBehaviour s, MiddleHal hal, LatheRequest latheRequest) {
+    s.addSubBehaviour(new ActionExecutor(new GrabReleaseAction(latheRequest), hal));
   }
 }
