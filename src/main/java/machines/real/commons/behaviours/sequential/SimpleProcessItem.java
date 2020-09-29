@@ -14,17 +14,13 @@ import machines.real.commons.request.ArmRequest;
  * @version 1.0.0.0
  * @since 1.8
  */
-
-
 public class SimpleProcessItem extends ProcessItemTemplate {
 
   private Behaviour simpleProcess(RealMachineAgent realAgent, Buffer buffer, String armPwd) {
     MiddleHal hal = realAgent.getHal();
-    ArmRequest request = new ArmRequest(
-        String.valueOf(buffer.getIndex()),
-        realAgent.getLocalName(),
-        buffer.getWpInfo().getGoodsId()
-    );
+    ArmRequest request =
+        new ArmRequest(
+            String.valueOf(buffer.getIndex()), realAgent.getLocalName(), buffer.getWpInfo());
 
     SequentialBehaviour s = new SequentialBehaviour();
     // 上料

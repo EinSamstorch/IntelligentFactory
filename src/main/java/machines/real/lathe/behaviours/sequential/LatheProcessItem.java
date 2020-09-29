@@ -17,7 +17,6 @@ import machines.real.lathe.actions.GrabReleaseAction;
  * @version 1.0.0.0
  * @since 1.8
  */
-
 public class LatheProcessItem extends ProcessItemTemplate {
 
   @Override
@@ -27,11 +26,9 @@ public class LatheProcessItem extends ProcessItemTemplate {
 
   private Behaviour latheProcessItem(RealMachineAgent realAgent, Buffer buffer, String armPwd) {
     SequentialBehaviour s = new SequentialBehaviour();
-    ArmRequest request = new ArmRequest(
-        String.valueOf(buffer.getIndex()),
-        realAgent.getLocalName(),
-        buffer.getWpInfo().getGoodsId()
-    );
+    ArmRequest request =
+        new ArmRequest(
+            String.valueOf(buffer.getIndex()), realAgent.getLocalName(), buffer.getWpInfo());
     MiddleHal hal = realAgent.getHal();
     // 上料加工1
     s.addSubBehaviour(loadAndProcess(request, buffer, hal, armPwd));
@@ -64,8 +61,8 @@ public class LatheProcessItem extends ProcessItemTemplate {
     return s;
   }
 
-  private Behaviour reverseAndProcess(ArmRequest step0, Buffer buffer, MiddleHal hal,
-      String armPwd) {
+  private Behaviour reverseAndProcess(
+      ArmRequest step0, Buffer buffer, MiddleHal hal, String armPwd) {
     SequentialBehaviour s = new SequentialBehaviour();
     // 抓住工件
     ArmRequest step1 = ArmRequest.nextStep(step0);
@@ -105,5 +102,4 @@ public class LatheProcessItem extends ProcessItemTemplate {
   private void latheGrabItem(SequentialBehaviour s, MiddleHal hal, boolean grab) {
     s.addSubBehaviour(new ActionExecutor(new GrabReleaseAction(grab), hal));
   }
-
 }

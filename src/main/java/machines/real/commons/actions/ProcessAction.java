@@ -16,7 +16,7 @@ public class ProcessAction extends AbstractMachineAction {
   private WorkpieceStatus wpInfo;
 
   /**
-   * 加工行为
+   * 加工行为.
    *
    * @param wpInfo 工件信息
    */
