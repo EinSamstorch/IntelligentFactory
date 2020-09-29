@@ -1,5 +1,6 @@
 package machines.real.agv.behaviours.cycle;
 
+import commons.order.WorkpieceStatus;
 import commons.tools.LoggerUtil;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
@@ -94,18 +95,18 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     agvMove(fromBuffer, choose);
     // 4. AGV入料
     if (fromBuffer < 0) {
-      interactWarehouse(true, choose, request.getWpInfo().getWarehousePosition());
+      interactWarehouse(true, choose, request.getWpInfo());
     } else {
-      interactBuffer(true, choose, fromBuffer);
+      interactBuffer(true, choose, fromBuffer, request.getWpInfo());
     }
     // 5. agv前往送货点
     int toBuffer = request.getToBuffer();
     agvMove(toBuffer, choose);
     // 6. AGV送料
     if (toBuffer < 0) {
-      interactWarehouse(false, choose, request.getWpInfo().getWarehousePosition());
+      interactWarehouse(false, choose, request.getWpInfo());
     } else {
-      interactBuffer(false, choose, toBuffer);
+      interactBuffer(false, choose, toBuffer, request.getWpInfo());
     }
     ACLMessage msg = msgQueue.remove();
     ACLMessage reply = msg.createReply();
@@ -150,10 +151,10 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
   }
 
   private void receiveRequest() {
-    MessageTemplate mt = MessageTemplate.and(
-        MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
-        MessageTemplate.MatchPerformative(ACLMessage.REQUEST)
-    );
+    MessageTemplate mt =
+        MessageTemplate.and(
+            MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
+            MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
     ACLMessage msg = myAgent.receive(mt);
     if (msg == null) {
       return;
@@ -187,7 +188,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     }
   }
 
-  private void interactWarehouse(boolean agvImport, AID agv, int warehousePos) {
+  private void interactWarehouse(boolean agvImport, AID agv, WorkpieceStatus wpInfo) {
     // agv从仓库取货
     // 1. 仓库移动货物到出口
     // 2. agv启动收货模式 & 仓库传送带启动出货模式
@@ -195,12 +196,14 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     // agv送货入仓库
     // 1. 仓库传送带启动入货模式 & agv启动出货模式
     // 2. 仓库移动货物到指定位置
+    int warehousePos = wpInfo.getWarehousePosition();
 
-    Behaviour whMove = new CallWarehouseMoveItem(
-        new WarehouseItemMoveRequest(warehousePos, !agvImport));
-    Behaviour agvAndConveyor = new ImExportItemBehaviour(
-        new ActionCaller(agv, new InExportAction(agvImport)),
-        new CallWarehouseConveyor(new WarehouseConveyorRequest(!agvImport)));
+    Behaviour whMove =
+        new CallWarehouseMoveItem(new WarehouseItemMoveRequest(warehousePos, !agvImport));
+    Behaviour agvAndConveyor =
+        new ImExportItemBehaviour(
+            new ActionCaller(agv, new InExportAction(agvImport)),
+            new CallWarehouseConveyor(new WarehouseConveyorRequest(!agvImport, wpInfo)));
     if (agvImport) {
       waitBehaviourDone(whMove);
       waitBehaviourDone(agvAndConveyor);
@@ -210,9 +213,10 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     }
   }
 
-  private void interactBuffer(boolean agvImport, AID agv, int bufferNo) {
+  private void interactBuffer(boolean agvImport, AID agv, int bufferNo, WorkpieceStatus wpInfo) {
     // 交互buffer， 进出货模式与agv进出货模式相反
-    InteractBuffer interactBuffer = new InteractBuffer(new BufferRequest(bufferNo, !agvImport));
+    InteractBuffer interactBuffer =
+        new InteractBuffer(new BufferRequest(bufferNo, !agvImport, wpInfo));
     // 交互agv货仓
     ActionCaller imExCaller = new ActionCaller(agv, new InExportAction(agvImport));
     // 组装行为
@@ -233,8 +237,9 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     }
     LoggerUtil.agent.info("Move path: " + movePath);
     // 计算冲突
-    List<Integer> conflict = AgvMapUtils.conflictNode(
-        Arrays.stream(movePath.split(",")).mapToInt(Integer::parseInt).toArray(), 4);
+    List<Integer> conflict =
+        AgvMapUtils.conflictNode(
+            Arrays.stream(movePath.split(",")).mapToInt(Integer::parseInt).toArray(), 4);
     // 解决冲突
     solveConflict(conflict, movePath);
     // 移动agv
