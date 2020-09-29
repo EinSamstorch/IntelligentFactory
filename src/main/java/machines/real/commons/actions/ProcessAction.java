@@ -2,6 +2,7 @@ package machines.real.commons.actions;
 
 import commons.order.WorkpieceStatus;
 import machines.real.commons.hal.MachineHal;
+import org.graalvm.compiler.core.common.type.ArithmeticOpTable.BinaryOp.Or;
 
 /**
  * 加工工件动作.
@@ -14,8 +15,15 @@ public class ProcessAction extends AbstractMachineAction {
 
   private WorkpieceStatus wpInfo;
 
+  /**
+   * 加工行为
+   *
+   * @param wpInfo 工件信息
+   */
   public ProcessAction(WorkpieceStatus wpInfo) {
     this.wpInfo = wpInfo;
+    this.orderId = wpInfo.getOrderId();
+    this.workpieceId = wpInfo.getWorkpieceId();
   }
 
   @Override
