@@ -121,6 +121,14 @@ public class ArmRequest implements Serializable {
     return goodsId;
   }
 
+  public String getOrderId() {
+    return orderId;
+  }
+
+  public String getWorkpieceId() {
+    return workpieceId;
+  }
+
   public Integer getStep() {
     return step;
   }

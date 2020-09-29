@@ -19,10 +19,10 @@ public class MoveItemAction extends AbstractMachineAction {
   /**
    * 构造移动物品动作.
    *
-   * @param from    起始位置
-   * @param to      终点位置
+   * @param from 起始位置
+   * @param to 终点位置
    * @param goodsId 货物种类
-   * @param step    工步，车床拥有多个装夹工步， 铣床 检测仪没有该属性，填0
+   * @param step 工步，车床拥有多个装夹工步， 铣床 检测仪没有该属性，填0
    */
   public MoveItemAction(String from, String to, String goodsId, int step) {
     JSONObject extra = new JSONObject();
@@ -38,8 +38,8 @@ public class MoveItemAction extends AbstractMachineAction {
   /**
    * 构造移动物品动作.
    *
-   * @param from    起始位置
-   * @param to      终点位置
+   * @param from 起始位置
+   * @param to 终点位置
    * @param goodsId 货物种类
    */
   public MoveItemAction(String from, String to, String goodsId) {
@@ -52,10 +52,9 @@ public class MoveItemAction extends AbstractMachineAction {
    * @param request 移动物品请求
    */
   public MoveItemAction(ArmRequest request) {
-    this(request.getFrom(),
-        request.getTo(),
-        request.getGoodsId(),
-        request.getStep());
+    this(request.getFrom(), request.getTo(), request.getGoodsId(), request.getStep());
+    this.orderId = request.getOrderId();
+    this.workpieceId = request.getWorkpieceId();
   }
 
   @Override

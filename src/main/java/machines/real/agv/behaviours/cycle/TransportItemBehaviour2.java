@@ -199,7 +199,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     int warehousePos = wpInfo.getWarehousePosition();
 
     Behaviour whMove =
-        new CallWarehouseMoveItem(new WarehouseItemMoveRequest(warehousePos, !agvImport));
+        new CallWarehouseMoveItem(new WarehouseItemMoveRequest(warehousePos, !agvImport, wpInfo));
     Behaviour agvAndConveyor =
         new ImExportItemBehaviour(
             new ActionCaller(agv, new InExportAction(agvImport)),

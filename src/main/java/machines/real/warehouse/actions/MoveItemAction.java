@@ -2,7 +2,10 @@ package machines.real.warehouse.actions;
 
 import com.alibaba.fastjson.JSONObject;
 import machines.real.commons.actions.AbstractMachineAction;
+import machines.real.commons.request.WarehouseConveyorRequest;
+import machines.real.commons.request.WarehouseItemMoveRequest;
 import machines.real.warehouse.WarehouseHal;
+import org.graalvm.compiler.core.common.type.ArithmeticOpTable.BinaryOp.Or;
 
 /**
  * 仓库移动物品动作.
@@ -19,13 +22,15 @@ public class MoveItemAction extends AbstractMachineAction {
    * 仓库移动物品动作.
    *
    * @param from 起点
-   * @param to   终点
+   * @param to 终点
    */
-  public MoveItemAction(int from, int to) {
+  public MoveItemAction(int from, int to, WarehouseItemMoveRequest request) {
     JSONObject extra = new JSONObject();
     extra.put(WarehouseHal.FIELD_FROM, from);
     extra.put(WarehouseHal.FIELD_TO, to);
     this.extra = extra;
+    this.orderId = request.getOrderId();
+    this.workpieceId = request.getWorkpieceId();
   }
 
   @Override

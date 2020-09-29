@@ -19,7 +19,6 @@ import machines.real.warehouse.actions.MoveItemAction;
  * @version 1.0.0.0
  * @since 1.8
  */
-
 public class ItemMoveBehaviour extends CyclicBehaviour {
 
   private MiddleHal hal;
@@ -45,10 +44,10 @@ public class ItemMoveBehaviour extends CyclicBehaviour {
 
   @Override
   public void action() {
-    MessageTemplate mt = MessageTemplate.and(
-        MessageTemplate.MatchLanguage(WarehouseItemMoveRequest.LANGUAGE),
-        MessageTemplate.MatchPerformative(ACLMessage.REQUEST)
-    );
+    MessageTemplate mt =
+        MessageTemplate.and(
+            MessageTemplate.MatchLanguage(WarehouseItemMoveRequest.LANGUAGE),
+            MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
     ACLMessage msg = myAgent.receive(mt);
     if (msg == null) {
       block();
@@ -59,14 +58,14 @@ public class ItemMoveBehaviour extends CyclicBehaviour {
       request = (WarehouseItemMoveRequest) msg.getContentObject();
     } catch (UnreadableException e) {
       e.printStackTrace();
-      LoggerUtil.agent
-          .warn("Deserialization Error in WarehouseItemMoveRequest. " + e.getLocalizedMessage());
+      LoggerUtil.agent.warn(
+          "Deserialization Error in WarehouseItemMoveRequest. " + e.getLocalizedMessage());
       return;
     }
     int itemPosition = request.getItemPosition();
     int from = request.isIn() ? posIn : itemPosition;
     int to = request.isIn() ? itemPosition : posOut;
-    Behaviour b = tbf.wrap(new ActionExecutor(new MoveItemAction(from, to), hal, msg));
+    Behaviour b = tbf.wrap(new ActionExecutor(new MoveItemAction(from, to, request), hal, msg));
     myAgent.addBehaviour(b);
     while (!b.done()) {
       try {
