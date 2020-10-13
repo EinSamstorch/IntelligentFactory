@@ -142,7 +142,12 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
             "Route plan conflict! Pos: " + conf + ", agent: " + conflictAid.getLocalName());
         // 获取不冲突位置,这时候小车上没有工件
         int newLoc = AgvMapUtils.getFreeEdgeNode(plan.getEdgeNodes(), 4, target);
-        MoveAction moveConflict = new MoveAction(plan.getRoute(conf, newLoc), wpInfo);
+        MoveAction moveConflict;
+        if (wpInfo != null) {
+          moveConflict = new MoveAction(plan.getRoute(conf, newLoc), wpInfo);
+        } else {
+          moveConflict = new MoveAction(plan.getRoute(conf, newLoc));
+        }
         waitCallerDone(conflictAid, moveConflict);
         // 更新解决冲突后,agv的位置
         AgvMapUtils.setAgvLoc(conflictAid, newLoc);
