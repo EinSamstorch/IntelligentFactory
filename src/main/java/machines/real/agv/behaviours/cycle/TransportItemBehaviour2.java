@@ -242,8 +242,13 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
             Arrays.stream(movePath.split(",")).mapToInt(Integer::parseInt).toArray(), 4);
     // 解决冲突, 避障的那个小车上肯定没有工件
     solveConflict(conflict, movePath, null);
-    // 移动agv
-    MachineAction moveAction = new MoveAction(plan.getRoute(fromLoc, toLoc), wpInfo);
+    MoveAction moveAction;
+    // 移动agv,如果不这样判断，wpInfo为null时程序会有空指针异常。
+    if (wpInfo != null) {
+      moveAction = new MoveAction(plan.getRoute(fromLoc, toLoc), wpInfo);
+    } else {
+      moveAction = new MoveAction(plan.getRoute(fromLoc, toLoc));
+    }
     waitCallerDone(agv, moveAction);
     // 更新agv位置
     AgvMapUtils.setAgvLoc(agv, toLoc);

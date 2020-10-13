@@ -28,6 +28,11 @@ public class MoveAction extends AbstractMachineAction {
     this.workpieceId = wpInfo.getWorkpieceId();
   }
 
+  public MoveAction(String path) {
+    extra = new JSONObject();
+    extra.put("path", path);
+  }
+
   @Override
   public String getCmd() {
     return MultiAgvHal.CMD_MOVE;
