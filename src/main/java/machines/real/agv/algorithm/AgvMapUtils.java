@@ -17,10 +17,9 @@ import java.util.function.Consumer;
  */
 public class AgvMapUtils {
 
-  /**
-   * 硬编码了地图点个数， 可以通过Spring 反射注入AgvRoutePlan 获取实例，获取地图大小.
-   */
+  /** 硬编码了地图点个数， 可以通过Spring 反射注入AgvRoutePlan 获取实例，获取地图大小. */
   private static volatile boolean[] nodeMap = new boolean[60 + 1];
+
   private static Map<AID, Integer> locationMap = new ConcurrentHashMap<>();
 
   /**
@@ -74,7 +73,7 @@ public class AgvMapUtils {
   /**
    * 获取空的边界点.
    *
-   * @param edgeNodes     边界点坐标
+   * @param edgeNodes 边界点坐标
    * @param neighbourSize 相领位置坐标差
    * @param target 目的地地点
    * @return 空边界点位置
@@ -109,14 +108,20 @@ public class AgvMapUtils {
         conflict.add(path[i]);
       }
     }
-    int start = path[0];
-    Consumer<Integer> consumer = (node) -> {
-      // 非起点/且该点被占
-      if (node >= 0 && node < nodeMap.length
-          && node != start && nodeMap[node]) {
-        conflict.add(node);
+    // 当agv去取货点3时，可能有另一个agv在入货口2那，这时候也是冲突。
+    if (path[path.length - 1] == 3) {
+      if (nodeMap[2]) {
+        conflict.add(2);
       }
-    };
+    }
+    int start = path[0];
+    Consumer<Integer> consumer =
+        (node) -> {
+          // 非起点/且该点被占
+          if (node >= 0 && node < nodeMap.length && node != start && nodeMap[node]) {
+            conflict.add(node);
+          }
+        };
     int end = path[path.length - 1];
     consumer.accept(end - mcol);
     consumer.accept(end - 2 * mcol);
@@ -129,7 +134,7 @@ public class AgvMapUtils {
   /**
    * 转换地图点->工位台编号.
    *
-   * @param mapNode        地图点
+   * @param mapNode 地图点
    * @param bufferLocation 工位台对应的地图点信息数组
    * @return 工位台编号， -1表示未找到
    */
