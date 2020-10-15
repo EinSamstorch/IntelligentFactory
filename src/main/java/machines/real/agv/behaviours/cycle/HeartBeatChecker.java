@@ -7,6 +7,7 @@ import jade.core.behaviours.TickerBehaviour;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import machines.real.agv.algorithm.AgvMapUtils;
 
 /**
  * 心跳过期检查.
@@ -19,7 +20,6 @@ public class HeartBeatChecker extends TickerBehaviour {
 
   private Map<AID, Long> checkInMap;
   private long heartBeatTimeOut;
-
 
   public void setCheckInMap(Map<AID, Long> checkInMap) {
     this.checkInMap = checkInMap;
@@ -37,8 +37,10 @@ public class HeartBeatChecker extends TickerBehaviour {
     while (it.hasNext()) {
       Entry<AID, Long> next = it.next();
       if (timestamp - next.getValue() > heartBeatTimeOut) {
+        AID lost = next.getKey();
         LoggerUtil.agent.info(String.format("Heartbeat timeout: %s", next.getKey().getLocalName()));
         it.remove();
+        AgvMapUtils.setAgvLoc(lost, null);
       }
     }
   }

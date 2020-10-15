@@ -46,7 +46,7 @@ public class AgvMapUtils {
    * @param aid id
    * @param pos 位置
    */
-  public static void setAgvLoc(AID aid, int pos) {
+  public static void setAgvLoc(AID aid, Integer pos) {
     Integer oldLoc = locationMap.get(aid);
     if (oldLoc != null) {
       nodeMap[oldLoc] = false;
