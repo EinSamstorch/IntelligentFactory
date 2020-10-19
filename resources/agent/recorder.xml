@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+  <bean class="machines.agent.VirtualAgentTemplate" id="agent">
+    <property name="serviceType">
+      <util:constant static-field="commons.tools.DfServiceType.RECORDER"/>
+    </property>
+    <!-- agent 行为集-->
+    <property name="behaviours">
+      <list>
+        <bean class="machines.virtual.recorder.behaviours.MessageListener">
+          <property name="db" ref="cloud_db"/>
+        </bean>
+      </list>
+    </property>
+  </bean>
+
+  <import resource="../constant/settings.xml"/>
+  <import resource="../constant/sql.xml"/>
+</beans>

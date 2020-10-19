@@ -7,8 +7,6 @@ package commons.tools;
  * @version 1.0.0.0
  * @since 1.8
  */
-
-
 public class DfServiceType {
 
   public static final String CLOUD_UPDATE = "cloud_update";
@@ -22,4 +20,5 @@ public class DfServiceType {
   public static final String ARM = "arm";
   public static final String PRODUCT = "product";
   public static final String BUFFER = "buffer";
+  public static final String RECORDER = "recorder";
 }
