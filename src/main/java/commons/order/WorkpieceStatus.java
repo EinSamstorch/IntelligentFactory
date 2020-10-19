@@ -11,13 +11,15 @@ import java.util.List;
  * @version 1.0.0.0
  * @since 1.8
  */
-
-
 public class WorkpieceStatus implements Serializable {
 
+  /** 订单号 */
   private String orderId;
+  /** 工件号，由本地生成，每次+1 */
   private String workpieceId;
+  /** 工件种类： 001：法兰 002：轴 003：板 */
   private String goodsId;
+
   private String detailSize;
   private String providerId;
   private String preOwnerId;
@@ -27,18 +29,16 @@ public class WorkpieceStatus implements Serializable {
   private List<String> processPlan;
   private Integer processIndex = 0;
   private Integer warehousePosition;
-  /**
-   * 工序分步.
-   */
+  /** 工序分步. */
   private Integer processStep;
 
   /**
    * 工件状态信息封装.
    *
-   * @param orderId     订单号
+   * @param orderId 订单号
    * @param workpieceId 工件号
-   * @param goodsId     种类
-   * @param detailSize  具体尺寸信息
+   * @param goodsId 种类
+   * @param detailSize 具体尺寸信息
    */
   public WorkpieceStatus(String orderId, String workpieceId, String goodsId, String detailSize) {
     this.orderId = orderId;

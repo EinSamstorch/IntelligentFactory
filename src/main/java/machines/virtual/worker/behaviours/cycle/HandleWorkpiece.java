@@ -24,8 +24,6 @@ import machines.virtual.worker.behaviours.simple.MyContractNetInitiator;
  * @version 1.0.0.0
  * @since 1.8
  */
-
-
 public class HandleWorkpiece extends CyclicBehaviour {
 
   private Integer detectRatio;
@@ -42,8 +40,10 @@ public class HandleWorkpiece extends CyclicBehaviour {
 
   @Override
   public void action() {
-    MessageTemplate mt = MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
-        MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST));
+    MessageTemplate mt =
+        MessageTemplate.and(
+            MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
+            MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST));
     ACLMessage msg = myAgent.receive(mt);
     if (msg == null) {
       if (retrying) {
@@ -81,8 +81,9 @@ public class HandleWorkpiece extends CyclicBehaviour {
     int processIndex = wpInfo.nextProcessIndex();
     if (processIndex >= processPlan.size()) {
       // 所有工艺完成，回成品库
-      LoggerUtil.agent.info(String.format("OrderId: %s, wpId: %s done.",
-          wpInfo.getOrderId(), wpInfo.getWorkpieceId()));
+      LoggerUtil.agent.info(
+          String.format(
+              "OrderId: %s, wpId: %s done.", wpInfo.getOrderId(), wpInfo.getWorkpieceId()));
       processOn(wpInfo, DfServiceType.PRODUCT);
       return;
     }
@@ -97,7 +98,7 @@ public class HandleWorkpiece extends CyclicBehaviour {
   /**
    * 处理招投标.
    *
-   * @param wpInfo      工件状态信息
+   * @param wpInfo 工件状态信息
    * @param serviceType 需求服务类型
    */
   private void processOn(WorkpieceStatus wpInfo, String serviceType) {
@@ -124,9 +125,7 @@ public class HandleWorkpiece extends CyclicBehaviour {
     }
   }
 
-  /**
-   * 对失败招投标进行重试.
-   */
+  /** 对失败招投标进行重试. */
   private void processRetry() {
     RetryMessage retryMsg = retryQueue.poll();
     if (retryMsg == null) {
@@ -135,11 +134,19 @@ public class HandleWorkpiece extends CyclicBehaviour {
     processOn(retryMsg.wpInfo, retryMsg.serviceType);
   }
 
+  /**
+   * 回仓库前对工件进行检测.
+   *
+   * @param wpInfo 工件信息
+   */
   private void addVisionProcess(WorkpieceStatus wpInfo) {
     int random = new Random().nextInt(100);
     if (random < detectRatio) {
-      LoggerUtil.agent.info(String.format("Item orderId:%s, wpId:%s add vision detect",
-          wpInfo.getOrderId(), wpInfo.getWorkpieceId()));
+      LoggerUtil.agent.info(
+          String.format(
+              "Item orderId:%s, wpId:%s add vision detect",
+              wpInfo.getOrderId(), wpInfo.getWorkpieceId()));
+      // 这地方修改工艺了
       wpInfo.getProcessPlan().add(DfServiceType.VISION);
     }
   }

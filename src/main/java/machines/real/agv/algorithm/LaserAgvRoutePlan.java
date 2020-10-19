@@ -20,13 +20,9 @@ import java.util.stream.Collectors;
  */
 public class LaserAgvRoutePlan implements AgvRoutePlan {
 
-  /**
-   * 定义地图列数.
-   */
+  /** 定义地图列数. */
   private static int mCol = 4;
-  /**
-   * 定义地图行数.
-   */
+  /** 定义地图行数. */
   private static int nRow = 15;
   /**
    * 定义在边界上的非边界点.
@@ -34,6 +30,7 @@ public class LaserAgvRoutePlan implements AgvRoutePlan {
    * <p>如：4 x 15地图中， 1 4 58 59这4个点.
    */
   private static int[] nonEdgePoints;
+
   private static int[] bufferNodes;
   private static int[] bufferLocation;
 
@@ -45,8 +42,10 @@ public class LaserAgvRoutePlan implements AgvRoutePlan {
       nonEdgePoints[i] = mCol * (nRow - 1) + i;
     }
 
-    bufferNodes = new int[]{8, 9, 12, 13, 16, 17, 20, 21, 24, 25, 28, 29, 32, 33, 36, 37, 40, 41,
-        44, 45, 48, 49, 52};
+    bufferNodes =
+        new int[] {
+          8, 9, 12, 13, 16, 17, 20, 21, 24, 25, 28, 29, 32, 33, 36, 37, 40, 41, 44, 45, 48, 49, 52
+        };
 
     try {
       initBufferLocation();
@@ -59,8 +58,7 @@ public class LaserAgvRoutePlan implements AgvRoutePlan {
   private static void initBufferLocation() throws IOException {
     File txt = new File("./resources/constant/buffer_map.txt");
 
-    BufferedReader reader = new BufferedReader(
-        new InputStreamReader(new FileInputStream(txt)));
+    BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(txt)));
     String line = readLine(reader);
     if ("".equalsIgnoreCase(line)) {
       throw new IOException("Reading Buffer Map Error!");
@@ -75,8 +73,7 @@ public class LaserAgvRoutePlan implements AgvRoutePlan {
 
   private static String readLine(BufferedReader reader) throws IOException {
     String line;
-    while (null != (line = reader.readLine()) && line.contains("#")) {
-    }
+    while (null != (line = reader.readLine()) && line.contains("#")) {}
     return line == null ? "" : line;
   }
 
@@ -264,7 +261,6 @@ public class LaserAgvRoutePlan implements AgvRoutePlan {
     }
     return true;
   }
-
 
   // TODO 相领的工位台规划未完成
   @Override
