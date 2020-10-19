@@ -26,15 +26,14 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
  * @version 1.0.0.0
  * @since 1.8
  */
-
-
 public class RawContractNetResponder extends ContractNetResponder {
 
-  private static MessageTemplate mt = MessageTemplate.and(
-      MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.CFP),
-          MessageTemplate.MatchProtocol(InteractionProtocol.FIPA_CONTRACT_NET)),
-      MessageTemplate.MatchLanguage("RAW")
-  );
+  private static MessageTemplate mt =
+      MessageTemplate.and(
+          MessageTemplate.and(
+              MessageTemplate.MatchPerformative(ACLMessage.CFP),
+              MessageTemplate.MatchProtocol(InteractionProtocol.FIPA_CONTRACT_NET)),
+          MessageTemplate.MatchLanguage("RAW"));
   private int exportBuffer = -3;
   private DbInterface db;
 

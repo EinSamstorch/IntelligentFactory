@@ -16,7 +16,6 @@ import java.util.Map;
  * @version 1.0.0.0
  * @since 1.8
  */
-
 public class WarehouseMysql extends MysqlJdbc implements DbInterface {
 
   /**
@@ -27,7 +26,6 @@ public class WarehouseMysql extends MysqlJdbc implements DbInterface {
   public WarehouseMysql(Map<String, String> mysqlInfo) {
     super(mysqlInfo);
   }
-
 
   @Override
   public int getRaw(String goodsid) {
@@ -57,7 +55,6 @@ public class WarehouseMysql extends MysqlJdbc implements DbInterface {
     return position;
   }
 
-
   @Override
   public int getRawQuantityByGoodsId(String goodsid) {
     String cmd = String.format("SELECT COUNT(*) FROM raw WHERE goodsid='%s'", goodsid);
@@ -75,15 +72,15 @@ public class WarehouseMysql extends MysqlJdbc implements DbInterface {
     return quantity;
   }
 
-
   @Override
   public int getProduct(WorkpieceStatus wpInfo) {
     int position = 0;
     connect();
     try {
       Statement stmt = con.createStatement();
-      ResultSet rs = stmt.executeQuery(
-          "SELECT position FROM product WHERE orderid IS NULL and workpieceid IS NULL");
+      ResultSet rs =
+          stmt.executeQuery(
+              "SELECT position FROM product WHERE orderid IS NULL and workpieceid IS NULL");
       while (rs.next()) {
         position = rs.getInt(1);
       }
@@ -92,16 +89,17 @@ public class WarehouseMysql extends MysqlJdbc implements DbInterface {
         throw new IllegalArgumentException("Position value can't be 0");
       }
 
-      PreparedStatement pstmt = con
-          .prepareStatement("UPDATE product SET orderid = ?, workpieceid = ? WHERE position = ?");
+      PreparedStatement pstmt =
+          con.prepareStatement(
+              "UPDATE product SET orderid = ?, workpieceid = ? WHERE position = ?");
       pstmt.setString(1, wpInfo.getOrderId());
       pstmt.setString(2, wpInfo.getWorkpieceId());
       pstmt.setInt(3, position);
 
       int result = pstmt.executeUpdate();
       if (result != 1) {
-        LoggerUtil.db
-            .error(String.format("Failed to update product table on position: %d", position));
+        LoggerUtil.db.error(
+            String.format("Failed to update product table on position: %d", position));
       }
     } catch (SQLException e) {
       e.printStackTrace();
@@ -112,15 +110,15 @@ public class WarehouseMysql extends MysqlJdbc implements DbInterface {
     return position;
   }
 
-
   @Override
   public int getProductQuantity() {
     int quantity = 0;
     connect();
     try {
       Statement stmt = con.createStatement();
-      ResultSet rs = stmt.executeQuery(
-          "SELECT COUNT(*) FROM product WHERE orderid IS NULL and workpieceid IS NULL");
+      ResultSet rs =
+          stmt.executeQuery(
+              "SELECT COUNT(*) FROM product WHERE orderid IS NULL and workpieceid IS NULL");
       while (rs.next()) {
         quantity = rs.getInt(1);
       }
@@ -131,5 +129,4 @@ public class WarehouseMysql extends MysqlJdbc implements DbInterface {
     }
     return quantity;
   }
-
 }
