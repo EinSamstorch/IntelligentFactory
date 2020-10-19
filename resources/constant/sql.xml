@@ -14,5 +14,16 @@
       </map>
     </constructor-arg>
   </bean>
+  <bean class="machines.virtual.recorder.OrderTraceMysql" id="cloud_db">
+    <constructor-arg>
+      <map key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="mysql_ip" value="101.132.32.165"/>
+        <entry key="mysql_port" value="7249"/>
+        <entry key="mysql_db" value="factoryNH"/>
+        <entry key="mysql_user" value="root"/>
+        <entry key="mysql_pwd" value="nuaalabMySQL"/>
+      </map>
+    </constructor-arg>
+  </bean>
 
 </beans>
