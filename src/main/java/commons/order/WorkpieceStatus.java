@@ -31,6 +31,8 @@ public class WorkpieceStatus implements Serializable {
   private Integer warehousePosition;
   /** 工序分步. */
   private Integer processStep;
+  /** 工件上携带的额外信息： 包括在仓库的位置，agv的路径 */
+  private String extra = "";
 
   /**
    * 工件状态信息封装.
@@ -154,6 +156,14 @@ public class WorkpieceStatus implements Serializable {
 
   public void setNextProcessStep() {
     this.processStep += 1;
+  }
+
+  public String getExtra() {
+    return extra;
+  }
+
+  public void setExtra(String extra) {
+    this.extra = extra;
   }
 
   @Override
