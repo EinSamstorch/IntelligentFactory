@@ -38,9 +38,6 @@ public class MysqlJdbc {
 
   protected void connect() {
     try {
-      if (this.con != null) {
-        return;
-      }
       String driver = "com.mysql.jdbc.Driver";
       Class.forName(driver);
       this.con = DriverManager.getConnection(url, user, password);
