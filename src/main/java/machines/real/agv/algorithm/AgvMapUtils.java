@@ -108,12 +108,6 @@ public class AgvMapUtils {
         conflict.add(path[i]);
       }
     }
-    // 当agv去取货点3时，可能有另一个agv在入货口2那，这时候也是冲突。
-    if (path[path.length - 1] == 3) {
-      if (nodeMap[2]) {
-        conflict.add(2);
-      }
-    }
     int start = path[0];
     Consumer<Integer> consumer =
         (node) -> {
