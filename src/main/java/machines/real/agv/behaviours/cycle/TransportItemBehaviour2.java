@@ -11,6 +11,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.util.leap.Iterator;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -143,10 +144,12 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
         // 获取不冲突位置,这时候小车上没有工件
         int newLoc = AgvMapUtils.getFreeEdgeNode(plan.getEdgeNodes(), 4, target);
         MoveAction moveConflict;
+        String newPath = plan.getRoute(conf, newLoc);
+        LoggerUtil.agent.info("Avoid path: " + newPath);
         if (wpInfo != null) {
-          moveConflict = new MoveAction(plan.getRoute(conf, newLoc), wpInfo);
+          moveConflict = new MoveAction(newPath, wpInfo);
         } else {
-          moveConflict = new MoveAction(plan.getRoute(conf, newLoc));
+          moveConflict = new MoveAction(newPath);
         }
         waitCallerDone(conflictAid, moveConflict);
         // 更新解决冲突后,agv的位置
