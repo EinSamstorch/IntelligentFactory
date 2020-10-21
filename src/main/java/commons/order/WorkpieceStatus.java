@@ -13,11 +13,11 @@ import java.util.List;
  */
 public class WorkpieceStatus implements Serializable {
 
-  /** 订单号 */
+  /** 订单号. */
   private String orderId;
-  /** 工件号，由本地生成，每次+1 */
+  /** 工件号，由本地生成，每次+1. */
   private String workpieceId;
-  /** 工件种类： 001：法兰 002：轴 003：板 */
+  /** 工件种类： 001：法兰 002：轴 003：板. */
   private String goodsId;
 
   private String detailSize;
@@ -31,7 +31,7 @@ public class WorkpieceStatus implements Serializable {
   private Integer warehousePosition;
   /** 工序分步. */
   private Integer processStep;
-  /** 工件上携带的额外信息： 包括在仓库的位置，agv的路径 */
+  /** 工件上携带的额外信息： 包括在仓库的位置，agv的路径. */
   private String extra = "";
 
   /**

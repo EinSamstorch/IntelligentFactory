@@ -10,6 +10,8 @@ import jade.lang.acl.UnreadableException;
 import machines.virtual.recorder.OrderTraceMysql;
 
 /**
+ * 消息监听者.
+ *
  * @author <a href="mailto:einsamstorch@qq.com">Liqun_Wang</a>
  * @date: 2020/10/19 16:55
  */

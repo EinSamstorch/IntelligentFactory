@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.Map;
 
 /**
+ * 订单追踪mysql.
+ *
  * @author <a href="mailto:einsamstorch@qq.com">Liqun_Wang</a>
  * @date: 2020/10/19 16:59
  */
@@ -21,6 +23,12 @@ public class OrderTraceMysql extends MysqlJdbc {
     super(mysqlInfo);
   }
 
+  /**
+   * 更新数据.
+   *
+   * @param orderTrace 订单追踪信息
+   * @return 是否成功
+   */
   public boolean updateInfo(OrderTrace orderTrace) {
 
     boolean flag = false;
