@@ -46,8 +46,10 @@ public class MessageListener extends CyclicBehaviour {
     String orderId = wpInfo.getOrderId();
     String workpieceId = wpInfo.getWorkpieceId();
     int bufferId = wpInfo.getBufferPos();
-    String owner = wpInfo.getPreOwnerId();
+    String owner = wpInfo.getCurOwnerId();
     String extra = wpInfo.getExtra();
+    // 每一次还需要将wpInfo上的extra复原
+    wpInfo.setExtra("");
 
     OrderTrace orderTrace = new OrderTrace(orderId, workpieceId, bufferId, owner, extra);
     // 执行成功，回复inform确认

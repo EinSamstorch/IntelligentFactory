@@ -47,10 +47,10 @@ public class OrderTraceMysql extends MysqlJdbc {
       int result = ps.executeUpdate();
 
       if (result > 0) {
-        LoggerUtil.db.info("插入成功");
+        LoggerUtil.db.info(orderTrace.getOwner() + " 插入成功");
         flag = true;
       } else {
-        LoggerUtil.db.error("插入失败");
+        LoggerUtil.db.error(orderTrace.getOwner() + " 插入失败");
         flag = false;
       }
 
