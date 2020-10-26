@@ -248,7 +248,8 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     String extra = "Move path:" + movePath;
     // 这两个设置是给记录agent使用的
     wpInfo.setExtra(extra);
-    wpInfo.setCurOwnerId(myAgent.getLocalName());
+    // 因为这是属于agv manager agent，而拥有者要显示哪个agv
+    wpInfo.setCurOwnerId(agv.getLocalName());
     LoggerUtil.agent.info("Move path: " + movePath);
     // 计算冲突
     List<Integer> conflict =
