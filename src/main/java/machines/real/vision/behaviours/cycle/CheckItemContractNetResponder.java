@@ -1,6 +1,8 @@
 package machines.real.vision.behaviours.cycle;
 
 import commons.order.WorkpieceStatus;
+import commons.tools.DfServiceType;
+import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.RefuseException;
@@ -23,13 +25,12 @@ import machines.real.commons.request.AgvRequest;
  * @version 1.0.0.0
  * @since 1.8
  */
-
 public class CheckItemContractNetResponder extends ContractNetResponder {
 
-  private static MessageTemplate mt = MessageTemplate.and(
-      MessageTemplate.MatchPerformative(ACLMessage.CFP),
-      MessageTemplate.MatchProtocol(InteractionProtocol.FIPA_CONTRACT_NET)
-  );
+  private static MessageTemplate mt =
+      MessageTemplate.and(
+          MessageTemplate.MatchPerformative(ACLMessage.CFP),
+          MessageTemplate.MatchProtocol(InteractionProtocol.FIPA_CONTRACT_NET));
   private RealMachineAgent visionAgent;
 
   public CheckItemContractNetResponder(RealMachineAgent visionAgent) {
@@ -38,8 +39,7 @@ public class CheckItemContractNetResponder extends ContractNetResponder {
   }
 
   @Override
-  protected ACLMessage handleCfp(ACLMessage cfp)
-      throws RefuseException {
+  protected ACLMessage handleCfp(ACLMessage cfp) throws RefuseException {
     LoggerUtil.agent.debug(String.format("CFP received from: %s.", cfp.getSender().getName()));
     if (visionAgent.getBufferManger().isBufferFull()) {
       throw new RefuseException("Buffer Full!");
@@ -87,6 +87,16 @@ public class CheckItemContractNetResponder extends ContractNetResponder {
     // call for agv
     AgvRequest request = new AgvRequest(from, to, wpInfo);
     visionAgent.addBehaviour(new CallForAgv(request, buffer));
+
+    // 发送到记录agent记录
+    try {
+      ACLMessage msg = DfUtils.createRequestMsg(wpInfo);
+      DfUtils.searchDf(myAgent, msg, DfServiceType.RECORDER);
+      myAgent.send(msg);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
     // 完成本次招标动作
     ACLMessage inform = accept.createReply();
     inform.setPerformative(ACLMessage.INFORM);

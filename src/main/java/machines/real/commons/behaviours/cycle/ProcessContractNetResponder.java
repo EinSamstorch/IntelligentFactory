@@ -1,6 +1,8 @@
 package machines.real.commons.behaviours.cycle;
 
 import commons.order.WorkpieceStatus;
+import commons.tools.DfServiceType;
+import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
@@ -13,6 +15,7 @@ import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetResponder;
 import java.io.IOException;
+import java.security.acl.Acl;
 import machines.agent.RealMachineAgent;
 import machines.real.commons.ContractNetContent;
 import machines.real.commons.actions.EvaluateAction;
@@ -31,13 +34,12 @@ import machines.real.commons.request.AgvRequest;
  * @version 1.0.0.0
  * @since 1.8
  */
-
 public class ProcessContractNetResponder extends ContractNetResponder {
 
-  private static MessageTemplate mt = MessageTemplate.and(
-      MessageTemplate.MatchPerformative(ACLMessage.CFP),
-      MessageTemplate.MatchProtocol(InteractionProtocol.FIPA_CONTRACT_NET)
-  );
+  private static MessageTemplate mt =
+      MessageTemplate.and(
+          MessageTemplate.MatchPerformative(ACLMessage.CFP),
+          MessageTemplate.MatchProtocol(InteractionProtocol.FIPA_CONTRACT_NET));
   private ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
   private RealMachineAgent machineAgent;
   private MiddleHal hal;
@@ -115,9 +117,20 @@ public class ProcessContractNetResponder extends ContractNetResponder {
     buffer.getBufferState().setState(BufferState.STATE_ARRIVING);
     int evaluateTime = evaluate(wpInfo);
     buffer.setEvaluateTime(evaluateTime);
+
     // call for agv
     AgvRequest request = new AgvRequest(from, to, wpInfo);
     machineAgent.addBehaviour(tbf.wrap(new CallForAgv(request, buffer)));
+
+    // 发送到记录agent记录
+    try {
+      ACLMessage msg = DfUtils.createRequestMsg(wpInfo);
+      DfUtils.searchDf(myAgent, msg, DfServiceType.RECORDER);
+      myAgent.send(msg);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
     // 完成本次招标动作
     ACLMessage inform = accept.createReply();
     inform.setPerformative(ACLMessage.INFORM);
