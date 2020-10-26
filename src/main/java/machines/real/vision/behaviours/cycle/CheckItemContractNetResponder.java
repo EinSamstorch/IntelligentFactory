@@ -84,6 +84,7 @@ public class CheckItemContractNetResponder extends ContractNetResponder {
     wpInfo.setBufferPos(to);
     // 放入机床buffer中
     buffer.setWpInfo(wpInfo);
+    wpInfo.setExtra("");
     // call for agv
     AgvRequest request = new AgvRequest(from, to, wpInfo);
     visionAgent.addBehaviour(new CallForAgv(request, buffer));

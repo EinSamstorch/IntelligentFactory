@@ -117,6 +117,8 @@ public class ProcessContractNetResponder extends ContractNetResponder {
     buffer.getBufferState().setState(BufferState.STATE_ARRIVING);
     int evaluateTime = evaluate(wpInfo);
     buffer.setEvaluateTime(evaluateTime);
+    // 不知道为啥，数据库那边extra一直保留上一次的信息，明明已经在插入后重置了
+    wpInfo.setExtra("");
 
     // call for agv
     AgvRequest request = new AgvRequest(from, to, wpInfo);
