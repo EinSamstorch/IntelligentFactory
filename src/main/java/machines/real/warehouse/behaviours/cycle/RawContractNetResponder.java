@@ -1,5 +1,6 @@
 package machines.real.warehouse.behaviours.cycle;
 
+import commons.order.OrderTrace;
 import commons.order.WorkpieceStatus;
 import commons.tools.DfServiceType;
 import commons.tools.DfUtils;
@@ -106,10 +107,15 @@ public class RawContractNetResponder extends ContractNetResponder {
       wpInfo.setCurOwnerId(myAgent.getLocalName());
       // map location for exporter of warehouse
       wpInfo.setBufferPos(exportBuffer);
+      wpInfo.setExtra("Warehouse position: " + position);
 
       // 发送至Worker 进行下一轮招标
       ACLMessage msg = DfUtils.createRequestMsg(wpInfo);
       DfUtils.searchDf(myAgent, msg, DfServiceType.WORKER);
+      myAgent.send(msg);
+
+      // 发送到recorder进行数据记录
+      DfUtils.searchDf(myAgent, msg, DfServiceType.RECORDER);
       myAgent.send(msg);
 
       // 完成本次招标动作
