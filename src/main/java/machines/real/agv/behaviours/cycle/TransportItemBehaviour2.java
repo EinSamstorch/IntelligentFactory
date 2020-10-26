@@ -246,10 +246,7 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
       return;
     }
     String extra = "Move path:" + movePath;
-    // 这两个设置是给记录agent使用的
-    wpInfo.setExtra(extra);
-    // 因为这是属于agv manager agent，而拥有者要显示哪个agv
-    wpInfo.setCurOwnerId(agv.getLocalName());
+
     LoggerUtil.agent.info("Move path: " + movePath);
     // 计算冲突
     List<Integer> conflict =
@@ -264,6 +261,10 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
     if (wpInfo != null) {
       moveAction = new MoveAction(plan.getRoute(fromLoc, toLoc), wpInfo);
       try {
+        // 这两个设置是给记录agent使用的
+        wpInfo.setExtra(extra);
+        // 因为这是属于agv manager agent，而拥有者要显示哪个agv
+        wpInfo.setCurOwnerId(agv.getLocalName());
         // 当小车上有工件时才发送到记录agent。
         ACLMessage msg = DfUtils.createRequestMsg(wpInfo);
         DfUtils.searchDf(myAgent, msg, DfServiceType.RECORDER);
