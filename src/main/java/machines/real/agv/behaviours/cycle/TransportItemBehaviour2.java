@@ -1,6 +1,8 @@
 package machines.real.agv.behaviours.cycle;
 
 import commons.order.WorkpieceStatus;
+import commons.tools.DfServiceType;
+import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
@@ -243,18 +245,31 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
       // 无需移动
       return;
     }
+    String extra = "Move path:" + movePath;
+    wpInfo.setExtra(extra);
     LoggerUtil.agent.info("Move path: " + movePath);
     // 计算冲突
     List<Integer> conflict =
         AgvMapUtils.conflictNode(
             Arrays.stream(movePath.split(",")).mapToInt(Integer::parseInt).toArray(), 4);
+
     // 解决冲突, 避障的那个小车上肯定没有工件
     solveConflict(conflict, movePath, null);
     MoveAction moveAction;
+
     // 移动agv,如果不这样判断，wpInfo为null时程序会有空指针异常。
     if (wpInfo != null) {
       moveAction = new MoveAction(plan.getRoute(fromLoc, toLoc), wpInfo);
+      try {
+        // 当小车上有工件时才发送到记录agent。
+        ACLMessage msg = DfUtils.createRequestMsg(wpInfo);
+        DfUtils.searchDf(myAgent, msg, DfServiceType.RECORDER);
+        myAgent.send(msg);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     } else {
+      // 只是避障的小车，不去记录轨迹
       moveAction = new MoveAction(plan.getRoute(fromLoc, toLoc));
     }
     waitCallerDone(agv, moveAction);
