@@ -246,7 +246,9 @@ public class TransportItemBehaviour2 extends CyclicBehaviour {
       return;
     }
     String extra = "Move path:" + movePath;
+    // 这两个设置是给记录agent使用的
     wpInfo.setExtra(extra);
+    wpInfo.setCurOwnerId(myAgent.getLocalName());
     LoggerUtil.agent.info("Move path: " + movePath);
     // 计算冲突
     List<Integer> conflict =
