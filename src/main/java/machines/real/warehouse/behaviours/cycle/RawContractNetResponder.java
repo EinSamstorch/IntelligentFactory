@@ -107,16 +107,18 @@ public class RawContractNetResponder extends ContractNetResponder {
       wpInfo.setCurOwnerId(myAgent.getLocalName());
       // map location for exporter of warehouse
       wpInfo.setBufferPos(exportBuffer);
-      wpInfo.setExtra("Warehouse position: " + position);
+      wpInfo.setExtra("Raw position: " + position);
 
       // 发送至Worker 进行下一轮招标
       ACLMessage msg = DfUtils.createRequestMsg(wpInfo);
       DfUtils.searchDf(myAgent, msg, DfServiceType.WORKER);
       myAgent.send(msg);
 
-      // 发送到recorder进行数据记录
-      DfUtils.searchDf(myAgent, msg, DfServiceType.RECORDER);
-      myAgent.send(msg);
+      // 发送到recorder进行数据记录，如果还是用DfUtils.searchDf(myAgent, msg, DfServiceType.WORKER)的话
+      // 消息会发给worker两次
+      ACLMessage trace = DfUtils.createRequestMsg(wpInfo);
+      DfUtils.searchDf(myAgent, trace, DfServiceType.RECORDER);
+      myAgent.send(trace);
 
       // 完成本次招标动作
       ACLMessage inform = accept.createReply();
