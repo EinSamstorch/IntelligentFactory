@@ -44,9 +44,7 @@ public class LaserAgvRoutePlan implements AgvRoutePlan {
 
     // 直接将8，12这两个点删除，agv避障得时候就不会停在那两个点了
     bufferNodes =
-        new int[] {
-          9, 13, 16, 17, 20, 21, 24, 25, 28, 29, 32, 33, 36, 37, 40, 41, 44, 45, 48, 49, 52
-        };
+        new int[] {13, 16, 17, 20, 21, 24, 25, 28, 29, 32, 33, 36, 37, 40, 41, 44, 45, 48, 49, 52};
 
     try {
       initBufferLocation();
