@@ -1,6 +1,8 @@
 package machines.real.warehouse.behaviours.cycle;
 
 import commons.order.WorkpieceStatus;
+import commons.tools.DfServiceType;
+import commons.tools.DfUtils;
 import commons.tools.LoggerUtil;
 import jade.core.Agent;
 import jade.core.behaviours.ThreadedBehaviourFactory;
@@ -26,14 +28,14 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
  * @version 1.0.0.0
  * @since 1.8
  */
-
 public class ProductContractNetResponder extends ContractNetResponder {
 
-  private static MessageTemplate mt = MessageTemplate.and(
-      MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.CFP),
-          MessageTemplate.MatchProtocol(InteractionProtocol.FIPA_CONTRACT_NET)),
-      MessageTemplate.MatchLanguage("PRODUCT")
-  );
+  private static MessageTemplate mt =
+      MessageTemplate.and(
+          MessageTemplate.and(
+              MessageTemplate.MatchPerformative(ACLMessage.CFP),
+              MessageTemplate.MatchProtocol(InteractionProtocol.FIPA_CONTRACT_NET)),
+          MessageTemplate.MatchLanguage("PRODUCT"));
   private int importBuffer = -2;
   private DbInterface db;
   private ThreadedBehaviourFactory tbf = new ThreadedBehaviourFactory();
@@ -84,6 +86,7 @@ public class ProductContractNetResponder extends ContractNetResponder {
     if (wpInfo != null) {
       int position = db.getProduct(wpInfo);
       wpInfo.setWarehousePosition(position);
+      wpInfo.setExtra("Product position: " + position);
       // 更新 wpInfo
       wpInfo.setCurOwnerId(myAgent.getLocalName());
       int oldBuffer = wpInfo.getBufferPos();
@@ -92,6 +95,15 @@ public class ProductContractNetResponder extends ContractNetResponder {
       // call for agv
       AgvRequest request = new AgvRequest(oldBuffer, importBuffer, wpInfo);
       myAgent.addBehaviour(tbf.wrap(new CallForAgv(request)));
+
+      // 发送到记录agent记录
+      try {
+        ACLMessage msg = DfUtils.createRequestMsg(wpInfo);
+        DfUtils.searchDf(myAgent, msg, DfServiceType.RECORDER);
+        myAgent.send(msg);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
 
       ACLMessage inform = accept.createReply();
       inform.setPerformative(ACLMessage.INFORM);
